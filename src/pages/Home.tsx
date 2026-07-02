@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ClimbCard from '../components/ClimbCard';
+import ClimbMap from '../components/ClimbMap';
 import { useClimbs } from '../context/ClimbsContext';
 
 export default function Home() {
@@ -28,6 +29,12 @@ export default function Home() {
           />
         </div>
       </div>
+
+      {!loading && climbs.length > 0 && (
+        <div className="mb-8">
+          <ClimbMap climbs={climbs} />
+        </div>
+      )}
 
       <div className="flex gap-2 mb-6">
         {(['all', 'completed', 'uncompleted'] as const).map(f => (

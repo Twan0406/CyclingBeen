@@ -4,19 +4,31 @@ export interface ProQuote {
   year: number;
 }
 
+export interface ProRecord {
+  rider: string;
+  time: string;
+  year: number;
+  note?: string;
+}
+
 export interface Climb {
   id: string;
   name: string;
   country: string;
   region: string;
+  lat: number;
+  lng: number;
   elevationM: number;
   lengthKm: number;
   avgGradientPct: number;
   difficulty: 'easy' | 'medium' | 'hard' | 'hors-categorie';
   shortDescription: string;
   story: string;
+  photoUrl: string;
+  gradient: string;
+  tourHistory: string;
+  proRecords: ProRecord[];
   proQuotes: ProQuote[];
-  heroImageUrl: string;
   completed: boolean;
 }
 
@@ -36,4 +48,6 @@ export interface StravaActivity {
   total_elevation_gain: number;
   start_date: string;
   start_date_local: string;
+  start_latlng?: [number, number];
+  end_latlng?: [number, number];
 }

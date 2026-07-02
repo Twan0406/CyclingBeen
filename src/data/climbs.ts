@@ -1,22 +1,35 @@
 import type { Climb } from '../types/climb';
 
+// Photos use Wikimedia Commons Special:FilePath, which redirects to the current
+// file. If a photo fails to load, components fall back to the CSS gradient.
+const wiki = (file: string) =>
+  `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=1200`;
+
 export const seedClimbs: Climb[] = [
   {
     id: 'mont-ventoux',
     name: 'Mont Ventoux',
     country: 'France',
     region: 'Provence',
+    lat: 44.1741,
+    lng: 5.2786,
     elevationM: 1909,
     lengthKm: 21.5,
     avgGradientPct: 7.5,
     difficulty: 'hors-categorie',
     shortDescription: 'The Giant of Provence, a brutal moonscape climb',
     story: 'Mont Ventoux rises in brutal isolation from the Provençal plains, its treeless white limestone summit visible for miles around. The climb has claimed careers and lives — Tom Simpson died near the summit in 1967 during the Tour de France, his memorial a pilgrimage site for cyclists. Three different ascent routes converge at the Chalet Reynard, after which the road enters a surreal lunar landscape stripped of vegetation by fierce winds. At the summit, the temperature can be 20°C colder than the base, and winds regularly exceed 90 km/h.',
+    photoUrl: wiki('Mont Ventoux from wheat fields near Sault.jpg'),
+    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    tourHistory: 'First climbed in the Tour de France in 1951 and used over 15 times since, including legendary summit finishes in 1970, 2000, 2002, 2009 and 2013. Also a regular in the Critérium du Dauphiné.',
+    proRecords: [
+      { rider: 'Iban Mayo', time: '55:51', year: 2004, note: 'From Bédoin (time trial) — long considered the reference time' },
+      { rider: 'Marco Pantani', time: '58:00', year: 1994, note: 'From Bédoin, estimated race ascent' },
+    ],
     proQuotes: [
       { quote: "Ventoux is a god of Evil, to which sacrifices must be made. It never forgives weakness and exacts a high price for glory.", cyclist: "Roland Barthes", year: 1957 },
       { quote: "Every time I climb it I suffer. Every time I reach the top I want to cry.", cyclist: "Eddy Merckx", year: 1970 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     completed: false,
   },
   {
@@ -24,17 +37,25 @@ export const seedClimbs: Climb[] = [
     name: "Alpe d'Huez",
     country: 'France',
     region: 'French Alps',
+    lat: 45.0909,
+    lng: 6.0703,
     elevationM: 1860,
     lengthKm: 13.8,
     avgGradientPct: 8.1,
     difficulty: 'hors-categorie',
     shortDescription: '21 legendary hairpins in the French Alps',
     story: "Alpe d'Huez is cycling's most celebrated climb, its 21 numbered hairpins each dedicated to a Tour de France stage winner. The Dutch have claimed so many victories here that a stretch is nicknamed \"Dutch Corner,\" where fans camp days in advance for a carnival atmosphere unlike anywhere else in cycling. First used in the Tour in 1952 when Fausto Coppi rode away from the field, it has since hosted 30 Tour stages. The gradient rarely relents below 7% and frequently kicks above 10%, making it a pure test of climbing ability.",
+    photoUrl: wiki("Alpe d'Huez - the 21 bends.jpg"),
+    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    tourHistory: 'Tour de France debut in 1952 (won by Fausto Coppi). Has hosted around 30 Tour stages, making it one of the race\'s most iconic summit finishes.',
+    proRecords: [
+      { rider: 'Marco Pantani', time: '37:35', year: 1997, note: 'Widely cited as the fastest recorded ascent' },
+      { rider: 'Lance Armstrong', time: '37:36', year: 2004, note: 'Time trial (result later annulled for doping)' },
+    ],
     proQuotes: [
       { quote: "Alpe d'Huez is simply the most famous climb in cycling. When you win there, you join a very special club.", cyclist: "Lance Armstrong", year: 2004 },
       { quote: "The hairpins are like a countdown to glory or suffering — you never know which until you're living it.", cyclist: "Marco Pantani", year: 1997 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     completed: false,
   },
   {
@@ -42,17 +63,25 @@ export const seedClimbs: Climb[] = [
     name: 'Col du Galibier',
     country: 'France',
     region: 'French Alps',
+    lat: 45.0644,
+    lng: 6.4083,
     elevationM: 2642,
     lengthKm: 18.1,
     avgGradientPct: 6.9,
     difficulty: 'hors-categorie',
     shortDescription: 'One of the highest paved passes in the Alps',
     story: "The Col du Galibier sits at 2,642 metres and has been the rooftop of the Tour de France more than any other climb. Henri Desgrange, the Tour's founder, called it a marvel and a titan that makes men look small. The approach from the south via the Col du Télégraphe adds another 11 kilometres of climbing before the Galibier proper even begins, making it one of the most demanding days in professional cycling. The summit tunnel, bored through the rock in 1891, was bypassed by a higher road in 1979, and today the full summit remains open only from June to October.",
+    photoUrl: wiki('Col du Galibier.jpg'),
+    gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    tourHistory: 'First crossed by the Tour de France in 1911. It has featured more than 60 times and often marks the highest point of the race, awarding the Souvenir Henri Desgrange.',
+    proRecords: [
+      { rider: 'Nairo Quintana', time: '—', year: 2011, note: 'Won the first Tour stage to finish on the Galibier (2,642 m)' },
+      { rider: 'Marco Pantani', time: '—', year: 1998, note: 'Legendary solo attack over the Galibier in the rain' },
+    ],
     proQuotes: [
       { quote: "There are no half measures on the Galibier. You either have the legs or you don't.", cyclist: "Bernard Hinault", year: 1986 },
       { quote: "Crossing the Galibier for the first time, I understood why the great champions speak of it with reverence.", cyclist: "Vincenzo Nibali", year: 2012 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     completed: false,
   },
   {
@@ -60,17 +89,25 @@ export const seedClimbs: Climb[] = [
     name: 'Stelvio Pass',
     country: 'Italy',
     region: 'South Tyrol',
+    lat: 46.5286,
+    lng: 10.4542,
     elevationM: 2758,
     lengthKm: 24.3,
     avgGradientPct: 7.4,
     difficulty: 'hors-categorie',
     shortDescription: 'The highest paved mountain pass in the Eastern Alps',
     story: "The Passo dello Stelvio was built between 1820 and 1825 as a military road connecting Austrian-controlled Lombardy to Vienna. At 2,758 metres, it is the highest paved mountain pass in the Eastern Alps and the second highest in the entire Alps. The eastern ascent from Prato features 48 numbered hairpins in a spectacular series that photographers have captured from above for over a century. The Giro d'Italia has used it as a decisive summit finish multiple times, most famously in 1988 when Andrew Hampsten rode through a snowstorm to win the race.",
+    photoUrl: wiki('Stilfser Joch Suedrampe.jpg'),
+    gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+    tourHistory: "Giro d'Italia debut in 1953, when Fausto Coppi attacked to seize the pink jersey. Frequently the Cima Coppi — the highest point of the Giro.",
+    proRecords: [
+      { rider: 'Fausto Coppi', time: '—', year: 1953, note: 'Historic Giro attack that decided the race' },
+      { rider: 'Thomas De Gendt', time: '—', year: 2012, note: 'Famous solo Giro win over the Stelvio' },
+    ],
     proQuotes: [
       { quote: "The Stelvio in a snowstorm was the most terrifying and beautiful thing I've ever experienced on a bike.", cyclist: "Andrew Hampsten", year: 1988 },
       { quote: "48 hairpins. Every one a different kind of pain.", cyclist: "Fausto Coppi", year: 1953 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
     completed: false,
   },
   {
@@ -78,17 +115,25 @@ export const seedClimbs: Climb[] = [
     name: 'Col du Tourmalet',
     country: 'France',
     region: 'Pyrenees',
+    lat: 42.9089,
+    lng: 0.1453,
     elevationM: 2115,
     lengthKm: 19.0,
     avgGradientPct: 7.4,
     difficulty: 'hors-categorie',
     shortDescription: 'The most frequently climbed mountain in Tour de France history',
     story: "The Col du Tourmalet holds the record as the most visited climb in Tour de France history, having appeared in the race over 80 times since 1910 when the first rider to crest it, Octave Lapize, reportedly shouted at race officials that they were assassins. The pass divides the central Pyrenees and offers views into both France and, on clear days, into Spain. At 2,115 metres it is the highest road pass in the French Pyrenees, and the long approach from either Luz-Saint-Sauveur or Bagnères-de-Bigorre grinds down even the strongest climbers. A statue of the cyclist Octave Lapize stands at the summit.",
+    photoUrl: wiki('Col du Tourmalet.jpg'),
+    gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    tourHistory: 'First climbed in 1910 — the most-used mountain in Tour de France history with more than 85 appearances. The Souvenir Jacques Goddet is awarded at the summit.',
+    proRecords: [
+      { rider: 'Octave Lapize', time: '—', year: 1910, note: 'First rider ever over the Tourmalet in the Tour' },
+      { rider: 'Thibaut Pinot', time: '—', year: 2019, note: 'Emotional home summit-finish victory' },
+    ],
     proQuotes: [
       { quote: "The Tourmalet is not a mountain, it is an idea. Every Tour de France is defined by what happens there.", cyclist: "Jens Voigt", year: 2009 },
       { quote: "I have climbed it twenty times in training and it never gets easier. It only gets more familiar.", cyclist: "Miguel Indurain", year: 1993 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
     completed: false,
   },
   {
@@ -96,17 +141,25 @@ export const seedClimbs: Climb[] = [
     name: 'Sa Calobra',
     country: 'Spain',
     region: 'Mallorca',
+    lat: 39.8497,
+    lng: 2.8003,
     elevationM: 682,
     lengthKm: 9.4,
     avgGradientPct: 7.1,
     difficulty: 'hard',
     shortDescription: 'The most spectacular descent road in the Mediterranean',
     story: "Sa Calobra on Mallorca is not the tallest or longest climb in cycling, but it may be the most dramatic. The road, engineered by Antonio Parietti Coll in 1932, winds through 270-degree turns and threads through rock tunnels on its way to a cove accessible only by sea or this single road. The 'Knot of the Tie' corner, where the road loops over itself in a full circle, is one of the most photographed stretches of road in Europe. Professional teams use Mallorca for winter training camps, and Sa Calobra is the defining test of every camp, ridden repeatedly as a measure of climbing form.",
+    photoUrl: wiki('Sa Calobra road.jpg'),
+    gradient: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+    tourHistory: "Not a Grand Tour climb, but the centrepiece of Mallorca training camps for nearly every WorldTour team. Featured in the Trofeo pro races on the island.",
+    proRecords: [
+      { rider: 'Bradley Wiggins', time: '~19 min', year: 2013, note: 'Training-camp benchmark ascent' },
+      { rider: 'Team Sky', time: '—', year: 2013, note: 'Made the climb famous as a winter form test' },
+    ],
     proQuotes: [
       { quote: "Sa Calobra looks impossible on paper and feels impossible on the bike. Then you reach the top and you understand why everyone comes back.", cyclist: "Chris Froome", year: 2015 },
       { quote: "There is something almost cruel about that road. Beautiful and cruel at the same time.", cyclist: "Richie Porte", year: 2016 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
     completed: false,
   },
   {
@@ -114,17 +167,25 @@ export const seedClimbs: Climb[] = [
     name: 'Col de la Croix de Fer',
     country: 'France',
     region: 'French Alps',
+    lat: 45.2278,
+    lng: 6.1856,
     elevationM: 2067,
     lengthKm: 29.0,
     avgGradientPct: 5.2,
     difficulty: 'hard',
     shortDescription: 'A long Alpine classic with stunning reservoir views',
     story: "The Col de la Croix de Fer — the Pass of the Iron Cross — takes its name from an iron cross erected at the summit. At 2,067 metres it is not the highest Alpine pass, but its length of nearly 30 kilometres from Saint-Jean-de-Maurienne makes it a formidable test of endurance. The route passes above the Lac du Grand Maison reservoir, one of the most beautiful stretches of Alpine road cycling has to offer. Often combined with the Col du Galibier in Tour de France stages, the Croix de Fer rewards patience — riders who go too deep early on the lower slopes pay dearly on the exposed upper sections.",
+    photoUrl: wiki('Col de la Croix de Fer.jpg'),
+    gradient: 'linear-gradient(135deg, #0093E9 0%, #80D0C7 100%)',
+    tourHistory: 'A Tour de France regular since 1947, often paired with the Galibier or Glandon in the great Alpine stages. Crossed more than 20 times.',
+    proRecords: [
+      { rider: 'Pierre Rolland', time: '—', year: 2012, note: 'Attacked over the Croix de Fer on the way to an Alpine stage win' },
+      { rider: 'Romain Bardet', time: '—', year: 2017, note: 'Key launchpad in a Tour Alpine stage' },
+    ],
     proQuotes: [
       { quote: "The Croix de Fer rewards patience more than any other climb I know. Go too hard early and the top section will destroy you.", cyclist: "Richard Virenque", year: 1997 },
       { quote: "Long climbs test character. The Croix de Fer has plenty of both.", cyclist: "Nairo Quintana", year: 2014 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #0093E9 0%, #80D0C7 100%)',
     completed: false,
   },
   {
@@ -132,17 +193,25 @@ export const seedClimbs: Climb[] = [
     name: 'Mont Cenis',
     country: 'France/Italy',
     region: 'Graian Alps',
+    lat: 45.2569,
+    lng: 6.9033,
     elevationM: 2083,
     lengthKm: 26.0,
     avgGradientPct: 5.8,
     difficulty: 'hard',
     shortDescription: "An ancient Alpine pass with Napoleon's road and a high plateau lake",
     story: "The Col du Mont Cenis, known in Italian as the Colle del Moncenisio, has served as one of the main crossings between France and Italy for two thousand years. Napoleon improved the road in the early 19th century to move his armies and artillery across the Alps. The pass opens onto a high plateau at 2,083 metres where a large reservoir now fills the basin that was once a valley with villages. The Giro d'Italia and the Tour de France have both used the climb, and the long approach through the Arc valley from Lanslebourg provides a steady, sustained effort that prepares riders for the exposed plateau crossing.",
+    photoUrl: wiki('Lac du Mont Cenis.jpg'),
+    gradient: 'linear-gradient(135deg, #FDDB92 0%, #D1FDFF 100%)',
+    tourHistory: "Crossed by both the Tour de France and the Giro d'Italia as a France–Italy border pass. Featured in Tour stages including 1999 and 2024.",
+    proRecords: [
+      { rider: 'Giro peloton', time: '—', year: 2013, note: 'Used as a high border crossing between the two countries' },
+      { rider: 'Tour de France', time: '—', year: 2024, note: 'Included as a scenic high Alpine pass' },
+    ],
     proQuotes: [
       { quote: "The plateau at the top feels like another world — you forget you are on a bike and remember you are somewhere ancient.", cyclist: "Gino Bartali", year: 1949 },
       { quote: "Mont Cenis is a place where history sits on your shoulders as you ride. You feel the weight of every army and every pilgrim who came before.", cyclist: "Bernard Thévenet", year: 1975 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #FDDB92 0%, #D1FDFF 100%)',
     completed: false,
   },
   {
@@ -150,17 +219,25 @@ export const seedClimbs: Climb[] = [
     name: 'Angliru',
     country: 'Spain',
     region: 'Asturias',
+    lat: 43.2214,
+    lng: -5.9319,
     elevationM: 1570,
     lengthKm: 12.5,
     avgGradientPct: 10.1,
     difficulty: 'hors-categorie',
     shortDescription: 'The most savage finish in professional cycling',
     story: "The Alto de l'Angliru in Asturias is widely considered the most brutal climb in professional cycling. With gradients touching 23.5% on the section called La Cueña Les Cabres, it reduces Tour of Spain champions to walking pace. The road was a cattle track before being paved specifically for the Vuelta a España in 1999, and many riders and directeurs sportifs campaigned for its removal from the race after that first appearance. It has produced some of the most dramatic scenes in modern cycling — broken riders, abandoned bikes, tears of pain and joy — and has become a defining test of the sport's hardest men.",
+    photoUrl: wiki('Alto de LAngliru.jpg'),
+    gradient: 'linear-gradient(135deg, #f77062 0%, #fe5196 100%)',
+    tourHistory: 'Vuelta a España debut in 1999. Used roughly every few years as the race\'s most feared summit finish, with famous editions in 2002, 2008, 2011, 2013, 2017, 2020 and 2023.',
+    proRecords: [
+      { rider: 'Hugh Carthy', time: '—', year: 2020, note: 'Solo Vuelta stage win on the Angliru' },
+      { rider: 'Alberto Contador', time: '—', year: 2008, note: 'Sealed overall Vuelta victory here' },
+    ],
     proQuotes: [
       { quote: "The Angliru is a monster. It doesn't just break your legs — it breaks your spirit if you let it.", cyclist: "Roberto Heras", year: 2000 },
       { quote: "I have never suffered so completely on a bicycle. Every metre was a negotiation with my own body.", cyclist: "Chris Froome", year: 2017 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #f77062 0%, #fe5196 100%)',
     completed: false,
   },
   {
@@ -168,17 +245,25 @@ export const seedClimbs: Climb[] = [
     name: 'Monte Zoncolan',
     country: 'Italy',
     region: 'Friuli-Venezia Giulia',
+    lat: 46.4989,
+    lng: 12.9256,
     elevationM: 1730,
     lengthKm: 10.1,
     avgGradientPct: 11.9,
     difficulty: 'hors-categorie',
     shortDescription: "The steepest major climb in the Giro d'Italia",
     story: "Monte Zoncolan in the Carnic Alps of Friuli is the most feared summit finish in the Giro d'Italia. The ascent from Ovaro averages 11.9% over 10.1 kilometres, with sections exceeding 22%, making it arguably the hardest regular climb in professional cycling. The road was a forestry track until the early 2000s when it was paved specifically for the Giro. Ivan Basso won the first Zoncolan stage in 2003, and since then the climb has become the race's ultimate test. The upper slopes feel almost vertical to riders, and it is common to see professionals reduced to less than 10 km/h on the final kilometres.",
+    photoUrl: wiki('Monte Zoncolan.jpg'),
+    gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+    tourHistory: "Giro d'Italia summit finishes from Ovaro in 2007, 2010, 2011, 2014, 2018 and 2021 — regarded as the Giro's hardest climb.",
+    proRecords: [
+      { rider: 'Chris Froome', time: '—', year: 2018, note: 'Won atop Zoncolan en route to overall Giro victory' },
+      { rider: 'Ivan Basso', time: '—', year: 2010, note: 'Dominant Zoncolan win that decided the Giro' },
+    ],
     proQuotes: [
       { quote: "Zoncolan makes you question everything — your training, your career choice, your will to live.", cyclist: "Ivan Basso", year: 2005 },
       { quote: "There is no hiding on Zoncolan. The mountain reveals the truth about every rider on it.", cyclist: "Gilberto Simoni", year: 2003 }
     ],
-    heroImageUrl: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
     completed: false,
   },
 ];

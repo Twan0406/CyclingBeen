@@ -18,9 +18,16 @@ export default function ClimbCard({ climb }: Props) {
     <Link to={`/climb/${climb.id}`} className="group block">
       <div className={`relative rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 ${!climb.completed ? 'opacity-70' : ''}`}>
         <div
-          className="h-36 w-full relative"
-          style={{ background: climb.heroImageUrl }}
+          className="h-36 w-full relative bg-cover bg-center"
+          style={{ background: climb.gradient }}
         >
+          <img
+            src={climb.photoUrl}
+            alt={climb.name}
+            loading="lazy"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
           {climb.completed && (
             <div className="absolute top-3 right-3">
               <CheckCircle className="w-7 h-7 text-white drop-shadow-md" fill="#1D9E75" />

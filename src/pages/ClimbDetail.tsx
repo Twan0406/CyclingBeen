@@ -34,10 +34,16 @@ export default function ClimbDetail() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="relative h-72 md:h-96" style={{ background: climb.heroImageUrl }}>
+      <div className="relative h-72 md:h-96 bg-cover bg-center" style={{ background: climb.gradient }}>
+        <img
+          src={climb.photoUrl}
+          alt={climb.name}
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 bg-black/30 hover:bg-black/50 text-white rounded-full p-2 transition-colors"
+          className="absolute top-4 left-4 bg-black/30 hover:bg-black/50 text-white rounded-full p-2 transition-colors z-10"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -81,6 +87,35 @@ export default function ClimbDetail() {
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-3">The Story</h2>
           <p className="text-gray-600 leading-relaxed">{climb.story}</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold text-gray-900 mb-3">Race History</h2>
+          <div className="bg-[#1D9E75]/5 rounded-xl p-5 border border-[#1D9E75]/10">
+            <p className="text-gray-700 leading-relaxed">{climb.tourHistory}</p>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Pro Times &amp; Notable Ascents</h2>
+          <div className="overflow-hidden rounded-xl border border-gray-100">
+            {climb.proRecords.map((r, i) => (
+              <div
+                key={i}
+                className={`flex items-start gap-4 px-4 py-3 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+              >
+                <div className="min-w-[70px] text-center">
+                  <p className="text-base font-bold text-[#1D9E75]">{r.time}</p>
+                  <p className="text-xs text-gray-400">{r.year}</p>
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-900">{r.rider}</p>
+                  {r.note && <p className="text-sm text-gray-500">{r.note}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-400 mt-2">Times are the fastest known / most notable ascents; a dash means no official time was recorded.</p>
         </section>
 
         <section>
