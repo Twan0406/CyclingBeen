@@ -6,23 +6,25 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
+    <nav className="sticky top-0 z-50 bg-[#070b0a]/85 backdrop-blur-xl border-b border-[#1D9E75]/15">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-bold text-gray-900 text-lg">
-          <Mountain className="w-5 h-5 text-[#1D9E75]" />
-          Collect
+        <Link to="/" className="flex items-center gap-2 font-bold text-white text-lg tracking-wide">
+          <span className="w-8 h-8 rounded-lg bg-[#1D9E75]/15 border border-[#1D9E75]/40 flex items-center justify-center shadow-[0_0_14px_rgba(29,158,117,0.35)]">
+            <Mountain className="w-4.5 h-4.5 text-[#2fd6a0]" />
+          </span>
+          COLLECT
         </Link>
         <div className="flex items-center gap-1">
           <Link
             to="/"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${isActive('/') ? 'bg-[#1D9E75]/10 text-[#1D9E75]' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${isActive('/') ? 'bg-[#1D9E75]/20 text-[#2fd6a0] border border-[#1D9E75]/50 shadow-[0_0_12px_rgba(29,158,117,0.3)]' : 'text-gray-400 border border-transparent hover:text-white hover:bg-white/5'}`}
           >
             <LayoutGrid className="w-4 h-4" />
             All Climbs
           </Link>
           <Link
             to="/my-climbs"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${isActive('/my-climbs') ? 'bg-[#1D9E75]/10 text-[#1D9E75]' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${isActive('/my-climbs') ? 'bg-[#1D9E75]/20 text-[#2fd6a0] border border-[#1D9E75]/50 shadow-[0_0_12px_rgba(29,158,117,0.3)]' : 'text-gray-400 border border-transparent hover:text-white hover:bg-white/5'}`}
           >
             <User className="w-4 h-4" />
             My Climbs

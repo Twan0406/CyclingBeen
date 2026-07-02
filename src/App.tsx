@@ -10,7 +10,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ClimbsProvider>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#070b0a]">
           <Navbar />
           <main>
             <Routes>
