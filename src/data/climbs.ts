@@ -383,7 +383,7 @@ export const seedClimbs: Climb[] = [
   {
     id: 'los-machucos', name: 'Los Machucos', country: 'Spain', region: 'Cantabria',
     lat: 43.2364, lng: -3.6767, elevationM: 921, lengthKm: 6.8, avgGradientPct: 9.2,
-    difficulty: 'hors-categorie', wikiTitle: 'Vuelta a España', gradient: g(0),
+    difficulty: 'hors-categorie', wikiTitle: 'Alto de Los Machucos', gradient: g(0),
     shortDescription: 'Concrete ramps beyond 25%',
     story: 'A goat-track of rough concrete with pitches over 25% that forced even Froome onto the smallest gear in 2017. Modern Vuelta sadism distilled into seven kilometres.',
     tourHistory: 'Vuelta summit finishes in 2017 and 2019.',
@@ -401,7 +401,7 @@ export const seedClimbs: Climb[] = [
   {
     id: 'coll-de-rates', name: 'Coll de Rates', country: 'Spain', region: 'Costa Blanca',
     lat: 38.7511, lng: -0.0656, elevationM: 626, lengthKm: 6.5, avgGradientPct: 5.0,
-    difficulty: 'easy', wikiTitle: 'Marina Alta', gradient: g(2),
+    difficulty: 'easy', wikiTitle: 'Coll de Rates', gradient: g(2),
     shortDescription: 'The Costa Blanca power-test',
     story: 'The steady, smooth benchmark climb of Calpe\'s winter training scene — every pro who camps on the Costa Blanca knows their Rates time to the second.',
     tourHistory: 'A staple test climb for WorldTour winter camps.',
@@ -421,7 +421,7 @@ export const seedClimbs: Climb[] = [
   {
     id: 'la-redoute', name: 'Côte de la Redoute', country: 'Belgium', region: 'Wallonia',
     lat: 50.4772, lng: 5.7169, elevationM: 292, lengthKm: 2.0, avgGradientPct: 8.9,
-    difficulty: 'medium', wikiTitle: 'Liège–Bastogne–Liège', gradient: g(4),
+    difficulty: 'medium', wikiTitle: 'Côte de la Redoute', gradient: g(4),
     shortDescription: 'The launchpad of Liège–Bastogne–Liège',
     story: 'Painted with riders\' names and packed with fans, La Redoute is where Liège–Bastogne–Liège traditionally explodes. Philippe Gilbert\'s name is still on the tarmac.',
     tourHistory: 'The signature climb of cycling\'s oldest monument.',

@@ -9,7 +9,8 @@ interface Props {
 
 /** Renders the climb's Wikipedia photo over its gradient placeholder. */
 export default function ClimbPhoto({ climb, size = 800, className = '' }: Props) {
-  const photo = useWikiPhoto(climb.wikiTitle, size);
+  const fetched = useWikiPhoto(climb.wikiTitle, size);
+  const photo = climb.photoUrl ?? fetched;
 
   return (
     <div
