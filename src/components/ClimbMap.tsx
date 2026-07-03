@@ -41,8 +41,8 @@ export default function ClimbMap({ climbs }: Props) {
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: STYLE,
-      center: [6, 46],
-      zoom: 2.6,
+      center: [8, 40],
+      zoom: 2.1,
       pitch: 0,
       attributionControl: false,
     });
@@ -119,8 +119,8 @@ export default function ClimbMap({ climbs }: Props) {
   const conquered = climbs.filter((c) => c.completed).length;
 
   return (
-    <div className="relative rounded-3xl overflow-hidden ring-1 ring-white/10 shadow-2xl shadow-black/40">
-      <div ref={containerRef} style={{ height: '460px', width: '100%' }} />
+    <div className="relative">
+      <div ref={containerRef} style={{ height: '520px', width: '100%' }} />
 
       <div className="absolute top-4 left-4 z-10 pointer-events-none">
         <div className="bg-[#0a0f1c]/80 backdrop-blur-md ring-1 ring-white/10 rounded-2xl px-4 py-2.5">
