@@ -1,4 +1,4 @@
-import { useWikiPhoto } from '../lib/wikiPhoto';
+import { useClimbPhoto } from '../lib/wikiPhoto';
 import type { Climb } from '../types/climb';
 
 interface Props {
@@ -7,9 +7,9 @@ interface Props {
   className?: string;
 }
 
-/** Renders the climb's Wikipedia photo over its gradient placeholder. */
+/** Renders the climb's photo over its gradient placeholder. */
 export default function ClimbPhoto({ climb, size = 800, className = '' }: Props) {
-  const fetched = useWikiPhoto(climb.wikiTitle, size);
+  const fetched = useClimbPhoto(climb.wikiTitle, climb.lat, climb.lng, size);
   const photo = climb.photoUrl ?? fetched;
 
   return (
