@@ -24,11 +24,13 @@ export interface Climb {
   difficulty: 'easy' | 'medium' | 'hard' | 'hors-categorie';
   shortDescription: string;
   story: string;
-  photoUrl: string;
+  /** English Wikipedia page title; the photo is fetched from the Wikipedia API at runtime. */
+  wikiTitle: string;
+  photoUrl?: string;
   gradient: string;
-  tourHistory: string;
-  proRecords: ProRecord[];
-  proQuotes: ProQuote[];
+  tourHistory?: string;
+  proRecords?: ProRecord[];
+  proQuotes?: ProQuote[];
   completed: boolean;
 }
 

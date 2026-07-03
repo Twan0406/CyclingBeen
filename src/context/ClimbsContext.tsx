@@ -1,7 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
-import { db } from '../firebase';
 import type { Climb } from '../types/climb';
 import { seedClimbs } from '../data/climbs';
 
@@ -12,43 +10,42 @@ interface ClimbsContextType {
 }
 
 const ClimbsContext = createContext<ClimbsContextType | null>(null);
+const STORAGE_KEY = 'collect_completed_v1';
+
+function loadCompleted(): Set<string> {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  } catch {
+    return new Set();
+  }
+}
 
 export function ClimbsProvider({ children }: { children: ReactNode }) {
-  const [climbs, setClimbs] = useState<Climb[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Seed data renders instantly; completed state lives in localStorage so there
+  // is no network round-trip on load.
+  const [completedIds, setCompletedIds] = useState<Set<string>>(loadCompleted);
 
-  useEffect(() => {
-    async function fetchClimbs() {
+  const climbs = useMemo(
+    () => seedClimbs.map((c) => ({ ...c, completed: completedIds.has(c.id) })),
+    [completedIds],
+  );
+
+  const toggleCompleted = useCallback((climbId: string) => {
+    setCompletedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(climbId)) next.delete(climbId);
+      else next.add(climbId);
       try {
-        const snapshot = await getDocs(collection(db, 'climbs'));
-        if (snapshot.empty) {
-          setClimbs(seedClimbs);
-        } else {
-          const data = snapshot.docs.map(d => ({ ...d.data(), id: d.id } as Climb));
-          setClimbs(data);
-        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]));
       } catch {
-        setClimbs(seedClimbs);
-      } finally {
-        setLoading(false);
+        /* ignore */
       }
-    }
-    fetchClimbs();
+      return next;
+    });
   }, []);
 
-  const toggleCompleted = (climbId: string) => {
-    setClimbs(prev => prev.map(c => {
-      if (c.id !== climbId) return c;
-      const updated = { ...c, completed: !c.completed };
-      try {
-        setDoc(doc(db, 'climbs', climbId), updated, { merge: true });
-      } catch { /* ignore */ }
-      return updated;
-    }));
-  };
-
   return (
-    <ClimbsContext.Provider value={{ climbs, loading, toggleCompleted }}>
+    <ClimbsContext.Provider value={{ climbs, loading: false, toggleCompleted }}>
       {children}
     </ClimbsContext.Provider>
   );

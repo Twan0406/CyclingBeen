@@ -1,60 +1,47 @@
 @import "tailwindcss";
 
+:root { color-scheme: dark; }
+
 body {
-  background: #070b0a;
-  color: #e5eae8;
+  background: #0a0f1c;
+  color: #e2e8f0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Leaflet dark-theme polish */
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+/* Leaflet dark polish */
 .leaflet-container {
-  background: #0a1210;
+  background: #0a0f1c;
   font: inherit;
   z-index: 0;
 }
 .leaflet-control-attribution {
-  background: rgba(7, 11, 10, 0.7) !important;
-  color: #4b5a55 !important;
+  background: rgba(10, 15, 28, 0.7) !important;
+  color: #475569 !important;
   font-size: 10px !important;
 }
-.leaflet-control-attribution a {
-  color: #1d9e75 !important;
-}
+.leaflet-control-attribution a { color: #94a3b8 !important; }
 .leaflet-control-zoom a {
-  background: rgba(15, 23, 20, 0.9) !important;
-  color: #1d9e75 !important;
-  border-color: rgba(29, 158, 117, 0.3) !important;
+  background: rgba(20, 27, 46, 0.92) !important;
+  color: #fbbf24 !important;
+  border-color: rgba(148, 163, 184, 0.2) !important;
 }
 .leaflet-tooltip.climb-tip {
-  background: rgba(10, 18, 15, 0.95);
-  border: 1px solid rgba(29, 158, 117, 0.5);
-  color: #e5eae8;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  color: #e2e8f0;
   border-radius: 10px;
   padding: 6px 10px;
-  box-shadow: 0 0 18px rgba(29, 158, 117, 0.25);
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
-.leaflet-tooltip.climb-tip::before {
-  border-top-color: rgba(29, 158, 117, 0.5);
-}
+.leaflet-tooltip.climb-tip::before { border-top-color: rgba(251, 191, 36, 0.4); }
 
-/* Glowing pulse for conquered markers */
-@keyframes pulse-glow {
-  0%, 100% { filter: drop-shadow(0 0 4px rgba(29, 158, 117, 0.9)); }
-  50% { filter: drop-shadow(0 0 14px rgba(29, 158, 117, 1)); }
+/* Gold pulse for conquered markers */
+@keyframes goldpulse {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.8)); }
+  50% { filter: drop-shadow(0 0 11px rgba(251, 191, 36, 1)); }
 }
-.marker-conquered {
-  animation: pulse-glow 2.4s ease-in-out infinite;
-}
-
-/* Subtle grid backdrop for hero areas */
-.grid-backdrop {
-  background-image:
-    linear-gradient(rgba(29, 158, 117, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(29, 158, 117, 0.06) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-/* Neon text accent */
-.neon-green {
-  color: #2fd6a0;
-  text-shadow: 0 0 14px rgba(29, 158, 117, 0.6);
-}
+.marker-conquered { animation: goldpulse 2.6s ease-in-out infinite; }

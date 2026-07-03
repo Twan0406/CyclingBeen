@@ -12,13 +12,14 @@ export default function ClimbMap({ climbs }: Props) {
   const conquered = climbs.filter(c => c.completed).length;
 
   return (
-    <div className="relative rounded-3xl overflow-hidden border border-[#1D9E75]/25 shadow-[0_0_40px_rgba(29,158,117,0.15)]">
+    <div className="relative rounded-3xl overflow-hidden ring-1 ring-white/10 shadow-2xl shadow-black/40">
       <MapContainer
-        center={[45.0, 5.5]}
+        center={[45.5, 6.0]}
         zoom={5}
         minZoom={3}
         scrollWheelZoom={false}
         style={{ height: '440px', width: '100%' }}
+        preferCanvas
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -26,18 +27,12 @@ export default function ClimbMap({ climbs }: Props) {
         />
         {climbs.map((climb) => (
           climb.completed ? (
-            // Conquered: bright glowing double ring
             <CircleMarker
               key={climb.id}
               center={[climb.lat, climb.lng]}
-              radius={9}
+              radius={8}
               className="marker-conquered"
-              pathOptions={{
-                color: '#2fd6a0',
-                fillColor: '#1D9E75',
-                fillOpacity: 1,
-                weight: 3,
-              }}
+              pathOptions={{ color: '#fcd34d', fillColor: '#fbbf24', fillOpacity: 1, weight: 2.5 }}
               eventHandlers={{ click: () => navigate(`/climb/${climb.id}`) }}
             >
               <Tooltip direction="top" offset={[0, -8]} className="climb-tip">
@@ -45,49 +40,40 @@ export default function ClimbMap({ climbs }: Props) {
               </Tooltip>
             </CircleMarker>
           ) : (
-            // Bucket list: dim hollow ring
             <CircleMarker
               key={climb.id}
               center={[climb.lat, climb.lng]}
-              radius={7}
-              pathOptions={{
-                color: 'rgba(150, 170, 165, 0.8)',
-                fillColor: '#0a1210',
-                fillOpacity: 0.5,
-                weight: 2,
-                dashArray: '3 3',
-              }}
+              radius={5}
+              pathOptions={{ color: '#64748b', fillColor: '#334155', fillOpacity: 0.7, weight: 1.5 }}
               eventHandlers={{ click: () => navigate(`/climb/${climb.id}`) }}
             >
-              <Tooltip direction="top" offset={[0, -8]} className="climb-tip">
-                <strong>{climb.name}</strong> — bucket list
+              <Tooltip direction="top" offset={[0, -6]} className="climb-tip">
+                <strong>{climb.name}</strong>
               </Tooltip>
             </CircleMarker>
           )
         ))}
       </MapContainer>
 
-      {/* HUD overlay: progress chip */}
       <div className="absolute top-4 left-4 z-[500] pointer-events-none">
-        <div className="bg-[#070b0a]/80 backdrop-blur-md border border-[#1D9E75]/40 rounded-2xl px-4 py-2.5 shadow-[0_0_20px_rgba(29,158,117,0.25)]">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400">World Progress</p>
+        <div className="bg-[#0a0f1c]/80 backdrop-blur-md ring-1 ring-white/10 rounded-2xl px-4 py-2.5">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Your world</p>
           <p className="text-xl font-bold text-white leading-tight">
-            <span className="neon-green">{conquered}</span>
-            <span className="text-gray-500 text-sm font-normal"> / {climbs.length} conquered</span>
+            <span className="text-amber-400">{conquered}</span>
+            <span className="text-slate-500 text-sm font-normal"> / {climbs.length} conquered</span>
           </p>
         </div>
       </div>
 
-      {/* HUD overlay: legend */}
       <div className="absolute bottom-4 left-4 z-[500] pointer-events-none">
-        <div className="flex items-center gap-4 bg-[#070b0a]/80 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 text-xs">
+        <div className="flex items-center gap-4 bg-[#0a0f1c]/80 backdrop-blur-md ring-1 ring-white/10 rounded-full px-4 py-2 text-xs">
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#2fd6a0] shadow-[0_0_8px_rgba(47,214,160,0.9)]" />
-            <span className="text-gray-300">Conquered</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.9)]" />
+            <span className="text-slate-300">Conquered</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full border border-dashed border-gray-400" />
-            <span className="text-gray-400">Bucket list</span>
+            <span className="w-2 h-2 rounded-full bg-slate-600" />
+            <span className="text-slate-400">To climb</span>
           </span>
         </div>
       </div>
