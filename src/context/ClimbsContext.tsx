@@ -30,6 +30,14 @@ function saveLocal(ids: Set<string>) {
   }
 }
 
+function clearLocal() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 async function loadRemote(uid: string): Promise<Set<string>> {
   const db = await getDb();
   const { doc, getDoc } = await import('firebase/firestore');
@@ -47,11 +55,7 @@ async function saveRemote(
   const { doc, setDoc } = await import('firebase/firestore');
   await setDoc(
     doc(db, 'users', uid),
-    {
-      completed: [...ids],
-      displayName: profile.displayName,
-      photoURL: profile.photoURL,
-    },
+    { completed: [...ids], displayName: profile.displayName, photoURL: profile.photoURL },
     { merge: true },
   );
 }
@@ -62,22 +66,28 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
   const userRef = useRef(user);
   userRef.current = user;
 
-  // On sign-in: merge any local (anonymous) progress with the account's cloud
-  // progress, show the union, and persist it back to Firestore.
   useEffect(() => {
-    if (!user) return;
     let alive = true;
-    (async () => {
-      try {
-        const remote = await loadRemote(user.uid);
-        const merged = new Set([...remote, ...loadLocal()]);
-        if (!alive) return;
-        setCompletedIds(merged);
-        await saveRemote(user.uid, merged, user);
-      } catch {
-        /* keep local state on failure */
-      }
-    })();
+    if (user) {
+      // Signed in: account is the source of truth. Migrate any anonymous local
+      // progress into the account once, then drop the local copy so it never
+      // lingers after sign-out.
+      (async () => {
+        try {
+          const remote = await loadRemote(user.uid);
+          const merged = new Set([...remote, ...loadLocal()]);
+          if (!alive) return;
+          setCompletedIds(merged);
+          await saveRemote(user.uid, merged, user);
+          clearLocal();
+        } catch {
+          /* keep whatever is on screen */
+        }
+      })();
+    } else {
+      // Signed out: show only the anonymous local progress.
+      setCompletedIds(loadLocal());
+    }
     return () => {
       alive = false;
     };
@@ -93,9 +103,9 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
       const next = new Set(prev);
       if (next.has(climbId)) next.delete(climbId);
       else next.add(climbId);
-      saveLocal(next);
       const u = userRef.current;
       if (u) saveRemote(u.uid, next, u).catch(() => {});
+      else saveLocal(next);
       return next;
     });
   }, []);
