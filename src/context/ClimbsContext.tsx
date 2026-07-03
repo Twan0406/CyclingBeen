@@ -12,31 +12,6 @@ interface ClimbsContextType {
 }
 
 const ClimbsContext = createContext<ClimbsContextType | null>(null);
-const STORAGE_KEY = 'collect_completed_v1';
-
-function loadLocal(): Set<string> {
-  try {
-    return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
-  } catch {
-    return new Set();
-  }
-}
-
-function saveLocal(ids: Set<string>) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...ids]));
-  } catch {
-    /* ignore */
-  }
-}
-
-function clearLocal() {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-}
 
 async function loadRemote(uid: string): Promise<Set<string>> {
   const db = await getDb();
@@ -61,33 +36,26 @@ async function saveRemote(
 }
 
 export function ClimbsProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
-  const [completedIds, setCompletedIds] = useState<Set<string>>(loadLocal);
+  const { user, signIn } = useAuth();
+  const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const userRef = useRef(user);
   userRef.current = user;
 
+  // Progress lives only in the signed-in account. Signed out shows nothing.
   useEffect(() => {
     let alive = true;
-    if (user) {
-      // Signed in: account is the source of truth. Migrate any anonymous local
-      // progress into the account once, then drop the local copy so it never
-      // lingers after sign-out.
-      (async () => {
-        try {
-          const remote = await loadRemote(user.uid);
-          const merged = new Set([...remote, ...loadLocal()]);
-          if (!alive) return;
-          setCompletedIds(merged);
-          await saveRemote(user.uid, merged, user);
-          clearLocal();
-        } catch {
-          /* keep whatever is on screen */
-        }
-      })();
-    } else {
-      // Signed out: show only the anonymous local progress.
-      setCompletedIds(loadLocal());
+    if (!user) {
+      setCompletedIds(new Set());
+      return;
     }
+    (async () => {
+      try {
+        const remote = await loadRemote(user.uid);
+        if (alive) setCompletedIds(remote);
+      } catch {
+        /* ignore */
+      }
+    })();
     return () => {
       alive = false;
     };
@@ -98,17 +66,24 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
     [completedIds],
   );
 
-  const toggleCompleted = useCallback((climbId: string) => {
-    setCompletedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(climbId)) next.delete(climbId);
-      else next.add(climbId);
+  const toggleCompleted = useCallback(
+    (climbId: string) => {
       const u = userRef.current;
-      if (u) saveRemote(u.uid, next, u).catch(() => {});
-      else saveLocal(next);
-      return next;
-    });
-  }, []);
+      if (!u) {
+        // Not signed in — prompt sign-in instead of tracking locally.
+        signIn().catch(() => {});
+        return;
+      }
+      setCompletedIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(climbId)) next.delete(climbId);
+        else next.add(climbId);
+        saveRemote(u.uid, next, u).catch(() => {});
+        return next;
+      });
+    },
+    [signIn],
+  );
 
   return (
     <ClimbsContext.Provider value={{ climbs, loading: false, toggleCompleted }}>

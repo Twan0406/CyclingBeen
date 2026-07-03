@@ -1,11 +1,33 @@
 import { Link } from 'react-router-dom';
 import { useClimbs } from '../context/ClimbsContext';
+import { useAuth } from '../context/AuthContext';
 import ClimbCard from '../components/ClimbCard';
 import StatCard from '../components/StatCard';
-import { Mountain, TrendingUp, Ruler, ExternalLink } from 'lucide-react';
+import { Mountain, TrendingUp, Ruler, ExternalLink, LogIn } from 'lucide-react';
 
 export default function MyClimbs() {
   const { climbs } = useClimbs();
+  const { user, signIn } = useAuth();
+
+  if (!user) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-24 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-amber-400/15 flex items-center justify-center mx-auto mb-5">
+          <Mountain className="w-8 h-8 text-amber-400" />
+        </div>
+        <h1 className="text-2xl font-bold text-white mb-2">Track your climbs</h1>
+        <p className="text-slate-400 mb-6">
+          Sign in to mark climbs as conquered and keep your collection on every device.
+        </p>
+        <button
+          onClick={() => signIn()}
+          className="inline-flex items-center gap-2 bg-white text-[#0a0f1c] font-semibold px-5 py-2.5 rounded-full hover:bg-slate-200 transition"
+        >
+          <LogIn className="w-4 h-4" /> Sign in with Google
+        </button>
+      </div>
+    );
+  }
 
   const completed = climbs.filter((c) => c.completed);
   const bucketList = climbs.filter((c) => !c.completed);
