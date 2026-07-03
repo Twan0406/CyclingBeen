@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useClimbs } from '../context/ClimbsContext';
 import { useAuth } from '../context/AuthContext';
+import { useStrava } from '../hooks/useStrava';
 import ClimbCard from '../components/ClimbCard';
 import StatCard from '../components/StatCard';
-import { Mountain, TrendingUp, Ruler, ExternalLink, LogIn } from 'lucide-react';
+import { formatDuration } from '../lib/strava';
+import { Mountain, TrendingUp, Ruler, RefreshCw, LogIn, Clock, Link2 } from 'lucide-react';
 
 export default function MyClimbs() {
-  const { climbs } = useClimbs();
+  const { climbs, climbTimes } = useClimbs();
   const { user, signIn } = useAuth();
+  const strava = useStrava();
 
   if (!user) {
     return (
@@ -34,29 +37,42 @@ export default function MyClimbs() {
   const totalElevation = completed.reduce((sum, c) => sum + c.elevationM, 0);
   const totalDistance = completed.reduce((sum, c) => sum + c.lengthKm, 0);
 
-  const handleStravaConnect = () => {
-    const clientId = import.meta.env.VITE_STRAVA_CLIENT_ID;
-    const redirectUri = import.meta.env.VITE_STRAVA_REDIRECT_URI || 'http://localhost:5173/strava-callback';
-    const scope = 'read,activity:read';
-    window.location.href = `https://www.strava.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${scope}`;
-  };
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-amber-400/80 mb-2">Rider dashboard</p>
           <h1 className="text-4xl font-bold text-white tracking-tight">My Climbs</h1>
           <p className="text-slate-400 mt-1">Your cycling achievements</p>
         </div>
-        <button
-          onClick={handleStravaConnect}
-          className="flex items-center gap-2 bg-[#FC4C02] hover:bg-[#ff5c14] text-white text-sm font-semibold px-4 py-2 rounded-full transition-all shadow-lg shadow-orange-600/25"
-        >
-          <ExternalLink className="w-4 h-4" />
-          Connect Strava
-        </button>
+
+        {strava.configured ? (
+          strava.connected ? (
+            <button
+              onClick={() => strava.sync()}
+              disabled={strava.syncing}
+              className="flex items-center gap-2 bg-[#FC4C02] hover:bg-[#ff5c14] disabled:opacity-60 text-white text-sm font-semibold px-4 py-2 rounded-full transition-all shadow-lg shadow-orange-600/25"
+            >
+              <RefreshCw className={`w-4 h-4 ${strava.syncing ? 'animate-spin' : ''}`} />
+              {strava.syncing ? 'Syncing…' : 'Sync Strava'}
+            </button>
+          ) : (
+            <button
+              onClick={() => strava.connect()}
+              className="flex items-center gap-2 bg-[#FC4C02] hover:bg-[#ff5c14] text-white text-sm font-semibold px-4 py-2 rounded-full transition-all shadow-lg shadow-orange-600/25"
+            >
+              <Link2 className="w-4 h-4" />
+              Connect Strava
+            </button>
+          )
+        ) : null}
       </div>
+
+      {strava.status && (
+        <div className="mb-6 text-sm text-slate-400 bg-[#111827] ring-1 ring-white/8 rounded-xl px-4 py-2.5">
+          {strava.status}
+        </div>
+      )}
 
       <div className="grid grid-cols-3 gap-4 mb-10">
         <StatCard label="Conquered" value={completed.length} icon={<Mountain className="w-5 h-5" />} />
@@ -79,7 +95,16 @@ export default function MyClimbs() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {completed.map((climb) => (
-              <ClimbCard key={climb.id} climb={climb} />
+              <div key={climb.id}>
+                <ClimbCard climb={climb} />
+                {climbTimes[climb.id] && (
+                  <div className="flex items-center gap-1.5 mt-1.5 px-1 text-xs text-amber-300/90">
+                    <Clock className="w-3 h-3" />
+                    <span className="font-semibold">{formatDuration(climbTimes[climb.id].seconds)}</span>
+                    <span className="text-slate-500">· from Strava</span>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         )}
