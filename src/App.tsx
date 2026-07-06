@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import ClimbDetail from './pages/ClimbDetail';
 import MyClimbs from './pages/MyClimbs';
+import Friends from './pages/Friends';
 import StravaCallback from './pages/StravaCallback';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/climb/:id" element={<ClimbDetail />} />
                 <Route path="/my-climbs" element={<MyClimbs />} />
+              <Route path="/friends" element={<Friends />} />
                 <Route path="/strava-callback" element={<StravaCallback />} />
               </Routes>
             </main>

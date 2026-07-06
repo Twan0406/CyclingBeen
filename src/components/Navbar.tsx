@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Mountain, LayoutGrid, User, LogOut } from 'lucide-react';
+import { Mountain, LayoutGrid, User, LogOut, Trophy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
@@ -34,6 +34,10 @@ export default function Navbar() {
           <Link to="/my-climbs" className={linkClass(isActive('/my-climbs'))}>
             <User className="w-4 h-4" />
             <span className="hidden sm:inline">My Climbs</span>
+          </Link>
+          <Link to="/friends" className={linkClass(isActive('/friends'))}>
+            <Trophy className="w-4 h-4" />
+            <span className="hidden sm:inline">Friends</span>
           </Link>
 
           {user ? (
