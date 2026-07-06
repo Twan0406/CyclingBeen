@@ -29,8 +29,8 @@ export const seedClimbs: Climb[] = [
     story: 'Mont Ventoux rises in brutal isolation from the Provençal plains, its treeless white limestone summit visible for miles around. Tom Simpson died near the summit during the 1967 Tour, and his memorial remains a pilgrimage site. Above Chalet Reynard the road enters a lunar landscape where winds regularly exceed 90 km/h.',
     tourHistory: 'Tour de France regular since 1951 with legendary summit finishes in 1970, 2000, 2002, 2009, 2013 and 2021.',
     proRecords: [
-      { rider: 'Iban Mayo', time: '55:51', year: 2004, note: 'From Bédoin (time trial) — the reference time' },
-      { rider: 'Marco Pantani', time: '58:00', year: 1994, note: 'From Bédoin, estimated race ascent' },
+      { rider: 'Tadej Pogačar', time: '54:30', year: 2025, note: 'From Bédoin — current record, set in the Tour de France' },
+      { rider: 'Iban Mayo', time: '55:51', year: 2004, note: 'From Bédoin (Dauphiné time trial) — held the record for 21 years' },
     ],
     proQuotes: [
       { quote: 'Ventoux is a god of Evil, to which sacrifices must be made. It never forgives weakness and exacts a high price for glory.', cyclist: 'Roland Barthes', year: 1957 },
@@ -46,7 +46,8 @@ export const seedClimbs: Climb[] = [
     story: "Cycling's most celebrated climb, its 21 numbered hairpins each dedicated to a Tour stage winner. Dutch Corner turns the mountain into a carnival, and the gradient rarely dips below 7%.",
     tourHistory: 'Tour de France debut in 1952 (won by Fausto Coppi); around 30 Tour stages since.',
     proRecords: [
-      { rider: 'Marco Pantani', time: '37:35', year: 1997, note: 'Widely cited as the fastest recorded ascent' },
+      { rider: 'Marco Pantani', time: '37:35', year: 1997, note: 'The fastest recorded race ascent — still unbeaten' },
+      { rider: 'Lance Armstrong', time: '37:36', year: 2004, note: 'Time trial (result later annulled for doping)' },
     ],
     proQuotes: [
       { quote: "Alpe d'Huez is simply the most famous climb in cycling. When you win there, you join a very special club.", cyclist: 'Lance Armstrong', year: 2004 },
@@ -122,7 +123,10 @@ export const seedClimbs: Climb[] = [
     difficulty: 'hors-categorie', wikiTitle: "Alto de l'Angliru", gradient: g(2),
     shortDescription: 'The most savage finish in professional cycling',
     story: 'A cattle track paved specifically for the Vuelta in 1999, with the Cueña Les Cabres ramp touching 23.5%. It reduces Grand Tour champions to walking pace and has produced some of the most dramatic scenes in modern cycling.',
-    tourHistory: 'Vuelta a España summit finishes in 1999, 2002, 2008, 2011, 2013, 2017, 2020 and 2023.',
+    tourHistory: 'Vuelta a España summit finishes in 1999, 2002, 2008, 2011, 2013, 2017, 2020, 2023 and 2025.',
+    proRecords: [
+      { rider: 'Roberto Heras', time: '41:55', year: 2000, note: 'Record ascent — stood 25 years until equalled by Almeida & Vingegaard in 2025' },
+    ],
     proQuotes: [
       { quote: "The Angliru is a monster. It doesn't just break your legs — it breaks your spirit if you let it.", cyclist: 'Roberto Heras', year: 2000 },
     ],
@@ -135,6 +139,9 @@ export const seedClimbs: Climb[] = [
     shortDescription: "The steepest major climb in the Giro d'Italia",
     story: 'The Ovaro ascent averages 11.9% with ramps beyond 22% — arguably the hardest regular climb in pro cycling. A forestry track until it was paved for the Giro in the early 2000s.',
     tourHistory: 'Giro summit finishes in 2003, 2007, 2010, 2011, 2014, 2018 and 2021.',
+    proRecords: [
+      { rider: 'Gilberto Simoni', time: '39:05', year: 2007, note: 'Record ascent from Ovaro — still unbeaten' },
+    ],
     proQuotes: [
       { quote: 'Zoncolan makes you question everything — your training, your career choice, your will to live.', cyclist: 'Ivan Basso', year: 2005 },
     ],
@@ -295,6 +302,10 @@ export const seedClimbs: Climb[] = [
     shortDescription: 'The climb Lance called the hardest he ever rode',
     story: 'A narrow farm road through the trees averaging over 10% with ramps at 18%. Pantani\'s 1994 attack here made his name; a monument to him stands at hairpin 11.',
     tourHistory: 'A Giro fixture since 1990, invariably deciding the pink jersey.',
+    proRecords: [
+      { rider: 'Marco Pantani', time: '~42:40', year: 1994, note: 'Legendary attack from Mazzo; the summit is now named Cima Pantani' },
+      { rider: 'Ivan Gotti', time: '42:40', year: 1996, note: 'Among the fastest recorded ascents from Mazzo' },
+    ],
     completed: false,
   },
   {
