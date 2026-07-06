@@ -128,18 +128,26 @@ function isRide(a: StravaActivitySlim): boolean {
 // categorized climb whose top sits near the summit and that covers most of the
 // climb's length. Returns elapsed seconds, or null if no good match.
 function bestEffortForClimb(efforts: SegmentEffort[], climb: Climb): number | null {
-  const NEAR_KM = 1.2;
+  const NEAR_KM = 1.5;
+  const targetM = climb.lengthKm * 1000;
+  // A "full climb" segment tops out near the summit and has a length close to
+  // the climb's own length (so partial segments and wrong routes are rejected).
   const candidates = efforts.filter((e) => {
     const seg = e.segment;
     if (!seg || !seg.end_latlng) return false;
     const nearSummit = distanceKm(seg.end_latlng[0], seg.end_latlng[1], climb.lat, climb.lng) <= NEAR_KM;
-    const longEnough = (seg.distance ?? 0) >= climb.lengthKm * 1000 * 0.45;
-    return (seg.climb_category ?? 0) >= 1 && nearSummit && longEnough;
+    const d = seg.distance ?? 0;
+    const lengthOk = d >= targetM * 0.7 && d <= targetM * 1.3;
+    return nearSummit && lengthOk;
   });
   if (candidates.length === 0) return null;
-  const maxDist = Math.max(...candidates.map((c) => c.segment!.distance ?? 0));
-  const full = candidates.filter((c) => (c.segment!.distance ?? 0) >= maxDist * 0.9);
-  return Math.min(...full.map((c) => c.elapsed_time));
+  // Prefer the segment whose length best matches the climb; fastest effort on it.
+  candidates.sort(
+    (a, b) => Math.abs((a.segment!.distance ?? 0) - targetM) - Math.abs((b.segment!.distance ?? 0) - targetM),
+  );
+  const bestSegId = candidates[0].segment!.id;
+  const sameSeg = candidates.filter((c) => c.segment!.id === bestSegId);
+  return Math.min(...sameSeg.map((c) => c.elapsed_time));
 }
 
 export interface SyncResult {
