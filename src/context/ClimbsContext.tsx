@@ -11,6 +11,8 @@ export interface ClimbTime {
   date: string;
   activityId: number;
   activityName: string;
+  attempts?: number;
+  isSegmentTime?: boolean;
 }
 
 type TimesMap = Record<string, ClimbTime>;
@@ -119,13 +121,18 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
     for (const m of matches) {
       nextCompleted.add(m.climbId);
       const ex = nextTimes[m.climbId];
+      const attempts = Math.max(ex?.attempts ?? 0, m.attempts ?? 1);
       if (!ex || m.seconds < ex.seconds) {
         nextTimes[m.climbId] = {
           seconds: m.seconds,
           date: m.date,
           activityId: m.activityId,
           activityName: m.activityName,
+          attempts,
+          isSegmentTime: m.isSegmentTime,
         };
+      } else {
+        nextTimes[m.climbId] = { ...ex, attempts };
       }
     }
     setCompletedIds(nextCompleted);

@@ -77,6 +77,33 @@ export default async function (request: Request): Promise<Response> {
       });
     }
 
+    if (url.pathname.endsWith("/activity") && request.method === "POST") {
+      const { refresh_token, activityId } = await request.json();
+      const t = await refresh(refresh_token);
+      if (!t.access_token) return json({ error: "refresh failed", detail: t }, 400);
+      const ar = await fetch(
+        `${STRAVA}/api/v3/activities/${activityId}?include_all_efforts=true`,
+        { headers: { Authorization: `Bearer ${t.access_token}` } },
+      );
+      const a = await ar.json();
+      const segment_efforts = ((a && a.segment_efforts) || []).map((e: any) => ({
+        elapsed_time: e.elapsed_time,
+        moving_time: e.moving_time,
+        distance: e.distance,
+        segment: e.segment
+          ? {
+              id: e.segment.id,
+              name: e.segment.name,
+              climb_category: e.segment.climb_category,
+              distance: e.segment.distance,
+              start_latlng: e.segment.start_latlng,
+              end_latlng: e.segment.end_latlng,
+            }
+          : null,
+      }));
+      return json({ segment_efforts, refresh_token: t.refresh_token });
+    }
+
     if (url.pathname.endsWith("/activities") && request.method === "POST") {
       const { refresh_token, page = 1, perPage = 100 } = await request.json();
       const t = await refresh(refresh_token);

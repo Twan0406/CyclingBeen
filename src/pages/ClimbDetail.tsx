@@ -1,7 +1,11 @@
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useClimbs } from '../context/ClimbsContext';
-import { ArrowLeft, ArrowUp, Ruler, TrendingUp, Check, Quote } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { ArrowLeft, ArrowUp, Ruler, TrendingUp, Check, Quote, Clock, Repeat } from 'lucide-react';
 import ClimbPhoto from '../components/ClimbPhoto';
+import { loadRiders, type Rider } from '../lib/riders';
+import { formatDuration } from '../lib/strava';
 
 const difficultyColors: Record<string, string> = {
   'easy': 'bg-emerald-400/15 text-emerald-300',
@@ -13,8 +17,26 @@ const difficultyColors: Record<string, string> = {
 export default function ClimbDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { climbs, toggleCompleted } = useClimbs();
+  const { climbs, climbTimes, toggleCompleted } = useClimbs();
+  const { user } = useAuth();
   const climb = climbs.find((c) => c.id === id);
+  const myTime = id ? climbTimes[id] : undefined;
+
+  const [riders, setRiders] = useState<Rider[]>([]);
+  useEffect(() => {
+    if (!user) {
+      setRiders([]);
+      return;
+    }
+    loadRiders().then(setRiders).catch(() => {});
+  }, [user]);
+
+  const board = id
+    ? riders
+        .filter((r) => r.climbTimes[id])
+        .map((r) => ({ rider: r, t: r.climbTimes[id] }))
+        .sort((a, b) => a.t.seconds - b.t.seconds)
+    : [];
 
   if (!climb) return (
     <div className="max-w-3xl mx-auto px-4 py-16 text-center">
@@ -124,11 +146,21 @@ export default function ClimbDetail() {
               </div>
               <div>
                 <p className="font-semibold text-white">You've conquered this!</p>
-                <p className="text-sm text-slate-500">It's in your collection.</p>
+                {myTime ? (
+                  <p className="text-sm text-amber-300 flex items-center gap-2 flex-wrap">
+                    <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {formatDuration(myTime.seconds)}</span>
+                    <span className="text-slate-500">{myTime.isSegmentTime ? 'climb time' : 'ride time'}</span>
+                    {myTime.attempts && myTime.attempts > 1 && (
+                      <span className="text-slate-500 flex items-center gap-1"><Repeat className="w-3 h-3" /> {myTime.attempts}× ridden</span>
+                    )}
+                  </p>
+                ) : (
+                  <p className="text-sm text-slate-500">It's in your collection.</p>
+                )}
               </div>
               <button
                 onClick={() => toggleCompleted(climb.id)}
-                className="ml-auto text-sm text-slate-500 hover:text-rose-400 transition-colors"
+                className="ml-auto text-sm text-slate-500 hover:text-rose-400 transition-colors self-start"
               >
                 Remove
               </button>
@@ -145,6 +177,42 @@ export default function ClimbDetail() {
             </div>
           )}
         </section>
+
+        {board.length > 0 && (
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-amber-400" /> Times on this climb
+            </h2>
+            <div className="overflow-hidden rounded-2xl ring-1 ring-white/8">
+              {board.map(({ rider, t }, i) => {
+                const isMe = rider.uid === user?.uid;
+                return (
+                  <div
+                    key={rider.uid}
+                    className={`flex items-center gap-3 px-4 py-3 ${isMe ? 'bg-amber-400/10' : i % 2 === 0 ? 'bg-[#111827]' : 'bg-[#0d1424]'}`}
+                  >
+                    <span className="w-5 text-center font-bold text-slate-500">{i + 1}</span>
+                    {rider.photoURL ? (
+                      <img src={rider.photoURL} alt="" className="w-8 h-8 rounded-full ring-1 ring-white/15" />
+                    ) : (
+                      <span className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
+                        {(rider.displayName || '?').charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                    <span className="flex-1 min-w-0 truncate text-white font-medium">
+                      {rider.displayName || 'Rider'} {isMe && <span className="text-amber-300 text-xs">(you)</span>}
+                    </span>
+                    {t.attempts && t.attempts > 1 && (
+                      <span className="text-xs text-slate-500 flex items-center gap-1"><Repeat className="w-3 h-3" />{t.attempts}×</span>
+                    )}
+                    <span className="font-bold text-amber-300">{formatDuration(t.seconds)}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-xs text-slate-600 mt-2">Fastest recorded time per rider, from Strava.</p>
+          </section>
+        )}
       </div>
     </div>
   );

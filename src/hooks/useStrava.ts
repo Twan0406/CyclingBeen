@@ -1,12 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useClimbs } from '../context/ClimbsContext';
-import {
-  stravaConfigured,
-  stravaAuthorizeUrl,
-  fetchActivities,
-  matchActivitiesToClimbs,
-} from '../lib/strava';
+import { stravaConfigured, stravaAuthorizeUrl, syncStrava } from '../lib/strava';
 import { loadPublicStrava, getRefreshToken, updateRefreshToken } from '../lib/stravaStore';
 
 export function useStrava() {
@@ -40,16 +35,16 @@ export function useStrava() {
         setStatus('Not connected to Strava yet.');
         return;
       }
-      const { activities, refresh_token } = await fetchActivities(refresh);
-      if (refresh_token && refresh_token !== refresh) {
-        await updateRefreshToken(user.uid, refresh_token);
+      const result = await syncStrava(refresh, climbs, (msg) => setStatus(msg));
+      if (result.refresh_token && result.refresh_token !== refresh) {
+        await updateRefreshToken(user.uid, result.refresh_token);
       }
-      const matches = matchActivitiesToClimbs(activities, climbs);
-      await applyStravaMatches(matches);
+      await applyStravaMatches(result.matches);
+      const segNote = result.segmentTimes > 0 ? ` · ${result.segmentTimes} with exact climb time` : '';
       setStatus(
-        matches.length
-          ? `Found ${matches.length} climb${matches.length === 1 ? '' : 's'} in ${activities.length} rides.`
-          : `No matching climbs in your ${activities.length} most recent rides yet.`,
+        result.matches.length
+          ? `Found ${result.matches.length} climb${result.matches.length === 1 ? '' : 's'} in ${result.ridesScanned} rides${segNote}.`
+          : `No matching climbs in your ${result.ridesScanned} most recent rides yet.`,
       );
     } catch (e) {
       setStatus('Sync failed: ' + (e as Error).message);

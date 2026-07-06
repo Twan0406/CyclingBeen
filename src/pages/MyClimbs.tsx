@@ -101,7 +101,12 @@ export default function MyClimbs() {
                   <div className="flex items-center gap-1.5 mt-1.5 px-1 text-xs text-amber-300/90">
                     <Clock className="w-3 h-3" />
                     <span className="font-semibold">{formatDuration(climbTimes[climb.id].seconds)}</span>
-                    <span className="text-slate-500">· from Strava</span>
+                    <span className="text-slate-500">
+                      · {climbTimes[climb.id].isSegmentTime ? 'climb time' : 'ride time'}
+                      {climbTimes[climb.id].attempts && climbTimes[climb.id].attempts! > 1
+                        ? ` · ${climbTimes[climb.id].attempts}×`
+                        : ''}
+                    </span>
                   </div>
                 )}
               </div>
