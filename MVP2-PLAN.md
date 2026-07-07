@@ -156,3 +156,54 @@ Denkrichting: **koepelmerk + sport-vertical**.
    tot nieuwe werelddelen/sporten.
 3. Volgorde: eerst gebruikers en retentie bewijzen (MVP2), monetisatie pas
    daarna serieus aanzetten.
+
+---
+
+## iOS-app (native) — aanpak & plaats in de planning
+
+Doel: een echte iOS-app in de App Store, zonder de webapp te herschrijven.
+
+### Gekozen route: Capacitor
+De app is een React/Vite-webapp; **Capacitor** verpakt exact die codebase in
+een native iOS- (en Android-)schil. ~100% code-hergebruik, één codebase blijft
+web + mobiel bedienen. MapLibre-globe en Firebase werken binnen de Capacitor
+WebView. Alternatieven (React Native = UI herschrijven; native Swift = alles
+herschrijven) vallen af: te veel werk voor te weinig extra waarde nu.
+
+### Plaats in de planning
+**Laatste fase van MVP2**, ná de webfeatures (wereldwijde klims, requests,
+inspiratie). Het is een op zichzelf staand "verpak- en publiceer"-project met
+App Store-overhead die losstaat van de productfeatures.
+
+### Wat ervoor nodig is (van Twan)
+- **Mac met Xcode** (verplicht om iOS te builden/submitten).
+- **Apple Developer Program**: €99/jaar.
+- Beslissing over app-naam/branding (zie naamgeving-sectie).
+
+### Technische werklijst
+1. Capacitor toevoegen (`@capacitor/core`, `@capacitor/ios`), `npx cap add ios`,
+   web build → `npx cap sync`.
+2. **Auth in native context**: `signInWithPopup` werkt niet in een WebView.
+   Overstappen op `@capacitor-firebase/authentication` (native Google Sign-In)
+   of redirect-flow met deep links.
+3. **Sign in with Apple toevoegen** — Apple-richtlijn 4.8 vereist dit zodra je
+   Google-login aanbiedt. Firebase Auth ondersteunt Apple als provider.
+4. **Strava OAuth via deep link**: in-app browser (`@capacitor/browser`) openen,
+   callback terug via custom URL-scheme / universal link i.p.v. web-redirect.
+   Val.town-worker blijft ongewijzigd bruikbaar.
+5. **Assets**: app-icoon, splash screen, screenshots voor de store.
+6. **Privacybeleid** (verplicht) + App Privacy-vragenlijst (data: account,
+   locatie/GPS via Strava, e-mail).
+7. App Store Connect: app aanmaken, TestFlight voor bèta met vrienden, daarna
+   review indienen.
+
+### Tussenstap zonder App Store (optioneel, bijna gratis)
+De site nu al als **PWA** installeerbaar maken ("Voeg toe aan beginscherm"):
+web-app-manifest + icoon + basic service worker. Geeft een app-achtige ervaring
+(eigen icoon, fullscreen) zonder Apple-account of review. Goede manier om het
+"app-gevoel" te testen bij vrienden vóór de echte native build. iOS-notificaties
+voor home-screen-PWA's kunnen sinds iOS 16.4, maar blijven beperkter dan native.
+
+### Aanbevolen volgorde binnen MVP2
+Web-features eerst → dan PWA-manifest als quick win → dan Capacitor + Sign in
+with Apple + Strava deep-link → TestFlight → App Store.
