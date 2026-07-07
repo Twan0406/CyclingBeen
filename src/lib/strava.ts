@@ -155,6 +155,8 @@ export interface SyncResult {
   refresh_token: string;
   ridesScanned: number;
   segmentTimes: number;
+  effortsFetched: number;
+  effortsFailed: number;
 }
 
 // Full sync: proximity-match rides to climbs, count attempts, then refine each
@@ -204,12 +206,15 @@ export async function syncStrava(
   let rt = refresh_token;
   const precise = new Map<string, number>();
   let done = 0;
+  let effortsFetched = 0;
+  let effortsFailed = 0;
   for (const actId of matchedActIds) {
     done += 1;
     onProgress?.(`Reading climb segments… ${done}/${matchedActIds.length}`);
     try {
       const { segment_efforts, refresh_token: nrt } = await fetchActivityEfforts(rt, actId);
       if (nrt) rt = nrt;
+      effortsFetched += 1;
       for (const cid of actToClimbs.get(actId) || []) {
         const climb = climbs.find((c) => c.id === cid);
         if (!climb) continue;
@@ -220,7 +225,7 @@ export async function syncStrava(
         }
       }
     } catch {
-      // /activity not available — keep ride-time fallback
+      effortsFailed += 1;
     }
   }
 
@@ -240,7 +245,14 @@ export async function syncStrava(
     });
   }
 
-  return { matches, refresh_token: rt, ridesScanned: activities.length, segmentTimes };
+  return {
+    matches,
+    refresh_token: rt,
+    ridesScanned: activities.length,
+    segmentTimes,
+    effortsFetched,
+    effortsFailed,
+  };
 }
 
 export function formatDuration(seconds: number): string {

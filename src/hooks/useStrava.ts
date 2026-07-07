@@ -40,10 +40,19 @@ export function useStrava() {
         await updateRefreshToken(user.uid, result.refresh_token);
       }
       await applyStravaMatches(result.matches);
-      const segNote = result.segmentTimes > 0 ? ` · ${result.segmentTimes} with exact climb time` : '';
+      let note = '';
+      if (result.matches.length > 0) {
+        if (result.effortsFetched === 0) {
+          note = ' · ⚠️ segment data unavailable — update your Val.town worker to get exact climb times';
+        } else if (result.segmentTimes > 0) {
+          note = ` · ${result.segmentTimes} with exact climb time (segments read for ${result.effortsFetched} rides)`;
+        } else {
+          note = ` · read segments for ${result.effortsFetched} rides but found no full-climb match`;
+        }
+      }
       setStatus(
         result.matches.length
-          ? `Found ${result.matches.length} climb${result.matches.length === 1 ? '' : 's'} in ${result.ridesScanned} rides${segNote}.`
+          ? `Found ${result.matches.length} climb${result.matches.length === 1 ? '' : 's'} in ${result.ridesScanned} rides${note}.`
           : `No matching climbs in your ${result.ridesScanned} most recent rides yet.`,
       );
     } catch (e) {
