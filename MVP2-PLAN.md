@@ -105,3 +105,54 @@ De app moet helpen dromen en plannen: "wat rijd ik nog meer in die regio?"
 - Requests: nieuwe pagina `/requests` + navlink, of sectie onder Explore.
 - Firestore-rules moeten worden bijgewerkt (climbRequests) — Twan moet die
   publishen in de Firebase-console (zoals eerder gedaan).
+
+---
+
+## Strategie: één platform, geen losse apps per sport
+
+Besluit (juli 2026): we bouwen **één merk en één app** met sport-"werelden"
+(verticals), géén aparte apps per sport.
+
+Redenen:
+1. **Kosten vermenigvuldigen bij losse apps** — hosting, auth, Strava-koppeling,
+   bugfixes en updates ×N, terwijl ~80% van de functionaliteit gedeeld is
+   (kaart, account, vrienden, ranglijsten).
+2. **Marketing is de bottleneck, niet techniek** — één merk laten groeien is al
+   moeilijk; meerdere merken tegelijk is voor een klein team onhaalbaar.
+3. **Netwerk-effect blijft intact** — endurance-sporters overlappen sterk
+   (triatleten fietsen én lopen). Eén app laat vriendengroepen elkaar
+   versterken; losse apps splitsen ze op.
+4. **Marktbewijs** — Strava, Komoot en AllTrails zijn allemaal één app met
+   meerdere activiteiten.
+
+Vorm: bij openen kies je je sport-wereld (🚴 klimmen · 🏃 trails · 🏊 triatlon),
+elk met eigen kaart/prestaties/ranglijsten, maar gedeeld account, vrienden en
+Strava. Technisch voorbereid via het `sport`-veld in het datamodel. Optie voor
+later: dezelfde codebase kan meerdere "gezichten"/brandings krijgen als dat
+ooit tactisch nut heeft.
+
+## Naamgeving (verkenning)
+
+Huidige werknaam "CyclingBeen" (afgeleid van de Been-app) vervangen.
+Denkrichting: **koepelmerk + sport-vertical**.
+
+- Koepel (breed, MVP3+): **Collect** (staat al in de app!), Conquered,
+  Tally, Atlas, Feats.
+- Fiets-vertical (MVP2): **Cols** ("Collect · Cols"), Col Collector,
+  ColQuest, Grimpeur, HC (hors catégorie).
+- Aanbeveling: app-koepel **Collect** houden; de fietswereld intern
+  **Cols** noemen. Domeincheck + merkcheck nog doen vóór publiciteit.
+
+## Businesscase (eerste schets)
+
+1. **Advertenties** — mogelijk, maar terughoudend: doelgroep is premium en
+   banner-ads maken het product goedkoop. Beter passend: gerichte
+   partnerships/affiliate (fietsverhuur op Mallorca, hotels bij iconische
+   cols, gran fondo's, kleding) op de plekken waar de gebruiker tóch aan het
+   plannen is (regio-gidsen, detailpagina's).
+2. **Freemium-abonnement** — gratis: tracken, globe, vrienden, basisdata.
+   Premium-ideeën: trip-gidsen & routeplanning, exacte segmenttijden en
+   statistieken, jaaroverzicht, badges, onbeperkt vergelijken, vroege toegang
+   tot nieuwe werelddelen/sporten.
+3. Volgorde: eerst gebruikers en retentie bewijzen (MVP2), monetisatie pas
+   daarna serieus aanzetten.
