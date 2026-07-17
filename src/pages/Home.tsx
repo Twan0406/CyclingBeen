@@ -24,62 +24,89 @@ export default function Home() {
     });
   }, [climbs, filter, query]);
 
-  const completedCount = climbs.filter((c) => c.completed).length;
-  const pct = climbs.length ? (completedCount / climbs.length) * 100 : 0;
+  const total = climbs.length;
+  const conquered = climbs.filter((c) => c.completed).length;
+  const pct = total ? (conquered / total) * 100 : 0;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <div className="mb-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-amber-400/80 mb-2">The world's great climbs</p>
-        <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">Explore</h1>
-        <p className="text-slate-400">
-          {completedCount} of {climbs.length} legendary ascents conquered
-        </p>
-        <div className="mt-4 h-1.5 bg-white/8 rounded-full overflow-hidden w-full max-w-sm">
-          <div
-            className="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full transition-all duration-700"
-            style={{ width: `${pct}%` }}
-          />
+    <div className="max-w-[1240px] mx-auto px-6 md:px-12 py-10 pb-20">
+      {/* Header stat block */}
+      <div className="flex items-end justify-between gap-8 flex-wrap mb-7">
+        <div>
+          <div className="font-mono-dc text-[12px] tracking-[0.18em] uppercase text-[#8b93a3] mb-2.5">
+            Your World
+          </div>
+          <div className="flex items-baseline gap-3.5">
+            <span className="text-[52px] font-extrabold tracking-[-0.02em] leading-none text-[#eef1f6]">
+              {conquered}
+            </span>
+            <span className="text-[22px] font-medium text-[#8b93a3]">
+              of {total} legendary ascents conquered
+            </span>
+          </div>
+        </div>
+        <div className="flex-1 min-w-[260px] max-w-[520px]">
+          <div className="h-2 rounded-full bg-[#1a1e27] overflow-hidden">
+            <div
+              className="h-full rounded-full bg-[linear-gradient(90deg,#f2b53a,#f78e3d)] shadow-[0_0_12px_rgba(242,181,58,0.5)] transition-all duration-700"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <div className="flex justify-between font-mono-dc text-[11px] text-[#6b7284] mt-2">
+            <span>{Math.round(pct)}% complete</span>
+            <span>{total - conquered} to climb</span>
+          </div>
         </div>
       </div>
 
-      <div className="mb-10">
-        <Suspense fallback={<div className="h-[440px] rounded-3xl bg-white/5 animate-pulse" />}>
-          <ClimbMap climbs={climbs} />
-        </Suspense>
+      {/* Globe */}
+      <Suspense fallback={<div className="h-[600px] rounded-[24px] bg-[#10131b] animate-pulse" />}>
+        <ClimbMap climbs={climbs} />
+      </Suspense>
+
+      {/* Peek divider */}
+      <div className="flex items-center justify-center gap-2.5 mt-7 mb-[18px] text-[#6b7284]">
+        <span className="w-10 h-px bg-[#20242e]" />
+        <span className="font-mono-dc tracking-[0.08em] uppercase text-[11px]">Browse all {total} ascents</span>
+        <span className="text-[14px]">↓</span>
+        <span className="w-10 h-px bg-[#20242e]" />
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
-        <div className="flex gap-2">
-          {(['all', 'completed', 'uncompleted'] as const).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                filter === f
-                  ? 'bg-amber-400/15 text-amber-300 ring-1 ring-amber-400/30'
-                  : 'bg-white/5 text-slate-400 hover:text-white'
-              }`}
-            >
-              {f === 'all' ? 'All' : f === 'completed' ? 'Conquered' : 'Bucket List'}
-            </button>
-          ))}
+      {/* Filters + search */}
+      <div className="flex items-center justify-between gap-4 flex-wrap mb-7">
+        <div className="flex gap-2.5">
+          {([['all', 'All'], ['completed', 'Conquered'], ['uncompleted', 'Bucket List']] as const).map(
+            ([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setFilter(key)}
+                className={`text-[14px] px-5 py-[9px] rounded-full transition-colors ${
+                  filter === key
+                    ? 'bg-[#f2b53a] text-[#161009] font-semibold'
+                    : 'bg-transparent border border-[#262b36] text-[#c4cad6] font-medium hover:text-white'
+                }`}
+              >
+                {label}
+              </button>
+            ),
+          )}
         </div>
-        <div className="relative sm:ml-auto sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+        <div className="relative min-w-[280px] flex-1 sm:flex-none">
+          <Search className="absolute left-[18px] top-1/2 -translate-y-1/2 w-[15px] h-[15px] text-[#6b7284]" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search climb or country…"
-            className="w-full bg-white/5 rounded-full pl-9 pr-4 py-2 text-sm text-white placeholder:text-slate-500 ring-1 ring-white/10 focus:ring-amber-400/40 focus:outline-none transition"
+            className="w-full bg-[#12151c] border border-[#262b36] rounded-full pl-11 pr-[18px] py-[9px] text-[14px] text-[#eef1f6] placeholder:text-[#6b7284] focus:border-[#f2b53a]/50 focus:outline-none transition-colors"
           />
         </div>
       </div>
 
+      {/* Grid */}
       {filtered.length === 0 ? (
-        <p className="text-slate-500 text-center py-16">No climbs match your search.</p>
+        <p className="text-[#6b7284] text-center py-16">No climbs match your search.</p>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {filtered.map((climb) => (
             <ClimbCard key={climb.id} climb={climb} />
           ))}

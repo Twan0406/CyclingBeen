@@ -1,52 +1,73 @@
 import { Link } from 'react-router-dom';
 import { Climb } from '../types/climb';
-import { Check, ArrowUp, Ruler } from 'lucide-react';
 import ClimbPhoto from './ClimbPhoto';
 
 interface Props {
   climb: Climb;
 }
 
-const difficultyColors: Record<string, string> = {
-  'easy': 'bg-emerald-400/15 text-emerald-300',
-  'medium': 'bg-sky-400/15 text-sky-300',
-  'hard': 'bg-orange-400/15 text-orange-300',
-  'hors-categorie': 'bg-rose-400/15 text-rose-300',
+const cat: Record<string, { label: string; bg: string; fg: string }> = {
+  'hors-categorie': { label: 'HC', bg: 'rgba(226,72,72,0.9)', fg: '#fff' },
+  'hard': { label: 'hard', bg: 'rgba(240,142,61,0.9)', fg: '#161009' },
+  'medium': { label: 'medium', bg: 'rgba(120,130,150,0.85)', fg: '#fff' },
+  'easy': { label: 'easy', bg: 'rgba(120,130,150,0.85)', fg: '#fff' },
 };
 
 export default function ClimbCard({ climb }: Props) {
+  const done = climb.completed;
+  const c = cat[climb.difficulty] ?? cat.medium;
+
   return (
     <Link to={`/climb/${climb.id}`} className="group block">
       <div
-        className={`relative rounded-2xl overflow-hidden bg-[#111827] ring-1 transition-all duration-300 ${
-          climb.completed
-            ? 'ring-amber-400/40 shadow-lg shadow-amber-500/10'
-            : 'ring-white/8 hover:ring-white/20'
+        className={`rounded-2xl overflow-hidden bg-[#12151c] transition-all duration-150 group-hover:-translate-y-0.5 ${
+          done
+            ? 'border border-[rgba(242,181,58,0.55)] shadow-[0_0_0_1px_rgba(242,181,58,0.15),0_8px_30px_rgba(242,181,58,0.08)] group-hover:border-[rgba(242,181,58,0.8)]'
+            : 'border border-[#20242e] opacity-[0.82] group-hover:opacity-100'
         }`}
       >
-        <div className="h-40 w-full relative">
-          <ClimbPhoto climb={climb} size={480} className="absolute inset-0 w-full h-full" />
-          {climb.completed && (
-            <div className="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/40">
-              <Check className="w-4 h-4 text-[#0a0f1c]" strokeWidth={3} />
+        {/* Photo */}
+        <div className="relative h-[190px] overflow-hidden">
+          <ClimbPhoto
+            climb={climb}
+            size={480}
+            className={`absolute inset-0 w-full h-full ${done ? '' : 'grayscale-[.7] brightness-[.72]'}`}
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,13,18,0)_30%,rgba(11,13,18,0.55)_62%,rgba(11,13,18,0.95)_100%)]" />
+
+          {done && (
+            <div className="absolute top-3 right-3 flex items-center gap-1 bg-[#f2b53a] text-[#161009] font-mono-dc text-[10px] font-medium tracking-[0.08em] uppercase pl-[7px] pr-[9px] py-1 rounded-full">
+              <span className="text-[11px]">✓</span> Conquered
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-transparent" />
-          <div className="absolute bottom-3 left-3 right-3 z-10">
-            <h3 className="text-white font-semibold text-base leading-tight">{climb.name}</h3>
-            <p className="text-slate-400 text-xs mt-0.5">{climb.region}, {climb.country}</p>
+
+          <div
+            className="absolute bottom-3 right-3 font-mono-dc text-[10px] font-medium tracking-[0.06em] uppercase px-[9px] py-[3px] rounded-md"
+            style={{ background: c.bg, color: c.fg }}
+          >
+            {c.label}
           </div>
         </div>
-        <div className="px-3 py-2.5">
-          <div className="flex items-center gap-3 text-xs text-slate-400">
-            <span className="flex items-center gap-1"><ArrowUp className="w-3 h-3 text-amber-400/80" />{climb.elevationM.toLocaleString()}m</span>
-            <span className="flex items-center gap-1"><Ruler className="w-3 h-3 text-amber-400/80" />{climb.lengthKm}km</span>
-            <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-semibold ${difficultyColors[climb.difficulty]}`}>
-              {climb.difficulty === 'hors-categorie' ? 'HC' : climb.difficulty}
-            </span>
+
+        {/* Body */}
+        <div className="px-[18px] pt-4 pb-[18px]">
+          <h3 className="text-[18px] font-bold tracking-[-0.01em] text-[#eef1f6] leading-tight">{climb.name}</h3>
+          <p className="text-[13px] text-[#8b93a3] mt-[3px] mb-4">{climb.region}, {climb.country}</p>
+          <div className="flex gap-[22px]">
+            <Stat label="Elevation" value={`${climb.elevationM.toLocaleString('de-DE')} m`} />
+            <Stat label="Distance" value={`${climb.lengthKm} km`} />
           </div>
         </div>
       </div>
     </Link>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="font-mono-dc text-[9px] tracking-[0.12em] uppercase text-[#5a6070] mb-[3px]">{label}</div>
+      <div className="text-[14px] font-semibold text-[#eef1f6]">{value}</div>
+    </div>
   );
 }

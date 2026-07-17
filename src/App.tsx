@@ -13,7 +13,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <ClimbsProvider>
-          <div className="min-h-screen bg-[#0a0f1c]">
+          <div className="min-h-screen bg-[#0b0d12]">
             <Navbar />
             <main>
               <Routes>

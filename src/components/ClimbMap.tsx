@@ -23,7 +23,7 @@ const STYLE: maplibregl.StyleSpecification = {
     },
   },
   layers: [
-    { id: 'bg', type: 'background', paint: { 'background-color': '#0a0f1c' } },
+    { id: 'bg', type: 'background', paint: { 'background-color': '#0a0c11' } },
     { id: 'carto', type: 'raster', source: 'carto' },
   ],
 };
@@ -35,7 +35,6 @@ export default function ClimbMap({ climbs }: Props) {
   const navigateRef = useRef(navigate);
   navigateRef.current = navigate;
 
-  // Create the map once.
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     const map = new maplibregl.Map({
@@ -47,23 +46,22 @@ export default function ClimbMap({ climbs }: Props) {
       attributionControl: false,
     });
     mapRef.current = map;
-    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: false }), 'top-right');
     map.addControl(new maplibregl.AttributionControl({ compact: true }));
 
     map.on('style.load', () => {
       map.setProjection({ type: 'globe' });
       map.setSky({
-        'sky-color': '#0a0f1c',
+        'sky-color': '#0b0d12',
         'sky-horizon-blend': 0.5,
-        'horizon-color': '#1e293b',
+        'horizon-color': '#20242e',
         'horizon-fog-blend': 0.6,
-        'fog-color': '#0a0f1c',
+        'fog-color': '#0b0d12',
         'fog-ground-blend': 0.4,
         'atmosphere-blend': 0.9,
       });
     });
 
-    // Gentle auto-spin until the user interacts.
     let spinning = true;
     const stop = () => { spinning = false; };
     map.on('mousedown', stop);
@@ -85,25 +83,19 @@ export default function ClimbMap({ climbs }: Props) {
     };
   }, []);
 
-  // Sync markers whenever climbs change.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     const markers: maplibregl.Marker[] = [];
-
     for (const climb of climbs) {
       const el = document.createElement('div');
       el.className = climb.completed ? 'climb-dot climb-dot--done' : 'climb-dot';
-      el.title = climb.name;
       el.addEventListener('click', (e) => {
         e.stopPropagation();
         navigateRef.current(`/climb/${climb.id}`);
       });
-      const popup = new maplibregl.Popup({
-        offset: 14,
-        closeButton: false,
-        className: 'climb-popup',
-      }).setText(climb.name + (climb.completed ? ' ✓' : ''));
+      const popup = new maplibregl.Popup({ offset: 14, closeButton: false, className: 'climb-popup' })
+        .setText(climb.name + (climb.completed ? ' ✓' : ''));
       const marker = new maplibregl.Marker({ element: el })
         .setLngLat([climb.lng, climb.lat])
         .setPopup(popup)
@@ -112,38 +104,27 @@ export default function ClimbMap({ climbs }: Props) {
       el.addEventListener('mouseleave', () => marker.togglePopup());
       markers.push(marker);
     }
-
     return () => markers.forEach((m) => m.remove());
   }, [climbs]);
 
-  const conquered = climbs.filter((c) => c.completed).length;
-
   return (
-    <div className="relative">
-      <div ref={containerRef} style={{ height: '520px', width: '100%' }} />
+    <div className="relative rounded-[24px] overflow-hidden border border-[#1a1e27] bg-[radial-gradient(120%_120%_at_50%_0%,#10131b_0%,#0a0c11_60%)]">
+      <div className="starfield absolute inset-0 pointer-events-none opacity-70" />
+      <div ref={containerRef} style={{ height: '600px', width: '100%' }} className="relative z-[1]" />
 
-      <div className="absolute top-4 left-4 z-10 pointer-events-none">
-        <div className="bg-[#0a0f1c]/80 backdrop-blur-md ring-1 ring-white/10 rounded-2xl px-4 py-2.5">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Your world</p>
-          <p className="text-xl font-bold text-white leading-tight">
-            <span className="text-amber-400">{conquered}</span>
-            <span className="text-slate-500 text-sm font-normal"> / {climbs.length} conquered</span>
-          </p>
-        </div>
-      </div>
-
-      <div className="absolute bottom-4 left-4 z-10 pointer-events-none">
-        <div className="flex items-center gap-4 bg-[#0a0f1c]/80 backdrop-blur-md ring-1 ring-white/10 rounded-full px-4 py-2 text-xs">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.9)]" />
-            <span className="text-slate-300">Conquered</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-slate-600" />
-            <span className="text-slate-400">To climb</span>
-          </span>
-          <span className="text-slate-500 hidden sm:inline">· drag to spin the globe</span>
-        </div>
+      {/* Legend */}
+      <div className="absolute bottom-6 left-6 z-10 flex items-center gap-5 bg-[rgba(13,16,22,0.7)] backdrop-blur-md border border-[#20242e] rounded-full px-[18px] py-[10px]">
+        <span className="flex items-center gap-2">
+          <span className="w-[11px] h-[11px] rounded-full bg-[#f2b53a] shadow-[0_0_8px_rgba(242,181,58,0.8)]" />
+          <span className="text-[13px] text-[#eef1f6] font-medium">Conquered</span>
+        </span>
+        <span className="w-px h-4 bg-[#2a2f3a]" />
+        <span className="flex items-center gap-2">
+          <span className="w-[11px] h-[11px] rounded-full border-2 border-[#7fa8e8] bg-transparent" />
+          <span className="text-[13px] text-[#c4cad6] font-medium">To climb</span>
+        </span>
+        <span className="w-px h-4 bg-[#2a2f3a] hidden sm:block" />
+        <span className="font-mono-dc text-[11px] text-[#6b7284] hidden sm:inline">drag to spin the globe</span>
       </div>
     </div>
   );
