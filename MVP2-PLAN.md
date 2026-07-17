@@ -207,3 +207,55 @@ voor home-screen-PWA's kunnen sinds iOS 16.4, maar blijven beperkter dan native.
 ### Aanbevolen volgorde binnen MVP2
 Web-features eerst → dan PWA-manifest als quick win → dan Capacitor + Sign in
 with Apple + Strava deep-link → TestFlight → App Store.
+
+---
+
+## 6. Zoom-gebaseerde ontdekking & de inspiratie-markt 🔍 (toegevoegd juli 2026)
+
+Idee (Twan): op wereldniveau toont de globe alleen de bekendste beklimmingen,
+maar wie inzoomt op een land of gebied ziet er veel méér. Zo wordt de app een
+inspiratietool om fietstrips te bedenken en plannen — een tweede markt naast
+"prestaties afvinken": de **fietsvakantie-planner**.
+
+### Waarom dit sterk is
+- Lost de spanning op tussen "cureerbare collectie" (klein, iconisch) en
+  "rijke planningsdata" (groot): beide bestaan naast elkaar via zoom.
+- De planningscontext is exact de plek waar de businesscase zit
+  (partnerships/affiliate: hotels, fietsverhuur, gran fondo's) — inspiratie
+  trekt bezoekers die nog niks afvinken maar wél plannen.
+- Nieuwe doelgroep: recreatieve fietsers die (nog) geen "collectors" zijn;
+  funnel: inspiratie zoeken → account maken → bucket list → collector worden.
+
+### Technische aanpak: tiers + zoom
+- `Climb`-type uitbreiden met `tier: 1 | 2 | 3`:
+  - **Tier 1 (~50-100):** de iconen — altijd zichtbaar, volledige content
+    (verhaal, historie, pro-records). Dit is de huidige lijst.
+  - **Tier 2 (honderden):** bekende regionale klims — zichtbaar vanaf
+    land-zoom (~zoomniveau 6+), compacte data (naam, stats, foto).
+  - **Tier 3 (optioneel later):** lokale klims — zichtbaar op regio-zoom.
+- Globe: markers filteren op `map.getZoom()` (zoom-listener), tier 1 groot,
+  tier 2 kleiner/subtieler. Clustering overwegen bij dichte gebieden
+  (Alpen!) — maplibre ondersteunt GeoJSON-source met cluster-optie.
+- Alles blijft afvinkbaar/Strava-matchbaar — tiers zijn presentatie, geen
+  aparte datamodellen.
+
+### Data-sourcing voor tier 2 (het echte werk)
+- Start gecureerd per topregio (Alpen, Pyreneeën, Dolomieten, Mallorca,
+  Ardennen/Limburg): ~20-40 klims per regio met compacte entries.
+- Verzoekjes-systeem (sectie 2) voedt tier 2: aangevraagde klims kunnen als
+  tier 2 binnenkomen (lagere content-eis dan tier 1).
+- Later evt. open datasets als bron ter inspiratie voor de redactie
+  (zelf cureren blijft het kwaliteitskenmerk t.o.v. "alles-databases"
+  zoals climbfinder — wij zijn de michelin-gids, niet het telefoonboek).
+
+### Koppeling met bestaande MVP2-punten
+- Versterkt sectie 3 (nearby climbs / regio-gidsen): tier 2 levert de
+  "wat is hier nog meer"-inhoud.
+- Werelddeel-filters (sectie 1) + zoom-tiers = samen de ontdek-ervaring.
+- Naamgeving: werktitel **"MyCols"** genoemd door Twan — toevoegen aan de
+  kandidatenlijst (persoonlijk, domeinvriendelijk; check mycols.app/.cc).
+
+### Plaats in bouwvolgorde
+Invoegen als onderdeel van fase 1-2: eerst tier-veld + zoom-filtering op de
+bestaande 49 (goedkoop), daarna tier 2-data per regio incrementeel toevoegen
+(elke regio is een los, deploybaar blokje werk).
