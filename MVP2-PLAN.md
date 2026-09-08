@@ -263,3 +263,68 @@ inspiratietool om fietstrips te bedenken en plannen — een tweede markt naast
 Invoegen als onderdeel van fase 1-2: eerst tier-veld + zoom-filtering op de
 bestaande 49 (goedkoop), daarna tier 2-data per regio incrementeel toevoegen
 (elke regio is een los, deploybaar blokje werk).
+
+---
+
+## 7. Redactionele content als groeikanaal 📖 (toegevoegd juli 2026)
+
+Idee (Twan): per beklimming/regio een reisblog-achtige gids — adviezen, leuke
+dingen eromheen, video — om mensen naar de site te trekken.
+
+### Waarom dit strategisch klopt
+Een tracking-app heeft vrijwel geen zoekvraag ("app om klims bij te houden"
+wordt niet gegoogeld); reisadvies wél ("Mont Ventoux fietsen", "fietsvakantie
+Dolomieten", "Mallorca fietsen beste tijd"). Content is dus de bovenkant van de
+funnel: **lezen → dromen → bucketlist → account → tracken → vrienden**. Het is
+tevens exact de context waar de businesscase zit (hotels, fietsverhuur,
+gran fondo's — zie businesscase-sectie).
+
+### Harde randvoorwaarde: de site moet vindbaar zijn
+De app is nu een client-rendered SPA met één `index.html`: Google krijgt een
+lege pagina zonder eigen titel/omschrijving per klim. **Zonder dit op te lossen
+levert content nul bezoekers op.** Benodigd:
+- **Pre-rendering/SSG** van alle publieke content-routes bij de build
+  (bijv. `vite-react-ssg` of een prerender-stap die per klim/regio een echte
+  HTML-pagina wegschrijft). De ingelogde app-delen mogen SPA blijven.
+- Per pagina `<title>`, meta description, Open Graph (voor delen) en
+  JSON-LD structured data (`TouristAttraction` / `Article`).
+- `sitemap.xml` + `robots.txt`, schone URL's (`/climb/mont-ventoux`).
+- Snelle first paint (al goed: bundle is klein gehouden).
+
+### Aanpak: schaalbaar, niet handmatig
+1. **Elke klimpagina wordt automatisch een gids.** Gebruik data die er al is of
+   goedkoop bij te zetten valt: verhaal, race-historie, prof-records, stats,
+   beste maanden, startplaats, nabije klims (sectie 3), en een kaartje.
+   Zo heeft *elke* klim direct gids-kwaliteit zonder 49× schrijfwerk.
+2. **Dun redactielaagje per klim** (optionele velden): 2-4 alinea's "hoe rijd je
+   'm", praktische tips (waar parkeren, waar water, café's, wanneer vermijden),
+   en 1 uitgelichte quote. Incrementeel te vullen — beginnen bij de top-10.
+3. **User-generated content = de blog die zichzelf schrijft.** Laat rijders een
+   korte tip/ritverslag per klim achterlaten ("vertrek vroeg, het café op km 8
+   sluit om 14:00"). Schaalt met je gebruikers, versterkt de sociale kern, en
+   is uniek t.o.v. concurrenten. Vereist lichte moderatie + Firestore-rules.
+4. **Video: cureren, niet produceren.** Sluit bestaande YouTube-beklimmingen in
+   (POV-video's zijn er in overvloed). Nul productiekosten, direct rijkere
+   pagina's. Zelf filmen pas overwegen als er publiek is.
+5. **Regio-gidsen als vlaggenschip** (5 stuks om te testen): "Een week in de
+   Alpen", "Mallorca", "Dolomieten", "Pyreneeën", "Limburg/Ardennen". Deze
+   trekken bredere zoektermen dan losse klims en linken door naar de klims.
+
+### Meten voordat je opschaalt
+Publiceer eerst de 5 regio-gidsen + de automatische klimgidsen, en kijk 2-3
+maanden naar zoekverkeer en of lezers accounts aanmaken. SEO is traag (reken op
+6-12 maanden voor serieus verkeer). Pas bij bewezen instroom doorpakken naar
+volledige redactionele dekking.
+
+### Risico's expliciet
+- Content veroudert (prijzen, wegen, openingstijden) — houd het tijdloos waar
+  mogelijk, en zet datum/"laatst gecontroleerd" bij praktische info.
+- Verleiding om een mediabedrijf te worden: de kern blijft de persoonlijke
+  collectie + sociale vergelijking. Content is een **kanaal**, geen product.
+- Concurrentie met gevestigde fietsmedia en klim-databases: win op
+  *gecureerde kwaliteit + het feit dat je het meteen kunt afvinken en delen*.
+
+### Plaats in de planning
+Na de webfeatures (fase 1-3), maar de **pre-rendering/SEO-stap is een
+prerequisite** en kan al eerder. Volgorde: SEO-fundament → automatische
+klimgidsen → 5 regio-gidsen → user-generated tips → video-embeds.
