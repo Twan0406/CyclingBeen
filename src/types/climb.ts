@@ -31,6 +31,17 @@ export interface Climb {
   tourHistory?: string;
   proRecords?: ProRecord[];
   proQuotes?: ProQuote[];
+
+  // --- Ride guide (all optional; pages degrade gracefully without them) ---
+  /** Town riders usually start the ascent from. */
+  startTown?: string;
+  /** Overrides the season derived from elevation, e.g. 'Year-round'. */
+  bestMonths?: string;
+  /** Practical, hard-won advice: parking, water, when to avoid. */
+  tips?: string[];
+  /** Curated YouTube video id for an embedded ascent. */
+  videoId?: string;
+
   completed: boolean;
 }
 

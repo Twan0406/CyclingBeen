@@ -2,6 +2,7 @@ import { useState, useMemo, lazy, Suspense } from 'react';
 import { Search } from 'lucide-react';
 import ClimbCard from '../components/ClimbCard';
 import { useClimbs } from '../context/ClimbsContext';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 const ClimbMap = lazy(() => import('../components/ClimbMap'));
 
@@ -27,6 +28,11 @@ export default function Home() {
   const total = climbs.length;
   const conquered = climbs.filter((c) => c.completed).length;
   const pct = total ? (conquered / total) * 100 : 0;
+
+  usePageMeta({
+    title: 'Collect — the legendary climbs of cycling',
+    description: `Track and plan the world's great cycling ascents. ${total} legendary climbs with ride guides, race history and your own times.`,
+  });
 
   return (
     <div className="max-w-[1240px] mx-auto px-6 md:px-12 py-10 pb-20">

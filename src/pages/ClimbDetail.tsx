@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useClimbs } from '../context/ClimbsContext';
 import { useAuth } from '../context/AuthContext';
-import { ArrowLeft, ArrowUp, Ruler, TrendingUp, Check, Quote, Clock, Repeat } from 'lucide-react';
+import {
+  ArrowLeft, ArrowUp, Ruler, TrendingUp, Check, Quote, Clock, Repeat,
+  CalendarDays, MapPin, Settings2, Timer, Lightbulb, Play, Compass,
+} from 'lucide-react';
 import ClimbPhoto from '../components/ClimbPhoto';
 import { loadRiders, type Rider } from '../lib/riders';
 import { formatDuration } from '../lib/strava';
+import { usePageMeta } from '../hooks/usePageMeta';
+import {
+  seasonFor, gearingFor, estimatedAmateurMinutes, nearbyClimbs, videoSearchUrl,
+} from '../lib/climbGuide';
 
 const difficultyColors: Record<string, string> = {
   'easy': 'bg-emerald-400/15 text-emerald-300',
@@ -37,6 +44,15 @@ export default function ClimbDetail() {
         .map((r) => ({ rider: r, t: r.climbTimes[id] }))
         .sort((a, b) => a.t.seconds - b.t.seconds)
     : [];
+
+  const nearby = climb ? nearbyClimbs(climb, climbs) : [];
+
+  usePageMeta({
+    title: climb ? `${climb.name} — cycling guide | Collect` : 'Climb | Collect',
+    description: climb
+      ? `${climb.name}: ${climb.lengthKm} km at ${climb.avgGradientPct}% to ${climb.elevationM} m in ${climb.region}, ${climb.country}. ${climb.shortDescription}`
+      : undefined,
+  });
 
   if (!climb) return (
     <div className="max-w-3xl mx-auto px-4 py-16 text-center">
@@ -88,6 +104,38 @@ export default function ClimbDetail() {
           </div>
         </div>
 
+        {/* Ride guide */}
+        <section>
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <Compass className="w-5 h-5 text-[#f2b53a]" /> Plan your ride
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <GuideItem
+              icon={<CalendarDays className="w-4 h-4" />}
+              label="Best time to go"
+              value={seasonFor(climb)}
+            />
+            <GuideItem
+              icon={<MapPin className="w-4 h-4" />}
+              label="Start from"
+              value={climb.startTown ?? `${climb.region}, ${climb.country}`}
+            />
+            <GuideItem
+              icon={<Settings2 className="w-4 h-4" />}
+              label="Gearing"
+              value={gearingFor(climb)}
+            />
+            <GuideItem
+              icon={<Timer className="w-4 h-4" />}
+              label="Typical amateur time"
+              value={`around ${estimatedAmateurMinutes(climb)} min`}
+            />
+          </div>
+          <p className="font-mono-dc text-[10px] text-[#5a6070] mt-2 uppercase tracking-[0.1em]">
+            Season and timing are estimates from elevation and gradient
+          </p>
+        </section>
+
         <section>
           <h2 className="text-xl font-bold text-white mb-3">The Story</h2>
           <p className="text-slate-400 leading-relaxed">{climb.story}</p>
@@ -99,6 +147,25 @@ export default function ClimbDetail() {
             <div className="bg-amber-400/8 rounded-2xl p-5 ring-1 ring-amber-400/20">
               <p className="text-slate-300 leading-relaxed">{climb.tourHistory}</p>
             </div>
+          </section>
+        )}
+
+        {climb.tips && climb.tips.length > 0 && (
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-[#f2b53a]" /> Local tips
+            </h2>
+            <ul className="space-y-2">
+              {climb.tips.map((tip, i) => (
+                <li
+                  key={i}
+                  className="flex gap-3 bg-[#12151c] ring-1 ring-[#20242e] rounded-xl px-4 py-3 text-[15px] text-[#c4cad6] leading-relaxed"
+                >
+                  <span className="text-[#f2b53a] font-bold">·</span>
+                  {tip}
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 
@@ -213,7 +280,92 @@ export default function ClimbDetail() {
             <p className="text-xs text-slate-600 mt-2">Fastest recorded time per rider, from Strava.</p>
           </section>
         )}
+
+        {/* Watch the climb */}
+        <section>
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <Play className="w-5 h-5 text-[#f2b53a]" /> Watch the climb
+          </h2>
+          {climb.videoId ? (
+            <div className="relative w-full rounded-2xl overflow-hidden ring-1 ring-[#20242e] aspect-video">
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src={`https://www.youtube.com/embed/${climb.videoId}`}
+                title={`${climb.name} ascent`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          ) : (
+            <a
+              href={videoSearchUrl(climb)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 bg-[#12151c] ring-1 ring-[#20242e] hover:ring-[#f2b53a]/40 rounded-2xl px-5 py-4 transition-colors group"
+            >
+              <span className="w-10 h-10 rounded-full bg-[#f2b53a]/15 flex items-center justify-center shrink-0">
+                <Play className="w-4 h-4 text-[#f2b53a]" />
+              </span>
+              <span>
+                <span className="block text-white font-semibold group-hover:text-[#f2b53a] transition-colors">
+                  See {climb.name} from the saddle
+                </span>
+                <span className="block text-[13px] text-[#8b93a3]">
+                  On-bike footage of the ascent on YouTube
+                </span>
+              </span>
+            </a>
+          )}
+        </section>
+
+        {/* Nearby climbs */}
+        {nearby.length > 0 && (
+          <section>
+            <h2 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
+              <Compass className="w-5 h-5 text-[#f2b53a]" /> Ride these too
+            </h2>
+            <p className="text-[13px] text-[#8b93a3] mb-4">
+              Other climbs within reach — the makings of a trip.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-2">
+              {nearby.map(({ climb: n, km }) => (
+                <Link
+                  key={n.id}
+                  to={`/climb/${n.id}`}
+                  className="flex items-center gap-3 bg-[#12151c] ring-1 ring-[#20242e] hover:ring-[#f2b53a]/40 rounded-xl px-4 py-3 transition-colors group"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="text-white font-semibold truncate group-hover:text-[#f2b53a] transition-colors">
+                      {n.name}
+                    </p>
+                    <p className="text-[12px] text-[#8b93a3] truncate">
+                      {n.elevationM.toLocaleString('de-DE')} m · {n.lengthKm} km
+                    </p>
+                  </div>
+                  <span className="font-mono-dc text-[11px] text-[#6b7284] shrink-0">
+                    {Math.round(km)} km
+                  </span>
+                  {n.completed && <Check className="w-4 h-4 text-[#f2b53a] shrink-0" strokeWidth={3} />}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
+    </div>
+  );
+}
+
+function GuideItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex gap-3 bg-[#12151c] ring-1 ring-[#20242e] rounded-xl px-4 py-3">
+      <span className="text-[#f2b53a] mt-0.5 shrink-0">{icon}</span>
+      <span className="min-w-0">
+        <span className="block font-mono-dc text-[9px] tracking-[0.12em] uppercase text-[#5a6070] mb-1">
+          {label}
+        </span>
+        <span className="block text-[14px] text-[#eef1f6] leading-snug">{value}</span>
+      </span>
     </div>
   );
 }

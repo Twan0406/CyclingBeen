@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useMemo, useCallback, useEffect, u
 import type { ReactNode } from 'react';
 import type { Climb } from '../types/climb';
 import { seedClimbs } from '../data/climbs';
+import { climbGuides } from '../data/climbGuides';
 import { useAuth } from './AuthContext';
 import { getDb } from '../firebase';
 import type { ClimbMatch } from '../lib/strava';
@@ -94,7 +95,12 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const climbs = useMemo(
-    () => seedClimbs.map((c) => ({ ...c, completed: completedIds.has(c.id) })),
+    () =>
+      seedClimbs.map((c) => ({
+        ...c,
+        ...(climbGuides[c.id] ?? {}),
+        completed: completedIds.has(c.id),
+      })),
     [completedIds],
   );
 
