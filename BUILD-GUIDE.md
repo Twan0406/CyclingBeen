@@ -216,6 +216,19 @@ met CSS-klassen (gouden pulse voor 'veroverd'). Auto-rotatie via
     eigenaar. Eén generieke read-only doorgeefroute (met padvalidatie) plus
     een `/version`-marker maakt de client vrij om te evolueren.
 
+16. **Cache-headers matchen op het request-pad, niet op het bestand.** Een
+    regel op `**/*.html` dekt `/index.html` wél, maar `/climb/mont-ventoux`
+    niet — ook al wordt daar dezelfde HTML voor geserveerd via een
+    SPA-rewrite. Gevolg: die pagina's kregen stilletjes standaard-caching en
+    gebruikers zagen oude versies. Zet expliciete no-cache-regels op elk
+    route-pad dat HTML teruggeeft (of gebruik `cleanUrls` + echte bestanden).
+17. **Een SPA is onvindbaar tot je pre-rendert.** Eén lege `index.html` betekent
+    voor Google: geen inhoud, en één titel voor de hele site. Een klein
+    Vite-plugin dat bij de build echte HTML per route wegschrijft (titel,
+    description, canonical, Open Graph, JSON-LD, de tekst zelf en interne
+    links) lost dat op zonder SSR-complexiteit — React vervangt de statische
+    markup gewoon bij het mounten.
+
 ## 12. Herbruikbaar recept voor een volgende app
 
 1. Vite + React + TS + Tailwind v4 scaffold (§2)

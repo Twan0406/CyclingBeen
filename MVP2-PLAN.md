@@ -279,7 +279,16 @@ funnel: **lezen → dromen → bucketlist → account → tracken → vrienden**
 tevens exact de context waar de businesscase zit (hotels, fietsverhuur,
 gran fondo's — zie businesscase-sectie).
 
-### Harde randvoorwaarde: de site moet vindbaar zijn
+### Harde randvoorwaarde: de site moet vindbaar zijn — ✅ GEDAAN (juli 2026)
+
+Uitgevoerd: `scripts/prerenderPlugin.ts` schrijft bij elke build echte HTML weg
+voor de homepage en alle 49 klims (eigen titel, description, canonical, Open
+Graph, TouristAttraction JSON-LD, de inhoud zelf en interne links naar nabije
+klims), plus `sitemap.xml` en `robots.txt`. Firebase serveert dit via
+`cleanUrls` met no-cache-headers op `/` en `/climb/**`.
+Nog te doen door Twan: sitemap indienen in Google Search Console.
+
+Oorspronkelijke eisen:
 De app is nu een client-rendered SPA met één `index.html`: Google krijgt een
 lege pagina zonder eigen titel/omschrijving per klim. **Zonder dit op te lossen
 levert content nul bezoekers op.** Benodigd:
@@ -292,11 +301,12 @@ levert content nul bezoekers op.** Benodigd:
 - Snelle first paint (al goed: bundle is klein gehouden).
 
 ### Aanpak: schaalbaar, niet handmatig
-1. **Elke klimpagina wordt automatisch een gids.** Gebruik data die er al is of
+1. **Elke klimpagina wordt automatisch een gids.** ✅ GEDAAN — Gebruik data die er al is of
    goedkoop bij te zetten valt: verhaal, race-historie, prof-records, stats,
    beste maanden, startplaats, nabije klims (sectie 3), en een kaartje.
    Zo heeft *elke* klim direct gids-kwaliteit zonder 49× schrijfwerk.
-2. **Dun redactielaagje per klim** (optionele velden): 2-4 alinea's "hoe rijd je
+2. **Dun redactielaagje per klim** — ✅ opgezet in `src/data/climbGuides.ts`
+   (15 iconen geschreven, rest volgt incrementeel). Optionele velden: 2-4 alinea's "hoe rijd je
    'm", praktische tips (waar parkeren, waar water, café's, wanneer vermijden),
    en 1 uitgelichte quote. Incrementeel te vullen — beginnen bij de top-10.
 3. **User-generated content = de blog die zichzelf schrijft.** Laat rijders een
