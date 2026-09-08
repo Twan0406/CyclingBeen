@@ -11,6 +11,33 @@ in MVP2 wel voorbereid: elk achievement krijgt een `sport`-veld (default
 
 ---
 
+---
+
+## ⏭️ VOLGENDE SESSIE — eerst dit, vóór de regio-gidsen
+
+Afgesproken met Twan. Deze drie punten gaan vóór de regio-gidsen uit sectie 7,
+omdat ze het fundament raken waarop die gidsen landen.
+
+1. **Design herzien.** Twan is niet tevreden over het huidige ontwerp, zeker nu
+   de app richting een fiets-blog/magazine beweegt. Het moet werken voor
+   langere, leesbare artikelen én voor de "trofeeënkast". Belangrijk: vraag
+   éérst om referenties (welke sites/apps vindt hij wél mooi) voordat er
+   opnieuw gebouwd wordt — stijl is subjectief en dit is de tweede ronde.
+   Huidige stijl: donker (#0b0d12), amber accent (#f2b53a), Sora + DM Mono.
+2. **Naam breder kiezen.** "CyclingBeen" is een werktitel; "Collect" en
+   "MyCols" zijn kandidaten maar niet definitief. De naam moet breder werken
+   (koepelmerk + verticals, zie strategie-sectie) en passen bij een
+   inspiratie-/contentplatform, niet alleen bij afvinken. Inclusief domein-
+   en merkcheck vóór publiciteit.
+3. **Homepagina versterken.** Die "mist nu iets": nu is het globe + grid.
+   Moet een echte landingspagina worden die het verhaal vertelt (inspiratie
+   én collectie) en bezoekers zonder account overtuigt.
+
+**Afhankelijkheid — belangrijk:** Twan dient de sitemap pas in bij Google
+Search Console zodra naam/branding vaststaan; anders indexeert Google onder een
+naam die nog verandert. Volgorde dus: **naam → design → homepage → Search
+Console → regio-gidsen**.
+
 ## 1. Klimmen over de hele wereld 🌍 (must-have)
 
 Nu alleen Europa; de globe schreeuwt om wereldwijde dekking.
