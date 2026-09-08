@@ -122,7 +122,16 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
       nextCompleted.add(m.climbId);
       const ex = nextTimes[m.climbId];
       const attempts = Math.max(ex?.attempts ?? 0, m.attempts ?? 1);
-      if (!ex || m.seconds < ex.seconds) {
+      // A measured climb time and a whole-ride estimate aren't comparable, so
+      // an exact time always wins over an estimate (and never the other way
+      // round); only like-for-like times compete on speed.
+      const exExact = ex?.isSegmentTime === true;
+      const newExact = m.isSegmentTime === true;
+      const replace =
+        !ex ||
+        (newExact && !exExact) ||
+        (newExact === exExact && m.seconds < ex.seconds);
+      if (replace) {
         nextTimes[m.climbId] = {
           seconds: m.seconds,
           date: m.date,
