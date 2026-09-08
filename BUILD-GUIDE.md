@@ -195,6 +195,26 @@ met CSS-klassen (gouden pulse voor 'veroverd'). Auto-rotatie via
    diagnostiek in de app (bijv. sync-statusmeldingen).
 10. **Diagnose inbouwen**: statusmeldingen in de UI ("segments read for X
     rides…") maken debuggen op afstand veel sneller dan gokken.
+11. **Nooit stilzwijgend terugvallen.** Een `catch {}` die op een fallback
+    uitkomt, verbergt de oorzaak: de gebruiker ziet alleen "het klopt niet",
+    en jij kunt niets. Faal luid — meld *waarom* (verouderde server, rate
+    limit, geen data gevonden). Dit kostte hier meerdere rondes debuggen.
+12. **Houd drempels consistent tussen detectie en meting.** Een klim werd
+    afgevinkt op 1500 m van de top, maar de tijdmeting zocht op 400 m. Gevolg:
+    "veroverd" zonder tijd, met een stille terugval. Als twee stukken code
+    dezelfde werkelijkheid beschrijven, moeten hun toleranties bij elkaar passen.
+13. **Vergelijk nooit twee verschillende grootheden.** Een gemeten klimtijd en
+    een hele-ritduur zijn niet uitwisselbaar; "houd de snelste" laat dan de
+    verkeerde winnen. Label de soort en vergelijk alleen gelijksoortige waarden.
+14. **Test algoritmes met gesimuleerde data.** Voor de klimtijd-berekening is
+    een synthetische rit gegenereerd (vlak stuk → klim → afdaling, plus
+    hill repeats) en met `esbuild --bundle --define:import.meta.env='{}'`
+    in Node getest. Dat gaf exacte verificatie zonder echte Strava-data —
+    onmisbaar als je zelf niet bij de productieomgeving kunt.
+15. **Maak proxies generiek.** De eerste Strava-proxy had één endpoint per
+    functie, dus elke uitbreiding vroeg om handmatig code plakken door de
+    eigenaar. Eén generieke read-only doorgeefroute (met padvalidatie) plus
+    een `/version`-marker maakt de client vrij om te evolueren.
 
 ## 12. Herbruikbaar recept voor een volgende app
 

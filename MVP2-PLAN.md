@@ -70,13 +70,17 @@ De app moet helpen dromen en plannen: "wat rijd ik nog meer in die regio?"
   je "droomkaart".
 - Nice-to-have: deelbare trip ("selecteer 5 klims → deel als lijstje").
 
-## 4. Doorgeschoven uit MVP1 (afmaken)
+## 4. Doorgeschoven uit MVP1 — ✅ AFGEROND (juli 2026)
 
-- **Exacte Strava-segmenttijden**: Val.town-worker updaten met `/activity`
-  endpoint (code staat klaar in `workers/valtown-strava.ts`), daarna de
-  segment-matching valideren met echte data (Ventoux-case van Twan).
-  Diagnose zit al in de sync-status.
-- Sync-knop zichtbaarheid checken (vereist login + Strava-connectie).
+- **Exacte klimtijden**: werkend en bevestigd met echte data. Aanpak is
+  gewijzigd t.o.v. het oorspronkelijke plan: niet via Strava-segmenten
+  (te fragiel — segmentnamen/-grenzen verschillen per klim), maar door de
+  klimtijd **zelf te meten** uit de GPS-, hoogte- en tijdstromen van de rit
+  (`ascentSeconds()` in `src/lib/strava.ts`). Herhalingen van dezelfde klim
+  binnen één rit worden apart geteld.
+- **Val.town-worker is nu v2** met een generieke read-only Strava-proxy
+  (`/api`) plus een `/version`-marker. Toekomstige Strava-uitbreidingen
+  vereisen daardoor **geen** nieuwe worker-code meer — alles kan app-zijdig.
 
 ## 5. Kleinere interactiviteits-ideeën (nice-to-have, op volgorde)
 
@@ -93,7 +97,7 @@ De app moet helpen dromen en plannen: "wat rijd ik nog meer in die regio?"
 | 1 | Wereldwijde klims + werelddeel-filter | Grootste zichtbare sprong, alleen data + kleine UI |
 | 2 | Nearby climbs + regio-gidsen | Bouwt op de nieuwe data, geen backend nodig |
 | 3 | Climb requests + upvotes | Nieuwe Firestore-collectie + rules |
-| 4 | Strava-segmenttijden afmaken | Vereist Val.town-update van Twan |
+| ~~4~~ | ~~Exacte klimtijden~~ | ✅ afgerond juli 2026 |
 | 5 | Badges → invite-link → feed | Losse toetjes |
 
 ## Technische notities voor de volgende sessie
