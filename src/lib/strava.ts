@@ -119,6 +119,12 @@ async function fetchStreams(
   });
   const body = await res.json();
   if (!res.ok || body.error) throw new Error(body.error || 'streams failed');
+  // The worker relays Strava's own status; surface rate limits explicitly
+  // instead of silently falling back to ride times.
+  if (body.status === 429) throw new Error('RATE_LIMIT');
+  if (typeof body.status === 'number' && body.status >= 400) {
+    throw new Error(`strava ${body.status}`);
+  }
   return { streams: (body.data || {}) as StreamSet, refresh_token: body.refresh_token };
 }
 
@@ -149,27 +155,38 @@ export function ascentSeconds(streams: StreamSet, climb: Climb): number[] {
   const n = Math.min(ll.length, t.length, alt.length, dist.length);
   if (n < 10) return [];
 
-  // Points that pass close to the summit.
-  const radiusKm = Math.max(0.4, Math.min(1.2, climb.lengthKm * 0.15));
+  // Points that pass close to the summit. Kept generous so a slightly-off
+  // summit coordinate still finds the ascent (the top is then the highest
+  // point within the radius, so a wider radius stays safe).
+  const radiusKm = Math.max(0.8, Math.min(1.5, climb.lengthKm * 0.2));
   const near: number[] = [];
   for (let i = 0; i < n; i++) {
     if (distanceKm(ll[i][0], ll[i][1], climb.lat, climb.lng) <= radiusKm) near.push(i);
   }
   if (near.length === 0) return [];
 
-  // Split into separate passes (a gap of >5 min means a new attempt).
+  const expectedGain = climb.lengthKm * 1000 * (climb.avgGradientPct / 100);
+
+  // Split the visits into separate ascents. A new attempt is one where the
+  // rider actually descended a meaningful part of the climb in between —
+  // far more reliable than a time gap, which depends on the search radius.
+  const dropThreshold = Math.max(20, expectedGain * 0.4);
   const passes: number[][] = [];
   let cur: number[] = [near[0]];
   for (let k = 1; k < near.length; k++) {
-    if (t[near[k]] - t[near[k - 1]] > 300) {
+    const prev = near[k - 1];
+    const now = near[k];
+    let low = Infinity;
+    for (let j = prev; j <= now; j++) if (alt[j] < low) low = alt[j];
+    let peak = -Infinity;
+    for (const i of cur) if (alt[i] > peak) peak = alt[i];
+    if (low < peak - dropThreshold || t[now] - t[prev] > 1800) {
       passes.push(cur);
       cur = [];
     }
-    cur.push(near[k]);
+    cur.push(now);
   }
   passes.push(cur);
-
-  const expectedGain = climb.lengthKm * 1000 * (climb.avgGradientPct / 100);
   const maxBackM = climb.lengthKm * 1000 * 1.8 + 500;
   const results: number[] = [];
 
@@ -198,9 +215,9 @@ export function ascentSeconds(streams: StreamSet, climb: Climb): number[] {
     const covered = dist[top] - dist[base];
 
     if (
-      seconds > 60 &&
-      gain >= expectedGain * 0.5 &&
-      covered >= climb.lengthKm * 1000 * 0.4
+      seconds > 30 &&
+      gain >= expectedGain * 0.4 &&
+      covered >= climb.lengthKm * 1000 * 0.3
     ) {
       results.push(seconds);
     }
@@ -214,6 +231,12 @@ export interface SyncResult {
   ridesScanned: number;
   exactTimes: number;
   workerOutdated: boolean;
+  /** Rides whose GPS/altitude streams were read successfully. */
+  streamsRead: number;
+  /** Rides whose streams could not be read. */
+  streamsFailed: number;
+  /** True when Strava's API rate limit stopped the measurement. */
+  rateLimited: boolean;
 }
 
 export async function syncStrava(
@@ -266,6 +289,10 @@ export async function syncStrava(
   const exact = new Map<string, { seconds: number; date: string; actId: number; actName: string }>();
   const passes = new Map<string, number>();
 
+  let streamsRead = 0;
+  let streamsFailed = 0;
+  let rateLimited = false;
+
   if (!workerOutdated) {
     const ids = [...actToClimbs.keys()].slice(0, 40);
     let done = 0;
@@ -275,6 +302,7 @@ export async function syncStrava(
       try {
         const { streams, refresh_token: nrt } = await fetchStreams(rt, actId);
         if (nrt) rt = nrt;
+        streamsRead += 1;
         const act = actById.get(actId);
         for (const cid of actToClimbs.get(actId) || []) {
           const climb = climbs.find((c) => c.id === cid);
@@ -293,8 +321,12 @@ export async function syncStrava(
             });
           }
         }
-      } catch {
-        /* skip this ride */
+      } catch (e) {
+        streamsFailed += 1;
+        if ((e as Error).message === 'RATE_LIMIT') {
+          rateLimited = true;
+          break; // no point hammering a rate-limited API
+        }
       }
     }
   }
@@ -315,7 +347,16 @@ export async function syncStrava(
     });
   }
 
-  return { matches, refresh_token: rt, ridesScanned: activities.length, exactTimes, workerOutdated };
+  return {
+    matches,
+    refresh_token: rt,
+    ridesScanned: activities.length,
+    exactTimes,
+    workerOutdated,
+    streamsRead,
+    streamsFailed,
+    rateLimited,
+  };
 }
 
 export function formatDuration(seconds: number): string {

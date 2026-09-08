@@ -56,11 +56,15 @@ export function useStrava() {
       } else {
         const base = `Found ${result.matches.length} climb${result.matches.length === 1 ? '' : 's'} in ${result.ridesScanned} rides`;
         if (result.workerOutdated) {
-          setStatus(`${base} — showing ride times. Update your Val.town worker for exact climb times.`);
+          setStatus(`${base} — showing ride times. Your Val.town worker is out of date (no /version), so exact climb times can't be measured.`);
+        } else if (result.rateLimited) {
+          setStatus(`${base} — Strava's rate limit was reached. Wait ~15 minutes and press Sync again to get exact climb times.`);
         } else if (result.exactTimes > 0) {
-          setStatus(`${base} · ${result.exactTimes} with an exact climb time ⏱️`);
+          setStatus(`${base} · ${result.exactTimes} with an exact climb time ⏱️ (read ${result.streamsRead} rides)`);
+        } else if (result.streamsRead === 0) {
+          setStatus(`${base} — could not read GPS data for any ride (${result.streamsFailed} failed). Check the Val.town worker.`);
         } else {
-          setStatus(`${base} — couldn't measure exact climb times from the GPS data.`);
+          setStatus(`${base} — read GPS data for ${result.streamsRead} rides, but no full ascent was detected. The summit coordinates may not line up with your route.`);
         }
       }
     } catch (e) {
