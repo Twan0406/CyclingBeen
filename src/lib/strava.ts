@@ -45,20 +45,6 @@ export interface StravaActivitySlim {
   end_latlng?: [number, number];
 }
 
-interface SegmentEffort {
-  elapsed_time: number;
-  moving_time: number;
-  distance: number;
-  segment: {
-    id: number;
-    name: string;
-    climb_category: number;
-    distance: number;
-    start_latlng?: [number, number];
-    end_latlng?: [number, number];
-  } | null;
-}
-
 export interface ClimbMatch {
   climbId: string;
   seconds: number;
@@ -78,6 +64,18 @@ export async function exchangeCode(code: string): Promise<StravaTokens> {
   const data = await res.json();
   if (!res.ok || data.error) throw new Error(data.error || 'Strava exchange failed');
   return data;
+}
+
+/** 2 = worker supports the generic /api proxy (exact climb times). 1 = old worker. */
+export async function workerVersion(): Promise<number> {
+  try {
+    const res = await fetch(`${WORKER_URL}/version`);
+    if (!res.ok) return 1;
+    const data = await res.json();
+    return typeof data.version === 'number' ? data.version : 1;
+  } catch {
+    return 1;
+  }
 }
 
 async function fetchActivities(
@@ -100,18 +98,28 @@ async function fetchActivities(
   return { activities: all, refresh_token: refresh };
 }
 
-async function fetchActivityEfforts(
+interface StreamSet {
+  latlng?: { data: [number, number][] };
+  time?: { data: number[] };
+  altitude?: { data: number[] };
+  distance?: { data: number[] };
+}
+
+async function fetchStreams(
   refreshToken: string,
   activityId: number,
-): Promise<{ segment_efforts: SegmentEffort[]; refresh_token: string }> {
-  const res = await fetch(`${WORKER_URL}/activity`, {
+): Promise<{ streams: StreamSet; refresh_token: string }> {
+  const res = await fetch(`${WORKER_URL}/api`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refresh_token: refreshToken, activityId }),
+    body: JSON.stringify({
+      refresh_token: refreshToken,
+      endpoint: `activities/${activityId}/streams?keys=latlng,time,altitude,distance&key_by_type=true`,
+    }),
   });
-  const data = await res.json();
-  if (!res.ok || data.error) throw new Error(data.error || 'activity failed');
-  return data;
+  const body = await res.json();
+  if (!res.ok || body.error) throw new Error(body.error || 'streams failed');
+  return { streams: (body.data || {}) as StreamSet, refresh_token: body.refresh_token };
 }
 
 function isRide(a: StravaActivitySlim): boolean {
@@ -124,43 +132,90 @@ function isRide(a: StravaActivitySlim): boolean {
   );
 }
 
-// Picks the best (fastest) segment effort that represents the full climb: a
-// categorized climb whose top sits near the summit and that covers most of the
-// climb's length. Returns elapsed seconds, or null if no good match.
-function bestEffortForClimb(efforts: SegmentEffort[], climb: Climb): number | null {
-  const NEAR_KM = 1.5;
-  const targetM = climb.lengthKm * 1000;
-  // A "full climb" segment tops out near the summit and has a length close to
-  // the climb's own length (so partial segments and wrong routes are rejected).
-  const candidates = efforts.filter((e) => {
-    const seg = e.segment;
-    if (!seg || !seg.end_latlng) return false;
-    const nearSummit = distanceKm(seg.end_latlng[0], seg.end_latlng[1], climb.lat, climb.lng) <= NEAR_KM;
-    const d = seg.distance ?? 0;
-    const lengthOk = d >= targetM * 0.7 && d <= targetM * 1.3;
-    return nearSummit && lengthOk;
-  });
-  if (candidates.length === 0) return null;
-  // Prefer the segment whose length best matches the climb; fastest effort on it.
-  candidates.sort(
-    (a, b) => Math.abs((a.segment!.distance ?? 0) - targetM) - Math.abs((b.segment!.distance ?? 0) - targetM),
-  );
-  const bestSegId = candidates[0].segment!.id;
-  const sameSeg = candidates.filter((c) => c.segment!.id === bestSegId);
-  return Math.min(...sameSeg.map((c) => c.elapsed_time));
+/**
+ * Finds every ascent of `climb` inside one ride and returns their durations.
+ *
+ * For each pass near the summit we walk back through the altitude stream to the
+ * foot of the final continuous climb, then take the time between there and the
+ * top. This measures the actual climb — not the whole ride — and naturally
+ * handles repeats of the same climb within one ride.
+ */
+export function ascentSeconds(streams: StreamSet, climb: Climb): number[] {
+  const ll = streams.latlng?.data;
+  const t = streams.time?.data;
+  const alt = streams.altitude?.data;
+  const dist = streams.distance?.data;
+  if (!ll || !t || !alt || !dist) return [];
+  const n = Math.min(ll.length, t.length, alt.length, dist.length);
+  if (n < 10) return [];
+
+  // Points that pass close to the summit.
+  const radiusKm = Math.max(0.4, Math.min(1.2, climb.lengthKm * 0.15));
+  const near: number[] = [];
+  for (let i = 0; i < n; i++) {
+    if (distanceKm(ll[i][0], ll[i][1], climb.lat, climb.lng) <= radiusKm) near.push(i);
+  }
+  if (near.length === 0) return [];
+
+  // Split into separate passes (a gap of >5 min means a new attempt).
+  const passes: number[][] = [];
+  let cur: number[] = [near[0]];
+  for (let k = 1; k < near.length; k++) {
+    if (t[near[k]] - t[near[k - 1]] > 300) {
+      passes.push(cur);
+      cur = [];
+    }
+    cur.push(near[k]);
+  }
+  passes.push(cur);
+
+  const expectedGain = climb.lengthKm * 1000 * (climb.avgGradientPct / 100);
+  const maxBackM = climb.lengthKm * 1000 * 1.8 + 500;
+  const results: number[] = [];
+
+  for (const pass of passes) {
+    // The summit is the highest point of the pass.
+    let top = pass[0];
+    for (const i of pass) if (alt[i] > alt[top]) top = i;
+
+    // Walk back to the bottom of the final continuous ascent.
+    let lo = top;
+    let minAlt = alt[top];
+    for (let j = top - 1; j >= 0; j--) {
+      if (dist[top] - dist[j] > maxBackM) { lo = j; break; }
+      if (alt[j] < minAlt) minAlt = alt[j];
+      else if (alt[j] > minAlt + 25) { lo = j; break; }
+      lo = j;
+    }
+    // Start at the point nearest the top that still sits at the bottom height,
+    // so a flat approach isn't counted as part of the climb. The small tolerance
+    // absorbs GPS altitude noise without eating into the climb itself.
+    let base = lo;
+    for (let j = lo; j < top; j++) if (alt[j] <= minAlt + 2) base = j;
+
+    const seconds = t[top] - t[base];
+    const gain = alt[top] - alt[base];
+    const covered = dist[top] - dist[base];
+
+    if (
+      seconds > 60 &&
+      gain >= expectedGain * 0.5 &&
+      covered >= climb.lengthKm * 1000 * 0.4
+    ) {
+      results.push(seconds);
+    }
+  }
+  return results;
 }
 
 export interface SyncResult {
   matches: ClimbMatch[];
   refresh_token: string;
   ridesScanned: number;
-  segmentTimes: number;
-  effortsFetched: number;
-  effortsFailed: number;
+  exactTimes: number;
+  workerOutdated: boolean;
 }
 
-// Full sync: proximity-match rides to climbs, count attempts, then refine each
-// matched climb with the precise Strava segment time where available.
 export async function syncStrava(
   refreshToken: string,
   climbs: Climb[],
@@ -173,16 +228,19 @@ export async function syncStrava(
   interface Agg { best: number; date: string; actId: number; actName: string; attempts: number }
   const perClimb = new Map<string, Agg>();
   const actToClimbs = new Map<number, string[]>();
+  const actById = new Map<number, StravaActivitySlim>();
 
   for (const act of activities) {
     if (!isRide(act)) continue;
     const track = act.summary_polyline ? decodePolyline(act.summary_polyline) : [];
     if (track.length === 0) continue;
     for (const climb of climbs) {
-      if (act.start_latlng && distanceKm(act.start_latlng[0], act.start_latlng[1], climb.lat, climb.lng) > 120) {
-        continue;
-      }
+      if (
+        act.start_latlng &&
+        distanceKm(act.start_latlng[0], act.start_latlng[1], climb.lat, climb.lng) > 120
+      ) continue;
       if (!trackPassesNear(track, climb.lat, climb.lng, 1.5)) continue;
+
       const ride = act.moving_time || act.elapsed_time || 0;
       const cur = perClimb.get(climb.id);
       if (!cur) {
@@ -197,62 +255,67 @@ export async function syncStrava(
         }
       }
       actToClimbs.set(act.id, [...(actToClimbs.get(act.id) || []), climb.id]);
+      actById.set(act.id, act);
     }
   }
 
-  // Refine with precise segment times (best-effort; skipped if the worker is an
-  // older version without the /activity endpoint).
-  const matchedActIds = [...actToClimbs.keys()].slice(0, 60);
+  // Exact climb times from the ride's GPS/altitude streams.
   let rt = refresh_token;
-  const precise = new Map<string, number>();
-  let done = 0;
-  let effortsFetched = 0;
-  let effortsFailed = 0;
-  for (const actId of matchedActIds) {
-    done += 1;
-    onProgress?.(`Reading climb segments… ${done}/${matchedActIds.length}`);
-    try {
-      const { segment_efforts, refresh_token: nrt } = await fetchActivityEfforts(rt, actId);
-      if (nrt) rt = nrt;
-      effortsFetched += 1;
-      for (const cid of actToClimbs.get(actId) || []) {
-        const climb = climbs.find((c) => c.id === cid);
-        if (!climb) continue;
-        const t = bestEffortForClimb(segment_efforts, climb);
-        if (t != null) {
-          const prev = precise.get(cid);
-          if (prev == null || t < prev) precise.set(cid, t);
+  const version = await workerVersion();
+  const workerOutdated = version < 2;
+  const exact = new Map<string, { seconds: number; date: string; actId: number; actName: string }>();
+  const passes = new Map<string, number>();
+
+  if (!workerOutdated) {
+    const ids = [...actToClimbs.keys()].slice(0, 40);
+    let done = 0;
+    for (const actId of ids) {
+      done += 1;
+      onProgress?.(`Measuring climb times… ${done}/${ids.length}`);
+      try {
+        const { streams, refresh_token: nrt } = await fetchStreams(rt, actId);
+        if (nrt) rt = nrt;
+        const act = actById.get(actId);
+        for (const cid of actToClimbs.get(actId) || []) {
+          const climb = climbs.find((c) => c.id === cid);
+          if (!climb) continue;
+          const secs = ascentSeconds(streams, climb);
+          if (secs.length === 0) continue;
+          passes.set(cid, (passes.get(cid) ?? 0) + secs.length);
+          const fastest = Math.min(...secs);
+          const prev = exact.get(cid);
+          if (!prev || fastest < prev.seconds) {
+            exact.set(cid, {
+              seconds: fastest,
+              date: act?.start_date ?? new Date().toISOString(),
+              actId,
+              actName: act?.name ?? '',
+            });
+          }
         }
+      } catch {
+        /* skip this ride */
       }
-    } catch {
-      effortsFailed += 1;
     }
   }
 
   const matches: ClimbMatch[] = [];
-  let segmentTimes = 0;
+  let exactTimes = 0;
   for (const [cid, agg] of perClimb) {
-    const seg = precise.get(cid);
-    if (seg != null) segmentTimes += 1;
+    const e = exact.get(cid);
+    if (e) exactTimes += 1;
     matches.push({
       climbId: cid,
-      seconds: seg ?? agg.best,
-      date: agg.date,
-      activityId: agg.actId,
-      activityName: agg.actName,
-      attempts: agg.attempts,
-      isSegmentTime: seg != null,
+      seconds: e ? e.seconds : agg.best,
+      date: e ? e.date : agg.date,
+      activityId: e ? e.actId : agg.actId,
+      activityName: e ? e.actName : agg.actName,
+      attempts: passes.get(cid) ?? agg.attempts,
+      isSegmentTime: Boolean(e),
     });
   }
 
-  return {
-    matches,
-    refresh_token: rt,
-    ridesScanned: activities.length,
-    segmentTimes,
-    effortsFetched,
-    effortsFailed,
-  };
+  return { matches, refresh_token: rt, ridesScanned: activities.length, exactTimes, workerOutdated };
 }
 
 export function formatDuration(seconds: number): string {

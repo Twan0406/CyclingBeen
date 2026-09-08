@@ -1,13 +1,17 @@
 /**
- * Collect — Strava proxy for Val.town (HTTP val)
+ * Collect — Strava proxy for Val.town (HTTP val)  — v2
  *
- * Set these as Environment Variables in Val.town (Settings → Environment Variables):
+ * Environment Variables (Val.town → Env vars):
  *   STRAVA_CLIENT_ID
  *   STRAVA_CLIENT_SECRET
  *
- * Endpoints (POST, JSON):
- *   /exchange    { code }
+ * Endpoints (POST, JSON) — /api makes this future-proof: the app can call any
+ * Strava GET endpoint without this worker ever needing another update.
+ *   /version     -> { version: 2 }
+ *   /exchange    { code }                  -> tokens + athlete
  *   /activities  { refresh_token, page?, perPage? }
+ *   /api         { refresh_token, endpoint } -> { data, status, refresh_token }
+ *                 endpoint e.g. "activities/123/streams?keys=latlng,time,altitude,distance&key_by_type=true"
  */
 
 const STRAVA = "https://www.strava.com";
@@ -15,7 +19,7 @@ const STRAVA = "https://www.strava.com";
 function withCors(resp: Response): Response {
   const h = new Headers(resp.headers);
   h.set("Access-Control-Allow-Origin", "*");
-  h.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  h.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   h.set("Access-Control-Allow-Headers", "Content-Type");
   return new Response(resp.body, { status: resp.status, headers: h });
 }
@@ -47,8 +51,12 @@ export default async function (request: Request): Promise<Response> {
   if (request.method === "OPTIONS") return withCors(new Response(null, { status: 204 }));
 
   const url = new URL(request.url);
+  const path = url.pathname;
+
   try {
-    if (url.pathname.endsWith("/exchange") && request.method === "POST") {
+    if (path.endsWith("/version")) return json({ version: 2 });
+
+    if (path.endsWith("/exchange") && request.method === "POST") {
       const { code } = await request.json();
       const r = await fetch(`${STRAVA}/oauth/token`, {
         method: "POST",
@@ -77,34 +85,27 @@ export default async function (request: Request): Promise<Response> {
       });
     }
 
-    if (url.pathname.endsWith("/activity") && request.method === "POST") {
-      const { refresh_token, activityId } = await request.json();
+    // Generic, read-only Strava API proxy.
+    if (path.endsWith("/api") && request.method === "POST") {
+      const { refresh_token, endpoint } = await request.json();
+      const safe =
+        typeof endpoint === "string" &&
+        endpoint.length < 300 &&
+        !endpoint.includes("..") &&
+        !endpoint.startsWith("/") &&
+        /^[A-Za-z0-9_\-\/]+(\?[A-Za-z0-9_\-=&,%.]*)?$/.test(endpoint);
+      if (!safe) return json({ error: "invalid endpoint" }, 400);
+
       const t = await refresh(refresh_token);
       if (!t.access_token) return json({ error: "refresh failed", detail: t }, 400);
-      const ar = await fetch(
-        `${STRAVA}/api/v3/activities/${activityId}?include_all_efforts=true`,
-        { headers: { Authorization: `Bearer ${t.access_token}` } },
-      );
-      const a = await ar.json();
-      const segment_efforts = ((a && a.segment_efforts) || []).map((e: any) => ({
-        elapsed_time: e.elapsed_time,
-        moving_time: e.moving_time,
-        distance: e.distance,
-        segment: e.segment
-          ? {
-              id: e.segment.id,
-              name: e.segment.name,
-              climb_category: e.segment.climb_category,
-              distance: e.segment.distance,
-              start_latlng: e.segment.start_latlng,
-              end_latlng: e.segment.end_latlng,
-            }
-          : null,
-      }));
-      return json({ segment_efforts, refresh_token: t.refresh_token });
+      const r = await fetch(`${STRAVA}/api/v3/${endpoint}`, {
+        headers: { Authorization: `Bearer ${t.access_token}` },
+      });
+      const data = await r.json();
+      return json({ data, status: r.status, refresh_token: t.refresh_token });
     }
 
-    if (url.pathname.endsWith("/activities") && request.method === "POST") {
+    if (path.endsWith("/activities") && request.method === "POST") {
       const { refresh_token, page = 1, perPage = 100 } = await request.json();
       const t = await refresh(refresh_token);
       if (!t.access_token) return json({ error: "refresh failed", detail: t }, 400);
@@ -114,7 +115,7 @@ export default async function (request: Request): Promise<Response> {
       );
       const acts = await ar.json();
       if (!Array.isArray(acts)) return json({ error: "activities failed", detail: acts }, 400);
-      const activities = acts.map((a: Record<string, unknown> & { map?: { summary_polyline?: string } }) => ({
+      const activities = acts.map((a: any) => ({
         id: a.id,
         name: a.name,
         type: a.type,

@@ -68,8 +68,18 @@ export default function MyClimbs() {
         ) : null}
       </div>
 
+      {strava.configured && strava.connected && strava.outdated && (
+        <div className="mb-4 text-sm rounded-xl px-4 py-3 bg-[#f78e3d]/10 ring-1 ring-[#f78e3d]/30 text-[#f2b53a]">
+          <strong className="font-semibold">Exact climb times are off.</strong>{' '}
+          <span className="text-[#c4cad6]">
+            Your Strava proxy is running an older version, so times fall back to the whole ride.
+            Paste the updated worker code into Val.town (once) and press Sync again.
+          </span>
+        </div>
+      )}
+
       {strava.status && (
-        <div className="mb-6 text-sm text-slate-400 bg-[#111827] ring-1 ring-white/8 rounded-xl px-4 py-2.5">
+        <div className="mb-6 text-sm text-[#8b93a3] bg-[#12151c] ring-1 ring-[#20242e] rounded-xl px-4 py-2.5">
           {strava.status}
         </div>
       )}

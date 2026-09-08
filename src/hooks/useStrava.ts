@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useClimbs } from '../context/ClimbsContext';
-import { stravaConfigured, stravaAuthorizeUrl, syncStrava } from '../lib/strava';
+import { stravaConfigured, stravaAuthorizeUrl, syncStrava, workerVersion } from '../lib/strava';
 import { loadPublicStrava, getRefreshToken, updateRefreshToken } from '../lib/stravaStore';
 
 export function useStrava() {
@@ -10,6 +10,7 @@ export function useStrava() {
   const [athleteName, setAthleteName] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [outdated, setOutdated] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -20,6 +21,14 @@ export function useStrava() {
       .then((s) => setAthleteName(s?.athleteName ?? null))
       .catch(() => {});
   }, [user]);
+
+  // Check once whether the Strava proxy supports exact climb times.
+  useEffect(() => {
+    if (!stravaConfigured()) return;
+    workerVersion()
+      .then((v) => setOutdated(v < 2))
+      .catch(() => {});
+  }, []);
 
   const connect = useCallback(() => {
     window.location.href = stravaAuthorizeUrl();
@@ -40,21 +49,20 @@ export function useStrava() {
         await updateRefreshToken(user.uid, result.refresh_token);
       }
       await applyStravaMatches(result.matches);
-      let note = '';
-      if (result.matches.length > 0) {
-        if (result.effortsFetched === 0) {
-          note = ' · ⚠️ segment data unavailable — update your Val.town worker to get exact climb times';
-        } else if (result.segmentTimes > 0) {
-          note = ` · ${result.segmentTimes} with exact climb time (segments read for ${result.effortsFetched} rides)`;
+      setOutdated(result.workerOutdated);
+
+      if (result.matches.length === 0) {
+        setStatus(`No matching climbs in your ${result.ridesScanned} most recent rides yet.`);
+      } else {
+        const base = `Found ${result.matches.length} climb${result.matches.length === 1 ? '' : 's'} in ${result.ridesScanned} rides`;
+        if (result.workerOutdated) {
+          setStatus(`${base} — showing ride times. Update your Val.town worker for exact climb times.`);
+        } else if (result.exactTimes > 0) {
+          setStatus(`${base} · ${result.exactTimes} with an exact climb time ⏱️`);
         } else {
-          note = ` · read segments for ${result.effortsFetched} rides but found no full-climb match`;
+          setStatus(`${base} — couldn't measure exact climb times from the GPS data.`);
         }
       }
-      setStatus(
-        result.matches.length
-          ? `Found ${result.matches.length} climb${result.matches.length === 1 ? '' : 's'} in ${result.ridesScanned} rides${note}.`
-          : `No matching climbs in your ${result.ridesScanned} most recent rides yet.`,
-      );
     } catch (e) {
       setStatus('Sync failed: ' + (e as Error).message);
     } finally {
@@ -68,6 +76,7 @@ export function useStrava() {
     athleteName,
     syncing,
     status,
+    outdated,
     connect,
     sync,
   };
