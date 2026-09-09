@@ -1,9 +1,10 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ArrowLeft, CalendarDays, MapPin, Route, TrendingUp, Layers, Lightbulb, Compass, Play,
+  Tent, Flag, Sparkles, Backpack, Train, Home, Coffee,
 } from 'lucide-react';
 import ClimbPhoto from '../components/ClimbPhoto';
-import { destinations } from '../data/destinations';
+import { allDestinations as destinations } from '../data/allDestinations';
 import { categories } from '../types/destination';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { distanceKm } from '../lib/polyline';
@@ -82,15 +83,113 @@ export default function DestinationDetail() {
             <Item icon={<Layers className="w-4 h-4" />} label="Surface" value={place.surface} />
             <Item
               icon={<Route className="w-4 h-4" />}
-              label="Typical ride"
+              label={place.category === 'events' ? 'Main distance' : 'Typical ride'}
               value={
                 place.elevationGainM != null
                   ? `${place.typicalRideKm} km · ${place.elevationGainM.toLocaleString('de-DE')} m climbing`
                   : `${place.typicalRideKm} km`
               }
             />
+            {place.days != null && place.totalKm != null && (
+              <Item
+                icon={<Tent className="w-4 h-4" />}
+                label="The whole route"
+                value={`${place.totalKm.toLocaleString('de-DE')} km in about ${place.days} days${
+                  place.totalElevationM
+                    ? ` · ${place.totalElevationM.toLocaleString('de-DE')} m climbing`
+                    : ''
+                }`}
+              />
+            )}
+            {place.whenHeld && (
+              <Item icon={<Flag className="w-4 h-4" />} label="When it's held" value={place.whenHeld} />
+            )}
+            {place.distanceOptionsKm && place.distanceOptionsKm.length > 1 && (
+              <Item
+                icon={<Route className="w-4 h-4" />}
+                label="Distance options"
+                value={place.distanceOptionsKm.map((d) => `${d} km`).join(' · ')}
+              />
+            )}
           </div>
+          {place.eventNote && (
+            <p className="font-mono-dc text-[10px] text-[#6b6157] mt-2 uppercase tracking-[0.1em]">
+              {place.eventNote}
+            </p>
+          )}
         </section>
+
+        {place.routes && place.routes.length > 0 && (
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-1 flex items-center gap-2">
+              <Route className="w-5 h-5 text-[#dfa04a]" /> Rides to do here
+            </h2>
+            <p className="text-[13px] text-[#a1968a] mb-4">
+              Suggested routes, from a half day to a full one.
+            </p>
+            <div className="space-y-3">
+              {place.routes.map((r) => (
+                <article
+                  key={r.name}
+                  className="bg-[#1c1915] ring-1 ring-[#322b24] rounded-2xl px-5 py-4"
+                >
+                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                    <h3 className="text-[17px] font-semibold text-[#f4efe7]">{r.name}</h3>
+                    <span
+                      className="font-mono-dc text-[10px] uppercase tracking-[0.1em] px-2 py-0.5 rounded"
+                      style={{
+                        background: `${difficultyColor(r.difficulty)}22`,
+                        color: difficultyColor(r.difficulty),
+                      }}
+                    >
+                      {r.difficulty}
+                    </span>
+                  </div>
+                  <p className="font-mono-dc text-[11px] text-[#7a7066] mt-1">
+                    {r.distanceKm} km
+                    {r.elevationM != null ? ` · ${r.elevationM.toLocaleString('de-DE')} m climbing` : ''}
+                  </p>
+                  <p className="text-[15px] text-[#d6cec2] mt-2 leading-relaxed">{r.description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {place.highlights && place.highlights.length > 0 && (
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#dfa04a]" /> Don't miss
+            </h2>
+            <ul className="space-y-2">
+              {place.highlights.map((h, i) => (
+                <li key={i} className="flex gap-3 text-[15px] text-[#d6cec2] leading-relaxed">
+                  <span className="text-[#dfa04a] font-bold shrink-0">·</span>
+                  {h}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {(place.gettingThere || place.basedIn || place.refuel) && (
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <Backpack className="w-5 h-5 text-[#dfa04a]" /> Practicalities
+            </h2>
+            <div className="space-y-3">
+              {place.gettingThere && (
+                <Item icon={<Train className="w-4 h-4" />} label="Getting there" value={place.gettingThere} />
+              )}
+              {place.basedIn && (
+                <Item icon={<Home className="w-4 h-4" />} label="Where to base yourself" value={place.basedIn} />
+              )}
+              {place.refuel && (
+                <Item icon={<Coffee className="w-4 h-4" />} label="Food & water" value={place.refuel} />
+              )}
+            </div>
+          </section>
+        )}
 
         {place.tips.length > 0 && (
           <section>
@@ -179,4 +278,10 @@ function Item({ icon, label, value }: { icon: React.ReactNode; label: string; va
       </span>
     </div>
   );
+}
+
+function difficultyColor(d: 'easy' | 'moderate' | 'hard'): string {
+  if (d === 'easy') return '#7f8f5f';
+  if (d === 'moderate') return '#dfa04a';
+  return '#c4633a';
 }

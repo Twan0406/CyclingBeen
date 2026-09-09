@@ -8,6 +8,8 @@ export interface PhotoSubject {
   lng: number;
   gradient: string;
   photoUrl?: string;
+  /** Commons search phrase, used to steer towards cycling imagery. */
+  photoQuery?: string;
 }
 
 interface Props {
@@ -18,7 +20,13 @@ interface Props {
 
 /** Renders the subject's photo over its gradient placeholder. */
 export default function ClimbPhoto({ subject, size = 800, className = '' }: Props) {
-  const fetched = useClimbPhoto(subject.wikiTitle, subject.lat, subject.lng, size);
+  const fetched = useClimbPhoto(
+    subject.wikiTitle,
+    subject.lat,
+    subject.lng,
+    size,
+    subject.photoQuery,
+  );
   const photo = subject.photoUrl ?? fetched;
 
   return (

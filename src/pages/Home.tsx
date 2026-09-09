@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Mountain, Trophy, Route } from 'lucide-react';
 import { useClimbs } from '../context/ClimbsContext';
 import { useAuth } from '../context/AuthContext';
-import { destinations } from '../data/destinations';
+import { allDestinations as destinations } from '../data/allDestinations';
 import { categories } from '../types/destination';
 import ClimbPhoto from '../components/ClimbPhoto';
 import DestinationCard from '../components/DestinationCard';
@@ -15,8 +15,11 @@ export default function Home() {
   const hero = climbs.find((c) => c.id === 'mont-ventoux') ?? climbs[0];
   const featured = [
     destinations.find((d) => d.id === 'crete-senesi'),
+    destinations.find((d) => d.id === 'torino-nice-rally'),
+    destinations.find((d) => d.id === 'maratona-dles-dolomites'),
     destinations.find((d) => d.id === 'zuid-limburg'),
     destinations.find((d) => d.id === 'finale-ligure'),
+    destinations.find((d) => d.id === 'zeeland'),
   ].filter(Boolean) as typeof destinations;
 
   const total = climbs.length + destinations.length;
@@ -44,9 +47,9 @@ export default function Home() {
               Every road is an adventure
             </h1>
             <p className="mt-5 text-[17px] md:text-[19px] text-[#d6cec2] max-w-[54ch] leading-relaxed">
-              Legendary mountain passes, white gravel roads, sea dikes with endless
-              horizons and singletrack that ends at the beach. Find where to ride —
-              then keep a record of everything you've conquered.
+              Legendary mountain passes, white gravel roads, multi-day routes across
+              a country and events worth training a season for. Find your next
+              adventure — then keep a record of everything you've conquered.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -72,7 +75,7 @@ export default function Home() {
           <SectionHead
             eyebrow="What kind of riding?"
             title="Pick your terrain"
-            sub={`${total} destinations across five kinds of riding, each with a practical guide.`}
+            sub={`${total} destinations across ${categories.length} kinds of riding, each with a practical guide.`}
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {categories.map((cat) => {

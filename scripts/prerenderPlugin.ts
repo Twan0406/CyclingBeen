@@ -3,7 +3,7 @@ import path from 'node:path';
 import type { Plugin } from 'vite';
 import { seedClimbs } from '../src/data/climbs';
 import { climbGuides } from '../src/data/climbGuides';
-import { destinations } from '../src/data/destinations';
+import { allDestinations as destinations } from '../src/data/allDestinations';
 import { categories } from '../src/types/destination';
 import { seasonFor, nearbyClimbs } from '../src/lib/climbGuide';
 import type { Climb } from '../src/types/climb';
@@ -115,11 +115,47 @@ function placeBody(p: Destination): string {
        <li><strong>Typical ride:</strong> ${p.typicalRideKm} km${p.elevationGainM != null ? ` \u00b7 ${p.elevationGainM} m climbing` : ''}</li>
      </ul>`,
   );
+  if (p.days != null && p.totalKm != null) {
+    parts.push(
+      `<p style="color:#d6cec2;line-height:1.7"><strong>The whole route:</strong> ${p.totalKm} km in about ${p.days} days${p.totalElevationM ? ` \u00b7 ${p.totalElevationM} m climbing` : ''}</p>`,
+    );
+  }
+  if (p.whenHeld) {
+    parts.push(
+      `<p style="color:#d6cec2;line-height:1.7"><strong>When:</strong> ${esc(p.whenHeld)}${p.distanceOptionsKm ? ` \u00b7 <strong>Distances:</strong> ${p.distanceOptionsKm.map((d) => `${d} km`).join(', ')}` : ''}</p>`,
+    );
+  }
+  if (p.routes?.length) {
+    parts.push(
+      `<h2 style="font-size:20px;margin:24px 0 8px">Rides to do here</h2>${p.routes
+        .map(
+          (r) =>
+            `<h3 style="font-size:17px;margin:16px 0 4px">${esc(r.name)}</h3><p style="color:#7a7066;margin:0 0 4px">${r.distanceKm} km${r.elevationM != null ? ` \u00b7 ${r.elevationM} m climbing` : ''} \u00b7 ${esc(r.difficulty)}</p><p style="color:#d6cec2;line-height:1.7;margin:0">${esc(r.description)}</p>`,
+        )
+        .join('')}`,
+    );
+  }
+  if (p.highlights?.length) {
+    parts.push(
+      `<h2 style="font-size:20px;margin:24px 0 8px">Don't miss</h2><ul style="color:#d6cec2;line-height:1.7">${p.highlights
+        .map((x) => `<li>${esc(x)}</li>`)
+        .join('')}</ul>`,
+    );
+  }
   if (p.tips.length) {
     parts.push(
       `<h2 style="font-size:20px;margin:24px 0 8px">Local tips</h2><ul style="color:#d6cec2;line-height:1.7">${p.tips
         .map((x) => `<li>${esc(x)}</li>`)
         .join('')}</ul>`,
+    );
+  }
+  if (p.gettingThere || p.basedIn || p.refuel) {
+    parts.push(
+      `<h2 style="font-size:20px;margin:24px 0 8px">Practicalities</h2><ul style="color:#d6cec2;line-height:1.7">${[
+        p.gettingThere ? `<li><strong>Getting there:</strong> ${esc(p.gettingThere)}</li>` : '',
+        p.basedIn ? `<li><strong>Where to base yourself:</strong> ${esc(p.basedIn)}</li>` : '',
+        p.refuel ? `<li><strong>Food &amp; water:</strong> ${esc(p.refuel)}</li>` : '',
+      ].join('')}</ul>`,
     );
   }
   parts.push(`<p style="margin-top:28px"><a style="color:#dfa04a" href="/rides">All cycling destinations</a></p>`);

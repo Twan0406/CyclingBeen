@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 import ClimbCard from '../components/ClimbCard';
 import DestinationCard from '../components/DestinationCard';
 import { useClimbs } from '../context/ClimbsContext';
-import { destinations } from '../data/destinations';
+import { allDestinations as destinations } from '../data/allDestinations';
 import { categories, type RideCategory } from '../types/destination';
 import { usePageMeta } from '../hooks/usePageMeta';
 

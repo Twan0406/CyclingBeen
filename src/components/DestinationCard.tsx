@@ -27,9 +27,23 @@ export default function DestinationCard({ destination }: { destination: Destinat
           </p>
           <p className="text-[13px] text-[#7a7066] mt-2 leading-snug line-clamp-2">{destination.summary}</p>
           <div className="flex gap-[22px] mt-4">
-            <Stat label="Typical ride" value={`${destination.typicalRideKm} km`} />
-            {destination.elevationGainM != null && (
-              <Stat label="Climbing" value={`${destination.elevationGainM.toLocaleString('de-DE')} m`} />
+            {destination.category === 'bikepacking' && destination.totalKm != null ? (
+              <>
+                <Stat label="Route" value={`${destination.totalKm.toLocaleString('de-DE')} km`} />
+                {destination.days != null && <Stat label="Days" value={`± ${destination.days}`} />}
+              </>
+            ) : destination.category === 'events' ? (
+              <>
+                <Stat label="Distance" value={`${destination.typicalRideKm} km`} />
+                {destination.whenHeld && <Stat label="When" value={destination.whenHeld.split(',')[0]} />}
+              </>
+            ) : (
+              <>
+                <Stat label="Typical ride" value={`${destination.typicalRideKm} km`} />
+                {destination.elevationGainM != null && (
+                  <Stat label="Climbing" value={`${destination.elevationGainM.toLocaleString('de-DE')} m`} />
+                )}
+              </>
             )}
           </div>
         </div>
