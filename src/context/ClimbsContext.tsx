@@ -24,46 +24,72 @@ interface ClimbsContextType {
   climbTimes: TimesMap;
   toggleCompleted: (climbId: string) => void;
   applyStravaMatches: (matches: ClimbMatch[]) => Promise<void>;
+  /** Destination ids the rider has marked as ridden. */
+  visited: Set<string>;
+  toggleVisited: (id: string) => void;
+  /** Climb and destination ids saved as a goal. */
+  wishlist: Set<string>;
+  toggleWishlist: (id: string) => void;
 }
 
 const ClimbsContext = createContext<ClimbsContextType | null>(null);
 
-async function loadRemote(uid: string): Promise<{ completed: Set<string>; times: TimesMap }> {
+interface RemoteState {
+  completed: Set<string>;
+  times: TimesMap;
+  visited: Set<string>;
+  wishlist: Set<string>;
+}
+
+async function loadRemote(uid: string): Promise<RemoteState> {
   const db = await getDb();
   const { doc, getDoc } = await import('firebase/firestore');
   const snap = await getDoc(doc(db, 'users', uid));
-  if (!snap.exists()) return { completed: new Set(), times: {} };
+  const empty: RemoteState = {
+    completed: new Set(),
+    times: {},
+    visited: new Set(),
+    wishlist: new Set(),
+  };
+  if (!snap.exists()) return empty;
   const data = snap.data();
   return {
     completed: new Set((data.completed as string[]) || []),
     times: (data.climbTimes as TimesMap) || {},
+    visited: new Set((data.visited as string[]) || []),
+    wishlist: new Set((data.wishlist as string[]) || []),
   };
 }
 
 async function saveRemote(
   uid: string,
-  completed: Set<string>,
-  times: TimesMap,
+  fields: Partial<{
+    completed: Set<string>;
+    climbTimes: TimesMap;
+    visited: Set<string>;
+    wishlist: Set<string>;
+  }>,
   profile: { displayName: string | null; photoURL: string | null },
 ) {
   const db = await getDb();
   const { doc, setDoc } = await import('firebase/firestore');
-  await setDoc(
-    doc(db, 'users', uid),
-    {
-      completed: [...completed],
-      climbTimes: times,
-      displayName: profile.displayName,
-      photoURL: profile.photoURL,
-    },
-    { merge: true },
-  );
+  const payload: Record<string, unknown> = {
+    displayName: profile.displayName,
+    photoURL: profile.photoURL,
+  };
+  if (fields.completed) payload.completed = [...fields.completed];
+  if (fields.climbTimes) payload.climbTimes = fields.climbTimes;
+  if (fields.visited) payload.visited = [...fields.visited];
+  if (fields.wishlist) payload.wishlist = [...fields.wishlist];
+  await setDoc(doc(db, 'users', uid), payload, { merge: true });
 }
 
 export function ClimbsProvider({ children }: { children: ReactNode }) {
   const { user, signIn } = useAuth();
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [climbTimes, setClimbTimes] = useState<TimesMap>({});
+  const [visited, setVisited] = useState<Set<string>>(new Set());
+  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
 
   const userRef = useRef(user);
   userRef.current = user;
@@ -77,14 +103,18 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
     if (!user) {
       setCompletedIds(new Set());
       setClimbTimes({});
+      setVisited(new Set());
+      setWishlist(new Set());
       return;
     }
     (async () => {
       try {
-        const { completed, times } = await loadRemote(user.uid);
+        const state = await loadRemote(user.uid);
         if (!alive) return;
-        setCompletedIds(completed);
-        setClimbTimes(times);
+        setCompletedIds(state.completed);
+        setClimbTimes(state.times);
+        setVisited(state.visited);
+        setWishlist(state.wishlist);
       } catch {
         /* ignore */
       }
@@ -114,10 +144,46 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
       const next = new Set(prev);
       if (next.has(climbId)) next.delete(climbId);
       else next.add(climbId);
-      saveRemote(u.uid, next, timesRef.current, u).catch(() => {});
+      saveRemote(u.uid, { completed: next, climbTimes: timesRef.current }, u).catch(() => {});
       return next;
     });
   }, [signIn]);
+
+  const toggleVisited = useCallback(
+    (id: string) => {
+      const u = userRef.current;
+      if (!u) {
+        signIn().catch(() => {});
+        return;
+      }
+      setVisited((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        saveRemote(u.uid, { visited: next }, u).catch(() => {});
+        return next;
+      });
+    },
+    [signIn],
+  );
+
+  const toggleWishlist = useCallback(
+    (id: string) => {
+      const u = userRef.current;
+      if (!u) {
+        signIn().catch(() => {});
+        return;
+      }
+      setWishlist((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        saveRemote(u.uid, { wishlist: next }, u).catch(() => {});
+        return next;
+      });
+    },
+    [signIn],
+  );
 
   const applyStravaMatches = useCallback(async (matches: ClimbMatch[]) => {
     const u = userRef.current;
@@ -152,12 +218,22 @@ export function ClimbsProvider({ children }: { children: ReactNode }) {
     }
     setCompletedIds(nextCompleted);
     setClimbTimes(nextTimes);
-    await saveRemote(u.uid, nextCompleted, nextTimes, u);
+    await saveRemote(u.uid, { completed: nextCompleted, climbTimes: nextTimes }, u);
   }, []);
 
   return (
     <ClimbsContext.Provider
-      value={{ climbs, loading: false, climbTimes, toggleCompleted, applyStravaMatches }}
+      value={{
+        climbs,
+        loading: false,
+        climbTimes,
+        toggleCompleted,
+        applyStravaMatches,
+        visited,
+        toggleVisited,
+        wishlist,
+        toggleWishlist,
+      }}
     >
       {children}
     </ClimbsContext.Provider>

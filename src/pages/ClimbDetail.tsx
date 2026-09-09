@@ -4,7 +4,7 @@ import { useClimbs } from '../context/ClimbsContext';
 import { useAuth } from '../context/AuthContext';
 import {
   ArrowLeft, ArrowUp, Ruler, TrendingUp, Check, Quote, Clock, Repeat,
-  CalendarDays, MapPin, Settings2, Timer, Lightbulb, Play, Compass,
+  CalendarDays, MapPin, Settings2, Timer, Lightbulb, Play, Compass, Bookmark,
 } from 'lucide-react';
 import ClimbPhoto from '../components/ClimbPhoto';
 import { loadRiders, type Rider } from '../lib/riders';
@@ -24,7 +24,8 @@ const difficultyColors: Record<string, string> = {
 export default function ClimbDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { climbs, climbTimes, toggleCompleted } = useClimbs();
+  const { climbs, climbTimes, toggleCompleted, wishlist, toggleWishlist } = useClimbs();
+  const isWished = id ? wishlist.has(id) : false;
   const { user } = useAuth();
   const climb = climbs.find((c) => c.id === id);
   const myTime = id ? climbTimes[id] : undefined;
@@ -235,12 +236,25 @@ export default function ClimbDetail() {
           ) : (
             <div className="text-center py-4">
               <p className="text-slate-400 text-sm mb-4">Ridden this one?</p>
-              <button
-                onClick={() => toggleCompleted(climb.id)}
-                className="bg-amber-400 hover:bg-amber-300 text-[#14120f] font-bold px-6 py-3 rounded-full transition-all shadow-lg shadow-amber-500/25"
-              >
-                Mark as Conquered
-              </button>
+              <div className="flex flex-wrap gap-3 justify-center">
+                <button
+                  onClick={() => toggleCompleted(climb.id)}
+                  className="bg-amber-400 hover:bg-amber-300 text-[#14120f] font-bold px-6 py-3 rounded-full transition-all shadow-lg shadow-amber-500/25"
+                >
+                  Mark as Conquered
+                </button>
+                <button
+                  onClick={() => toggleWishlist(climb.id)}
+                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-colors ${
+                    isWished
+                      ? 'bg-[#c4633a] text-[#fdf6ec] hover:bg-[#d4703f]'
+                      : 'border border-[#4a4038] text-[#f4efe7] hover:border-[#6b6157]'
+                  }`}
+                >
+                  <Bookmark className={`w-4 h-4 ${isWished ? 'fill-current' : ''}`} />
+                  {isWished ? 'On your list' : 'Add to my list'}
+                </button>
+              </div>
             </div>
           )}
         </section>

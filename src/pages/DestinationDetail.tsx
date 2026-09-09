@@ -1,19 +1,23 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ArrowLeft, CalendarDays, MapPin, Route, TrendingUp, Layers, Lightbulb, Compass, Play,
-  Tent, Flag, Sparkles, Backpack, Train, Home, Coffee,
+  Tent, Flag, Sparkles, Backpack, Train, Home, Coffee, Check, Bookmark,
 } from 'lucide-react';
 import ClimbPhoto from '../components/ClimbPhoto';
 import { allDestinations as destinations } from '../data/allDestinations';
 import { categories } from '../types/destination';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { distanceKm } from '../lib/polyline';
+import { useClimbs } from '../context/ClimbsContext';
 
 export default function DestinationDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const place = destinations.find((d) => d.id === id);
   const cat = categories.find((c) => c.id === place?.category);
+  const { visited, toggleVisited, wishlist, toggleWishlist } = useClimbs();
+  const isVisited = id ? visited.has(id) : false;
+  const isWished = id ? wishlist.has(id) : false;
 
   usePageMeta({
     title: place ? `${place.name} — cycling guide | Collect` : 'Destination | Collect',
@@ -68,6 +72,31 @@ export default function DestinationDetail() {
 
       <div className="px-4 py-8 space-y-10">
         <p className="text-[19px] text-[#e8e0d4] leading-relaxed font-display">{place.summary}</p>
+
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => toggleVisited(place.id)}
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors ${
+              isVisited
+                ? 'bg-[#dfa04a] text-[#1a1206] hover:bg-[#e8b463]'
+                : 'border border-[#4a4038] text-[#f4efe7] hover:border-[#6b6157]'
+            }`}
+          >
+            <Check className="w-4 h-4" strokeWidth={3} />
+            {isVisited ? "You've ridden here" : "I've ridden here"}
+          </button>
+          <button
+            onClick={() => toggleWishlist(place.id)}
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors ${
+              isWished
+                ? 'bg-[#c4633a] text-[#fdf6ec] hover:bg-[#d4703f]'
+                : 'border border-[#4a4038] text-[#f4efe7] hover:border-[#6b6157]'
+            }`}
+          >
+            <Bookmark className={`w-4 h-4 ${isWished ? 'fill-current' : ''}`} />
+            {isWished ? 'On your list' : 'Add to my list'}
+          </button>
+        </div>
 
         <section className="prose-ride">
           <p>{place.story}</p>

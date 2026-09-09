@@ -1,26 +1,50 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useClimbs } from '../context/ClimbsContext';
 import { useAuth } from '../context/AuthContext';
 import { useStrava } from '../hooks/useStrava';
 import ClimbCard from '../components/ClimbCard';
+import DestinationCard from '../components/DestinationCard';
 import StatCard from '../components/StatCard';
+import { allDestinations } from '../data/allDestinations';
+import { categories } from '../types/destination';
 import { formatDuration } from '../lib/strava';
-import { Mountain, TrendingUp, Ruler, RefreshCw, LogIn, Clock, Link2 } from 'lucide-react';
+import { usePageMeta } from '../hooks/usePageMeta';
+import {
+  Mountain, TrendingUp, Globe2, RefreshCw, LogIn, Clock, Link2, Bookmark, MapPin,
+} from 'lucide-react';
 
 export default function MyClimbs() {
-  const { climbs, climbTimes } = useClimbs();
+  const { climbs, climbTimes, visited, wishlist } = useClimbs();
   const { user, signIn } = useAuth();
   const strava = useStrava();
+
+  usePageMeta({ title: 'My rides | Collect' });
+
+  const conqueredClimbs = useMemo(() => climbs.filter((c) => c.completed), [climbs]);
+  const visitedPlaces = useMemo(
+    () => allDestinations.filter((d) => visited.has(d.id)),
+    [visited],
+  );
+  const savedClimbs = useMemo(
+    () => climbs.filter((c) => wishlist.has(c.id)),
+    [climbs, wishlist],
+  );
+  const savedPlaces = useMemo(
+    () => allDestinations.filter((d) => wishlist.has(d.id)),
+    [wishlist],
+  );
 
   if (!user) {
     return (
       <div className="max-w-md mx-auto px-4 py-24 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-amber-400/15 flex items-center justify-center mx-auto mb-5">
-          <Mountain className="w-8 h-8 text-amber-400" />
+        <div className="w-16 h-16 rounded-2xl bg-[#dfa04a]/15 flex items-center justify-center mx-auto mb-5">
+          <Mountain className="w-8 h-8 text-[#dfa04a]" />
         </div>
-        <h1 className="text-2xl font-bold text-white mb-2">Track your climbs</h1>
-        <p className="text-slate-400 mb-6">
-          Sign in to mark climbs as conquered and keep your collection on every device.
+        <h1 className="text-2xl font-semibold text-white mb-2">Your rides, collected</h1>
+        <p className="text-[#a1968a] mb-6">
+          Sign in to keep track of the climbs you've conquered, the places you've ridden
+          and the adventures still on your list.
         </p>
         <button
           onClick={() => signIn()}
@@ -32,26 +56,32 @@ export default function MyClimbs() {
     );
   }
 
-  const completed = climbs.filter((c) => c.completed);
-  const bucketList = climbs.filter((c) => !c.completed);
-  const totalElevation = completed.reduce((sum, c) => sum + c.elevationM, 0);
-  const totalDistance = completed.reduce((sum, c) => sum + c.lengthKm, 0);
+  const totalElevation = conqueredClimbs.reduce((sum, c) => sum + c.elevationM, 0);
+  const countries = new Set([
+    ...conqueredClimbs.map((c) => c.country),
+    ...visitedPlaces.map((d) => d.country),
+  ]);
+  const savedCount = savedClimbs.length + savedPlaces.length;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="max-w-[1240px] mx-auto px-6 md:px-12 py-10 pb-24">
       <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-amber-400/80 mb-2">Rider dashboard</p>
-          <h1 className="text-4xl font-bold text-white tracking-tight">My Climbs</h1>
-          <p className="text-slate-400 mt-1">Your cycling achievements</p>
+          <p className="font-mono-dc text-[11px] tracking-[0.22em] uppercase text-[#7a7066] mb-3">
+            Rider dashboard
+          </p>
+          <h1 className="text-[clamp(30px,4.5vw,46px)] font-semibold text-[#f4efe7]">My rides</h1>
+          <p className="text-[16px] text-[#a1968a] mt-2">
+            Everything you've ridden, and everything you still want to.
+          </p>
         </div>
 
-        {strava.configured ? (
-          strava.connected ? (
+        {strava.configured &&
+          (strava.connected ? (
             <button
               onClick={() => strava.sync()}
               disabled={strava.syncing}
-              className="flex items-center gap-2 bg-[#FC4C02] hover:bg-[#ff5c14] disabled:opacity-60 text-white text-sm font-semibold px-4 py-2 rounded-full transition-all shadow-lg shadow-orange-600/25"
+              className="flex items-center gap-2 bg-[#FC4C02] hover:bg-[#ff5c14] disabled:opacity-60 text-white text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               <RefreshCw className={`w-4 h-4 ${strava.syncing ? 'animate-spin' : ''}`} />
               {strava.syncing ? 'Syncing…' : 'Sync Strava'}
@@ -59,13 +89,11 @@ export default function MyClimbs() {
           ) : (
             <button
               onClick={() => strava.connect()}
-              className="flex items-center gap-2 bg-[#FC4C02] hover:bg-[#ff5c14] text-white text-sm font-semibold px-4 py-2 rounded-full transition-all shadow-lg shadow-orange-600/25"
+              className="flex items-center gap-2 bg-[#FC4C02] hover:bg-[#ff5c14] text-white text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
-              <Link2 className="w-4 h-4" />
-              Connect Strava
+              <Link2 className="w-4 h-4" /> Connect Strava
             </button>
-          )
-        ) : null}
+          ))}
       </div>
 
       {strava.configured && strava.connected && strava.outdated && (
@@ -73,7 +101,6 @@ export default function MyClimbs() {
           <strong className="font-semibold">Exact climb times are off.</strong>{' '}
           <span className="text-[#d6cec2]">
             Your Strava proxy is running an older version, so times fall back to the whole ride.
-            Paste the updated worker code into Val.town (once) and press Sync again.
           </span>
         </div>
       )}
@@ -84,63 +111,153 @@ export default function MyClimbs() {
         </div>
       )}
 
-      <div className="grid grid-cols-3 gap-4 mb-10">
-        <StatCard label="Conquered" value={completed.length} icon={<Mountain className="w-5 h-5" />} />
-        <StatCard label="Total Elevation" value={totalElevation.toLocaleString()} unit="m" icon={<TrendingUp className="w-5 h-5" />} />
-        <StatCard label="Total Distance" value={totalDistance.toFixed(1)} unit="km" icon={<Ruler className="w-5 h-5" />} />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <StatCard label="Climbs conquered" value={conqueredClimbs.length} icon={<Mountain className="w-5 h-5" />} />
+        <StatCard label="Places ridden" value={visitedPlaces.length} icon={<MapPin className="w-5 h-5" />} />
+        <StatCard label="Countries" value={countries.size} icon={<Globe2 className="w-5 h-5" />} />
+        <StatCard
+          label="Total elevation"
+          value={totalElevation.toLocaleString('de-DE')}
+          unit="m"
+          icon={<TrendingUp className="w-5 h-5" />}
+        />
       </div>
 
-      <section className="mb-10">
-        <h2 className="text-xl font-bold text-white mb-4">
-          Conquered <span className="text-amber-400 ml-1">{completed.length}</span>
-        </h2>
-        {completed.length === 0 ? (
-          <div className="bg-[#1c1915] ring-1 ring-white/8 rounded-2xl p-8 text-center">
-            <Mountain className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-400">No climbs conquered yet.</p>
-            <Link to="/" className="mt-2 inline-block text-sm text-amber-400 font-medium hover:underline">
-              Explore all climbs
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {completed.map((climb) => (
-              <div key={climb.id}>
-                <ClimbCard climb={climb} />
-                {climbTimes[climb.id] && (
-                  <div className="flex items-center gap-1.5 mt-1.5 px-1 text-xs text-amber-300/90">
-                    <Clock className="w-3 h-3" />
-                    <span className="font-semibold">{formatDuration(climbTimes[climb.id].seconds)}</span>
-                    <span className="text-slate-500">
-                      · {climbTimes[climb.id].isSegmentTime ? 'climb time' : 'ride time'}
-                      {climbTimes[climb.id].attempts && climbTimes[climb.id].attempts! > 1
-                        ? ` · ${climbTimes[climb.id].attempts}×`
-                        : ''}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      {/* Conquered climbs */}
+      <Section
+        title="Climbs conquered"
+        count={conqueredClimbs.length}
+        empty="No climbs yet — connect Strava and they'll be found automatically."
+        emptyLink={{ to: '/rides/climbs', label: 'Browse the legendary climbs' }}
+      >
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {conqueredClimbs.map((climb) => (
+            <div key={climb.id}>
+              <ClimbCard climb={climb} />
+              {climbTimes[climb.id] && (
+                <div className="flex items-center gap-1.5 mt-1.5 px-1 text-xs text-[#e8b463]">
+                  <Clock className="w-3 h-3" />
+                  <span className="font-semibold">{formatDuration(climbTimes[climb.id].seconds)}</span>
+                  <span className="text-[#7a7066]">
+                    · {climbTimes[climb.id].isSegmentTime ? 'climb time' : 'ride time'}
+                    {climbTimes[climb.id].attempts && climbTimes[climb.id].attempts! > 1
+                      ? ` · ${climbTimes[climb.id].attempts}×`
+                      : ''}
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </Section>
 
-      <section>
-        <h2 className="text-xl font-bold text-white mb-4">
-          Bucket List <span className="text-slate-500 ml-1">{bucketList.length}</span>
-        </h2>
-        {bucketList.length === 0 ? (
-          <div className="bg-amber-400/10 ring-1 ring-amber-400/25 rounded-2xl p-8 text-center">
-            <p className="text-amber-300 font-medium">You've conquered them all!</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {bucketList.map((climb) => (
-              <ClimbCard key={climb.id} climb={climb} />
-            ))}
-          </div>
-        )}
+      {/* Places ridden */}
+      <Section
+        title="Places you've ridden"
+        count={visitedPlaces.length}
+        empty="Mark a destination as ridden and it lands here."
+        emptyLink={{ to: '/rides', label: 'Browse destinations' }}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {visitedPlaces.map((d) => (
+            <DestinationCard key={d.id} destination={d} />
+          ))}
+        </div>
+      </Section>
+
+      {/* The list */}
+      <Section
+        title="On your list"
+        count={savedCount}
+        icon={<Bookmark className="w-4 h-4" />}
+        empty="Nothing saved yet — add a climb, a route or an event you want to do."
+        emptyLink={{ to: '/rides/events', label: 'Find something to train for' }}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {savedPlaces.map((d) => (
+            <DestinationCard key={d.id} destination={d} />
+          ))}
+          {savedClimbs.map((c) => (
+            <ClimbCard key={c.id} climb={c} />
+          ))}
+        </div>
+      </Section>
+
+      {/* What's left, by category */}
+      <section className="mt-16">
+        <h2 className="text-xl font-semibold text-white mb-4">Your progress by terrain</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {categories.map((cat) => {
+            const total =
+              cat.id === 'climbs'
+                ? climbs.length
+                : allDestinations.filter((d) => d.category === cat.id).length;
+            const done =
+              cat.id === 'climbs'
+                ? conqueredClimbs.length
+                : visitedPlaces.filter((d) => d.category === cat.id).length;
+            const pct = total ? (done / total) * 100 : 0;
+            return (
+              <Link
+                key={cat.id}
+                to={`/rides/${cat.id}`}
+                className="bg-[#1c1915] border border-[#322b24] hover:border-[#4a4038] rounded-2xl p-5 transition-colors"
+              >
+                <p className="text-[15px] font-semibold text-[#f4efe7]">{cat.label}</p>
+                <p className="font-mono-dc text-[11px] text-[#7a7066] mt-1">
+                  {done} of {total}
+                </p>
+                <div className="h-1.5 rounded-full bg-[#2a241e] overflow-hidden mt-3">
+                  <div
+                    className="h-full rounded-full transition-all duration-700"
+                    style={{ width: `${pct}%`, background: cat.color }}
+                  />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </section>
     </div>
+  );
+}
+
+function Section({
+  title,
+  count,
+  icon,
+  empty,
+  emptyLink,
+  children,
+}: {
+  title: string;
+  count: number;
+  icon?: React.ReactNode;
+  empty: string;
+  emptyLink?: { to: string; label: string };
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="mb-14">
+      <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+        {icon && <span className="text-[#dfa04a]">{icon}</span>}
+        {title} <span className="text-[#dfa04a] font-mono-dc text-[15px]">{count}</span>
+      </h2>
+      {count === 0 ? (
+        <div className="bg-[#1c1915] ring-1 ring-[#322b24] rounded-2xl p-8 text-center">
+          <p className="text-[#a1968a]">{empty}</p>
+          {emptyLink && (
+            <Link
+              to={emptyLink.to}
+              className="mt-2 inline-block text-sm text-[#dfa04a] font-medium hover:underline"
+            >
+              {emptyLink.label}
+            </Link>
+          )}
+        </div>
+      ) : (
+        children
+      )}
+    </section>
   );
 }
