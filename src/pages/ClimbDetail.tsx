@@ -64,19 +64,19 @@ export default function ClimbDetail() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="relative h-72 md:h-96">
-        <ClimbPhoto climb={climb} size={1024} className="absolute inset-0 w-full h-full" />
+        <ClimbPhoto subject={climb} size={1024} className="absolute inset-0 w-full h-full" />
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 bg-[#0a0f1c]/60 hover:bg-[#0a0f1c]/90 backdrop-blur text-white rounded-full p-2 transition-colors z-10 ring-1 ring-white/10"
+          className="absolute top-4 left-4 bg-[#14120f]/60 hover:bg-[#14120f]/90 backdrop-blur text-white rounded-full p-2 transition-colors z-10 ring-1 ring-white/10"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
         {climb.completed && (
-          <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-amber-400 text-[#0a0f1c] text-sm font-bold px-3 py-1.5 rounded-full z-10 shadow-lg shadow-amber-500/30">
+          <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-amber-400 text-[#14120f] text-sm font-bold px-3 py-1.5 rounded-full z-10 shadow-lg shadow-amber-500/30">
             <Check className="w-4 h-4" strokeWidth={3} /> Conquered
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1c] via-[#0a0f1c]/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#14120f] via-[#14120f]/20 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6 z-10">
           <h1 className="text-white text-4xl font-bold tracking-tight">{climb.name}</h1>
           <p className="text-slate-300 mt-1">{climb.region}, {climb.country}</p>
@@ -90,13 +90,13 @@ export default function ClimbDetail() {
             { icon: <Ruler className="w-4 h-4" />, value: `${climb.lengthKm}km`, label: 'Length' },
             { icon: <TrendingUp className="w-4 h-4" />, value: `${climb.avgGradientPct}%`, label: 'Avg Grade' },
           ].map((s) => (
-            <div key={s.label} className="bg-[#111827] rounded-2xl ring-1 ring-white/8 p-3 text-center">
+            <div key={s.label} className="bg-[#1c1915] rounded-2xl ring-1 ring-white/8 p-3 text-center">
               <div className="text-amber-400 flex justify-center mb-1">{s.icon}</div>
               <p className="text-lg font-bold text-white">{s.value}</p>
               <p className="text-xs text-slate-500">{s.label}</p>
             </div>
           ))}
-          <div className="bg-[#111827] rounded-2xl ring-1 ring-white/8 p-3 text-center flex flex-col items-center justify-center">
+          <div className="bg-[#1c1915] rounded-2xl ring-1 ring-white/8 p-3 text-center flex flex-col items-center justify-center">
             <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${difficultyColors[climb.difficulty]}`}>
               {climb.difficulty === 'hors-categorie' ? 'HC' : climb.difficulty.charAt(0).toUpperCase() + climb.difficulty.slice(1)}
             </span>
@@ -107,7 +107,7 @@ export default function ClimbDetail() {
         {/* Ride guide */}
         <section>
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <Compass className="w-5 h-5 text-[#f2b53a]" /> Plan your ride
+            <Compass className="w-5 h-5 text-[#dfa04a]" /> Plan your ride
           </h2>
           <div className="grid sm:grid-cols-2 gap-3">
             <GuideItem
@@ -131,7 +131,7 @@ export default function ClimbDetail() {
               value={`around ${estimatedAmateurMinutes(climb)} min`}
             />
           </div>
-          <p className="font-mono-dc text-[10px] text-[#5a6070] mt-2 uppercase tracking-[0.1em]">
+          <p className="font-mono-dc text-[10px] text-[#6b6157] mt-2 uppercase tracking-[0.1em]">
             Season and timing are estimates from elevation and gradient
           </p>
         </section>
@@ -153,15 +153,15 @@ export default function ClimbDetail() {
         {climb.tips && climb.tips.length > 0 && (
           <section>
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <Lightbulb className="w-5 h-5 text-[#f2b53a]" /> Local tips
+              <Lightbulb className="w-5 h-5 text-[#dfa04a]" /> Local tips
             </h2>
             <ul className="space-y-2">
               {climb.tips.map((tip, i) => (
                 <li
                   key={i}
-                  className="flex gap-3 bg-[#12151c] ring-1 ring-[#20242e] rounded-xl px-4 py-3 text-[15px] text-[#c4cad6] leading-relaxed"
+                  className="flex gap-3 bg-[#1c1915] ring-1 ring-[#322b24] rounded-xl px-4 py-3 text-[15px] text-[#d6cec2] leading-relaxed"
                 >
-                  <span className="text-[#f2b53a] font-bold">·</span>
+                  <span className="text-[#dfa04a] font-bold">·</span>
                   {tip}
                 </li>
               ))}
@@ -174,7 +174,7 @@ export default function ClimbDetail() {
             <h2 className="text-xl font-bold text-white mb-4">Pro Times &amp; Notable Ascents</h2>
             <div className="overflow-hidden rounded-2xl ring-1 ring-white/8">
               {climb.proRecords.map((r, i) => (
-                <div key={i} className={`flex items-start gap-4 px-4 py-3 ${i % 2 === 0 ? 'bg-[#111827]' : 'bg-[#0d1424]'}`}>
+                <div key={i} className={`flex items-start gap-4 px-4 py-3 ${i % 2 === 0 ? 'bg-[#1c1915]' : 'bg-[#201c17]'}`}>
                   <div className="min-w-[70px] text-center">
                     <p className="text-base font-bold text-amber-400">{r.time}</p>
                     <p className="text-xs text-slate-500">{r.year}</p>
@@ -194,7 +194,7 @@ export default function ClimbDetail() {
             <h2 className="text-xl font-bold text-white mb-4">Pros on this Climb</h2>
             <div className="space-y-4">
               {climb.proQuotes.map((pq, i) => (
-                <blockquote key={i} className="relative bg-[#111827] rounded-2xl p-5 ring-1 ring-white/8 border-l-2 border-amber-400">
+                <blockquote key={i} className="relative bg-[#1c1915] rounded-2xl p-5 ring-1 ring-white/8 border-l-2 border-amber-400">
                   <Quote className="w-5 h-5 text-amber-400 mb-2 opacity-60" />
                   <p className="text-slate-300 italic leading-relaxed">"{pq.quote}"</p>
                   <footer className="mt-2 text-sm text-slate-500 font-medium">— {pq.cyclist}, {pq.year}</footer>
@@ -204,7 +204,7 @@ export default function ClimbDetail() {
           </section>
         )}
 
-        <section className="bg-[#111827] rounded-2xl ring-1 ring-white/8 p-5">
+        <section className="bg-[#1c1915] rounded-2xl ring-1 ring-white/8 p-5">
           <h2 className="text-xl font-bold text-white mb-4">Your Ride</h2>
           {climb.completed ? (
             <div className="flex items-center gap-3">
@@ -237,7 +237,7 @@ export default function ClimbDetail() {
               <p className="text-slate-400 text-sm mb-4">Ridden this one?</p>
               <button
                 onClick={() => toggleCompleted(climb.id)}
-                className="bg-amber-400 hover:bg-amber-300 text-[#0a0f1c] font-bold px-6 py-3 rounded-full transition-all shadow-lg shadow-amber-500/25"
+                className="bg-amber-400 hover:bg-amber-300 text-[#14120f] font-bold px-6 py-3 rounded-full transition-all shadow-lg shadow-amber-500/25"
               >
                 Mark as Conquered
               </button>
@@ -256,7 +256,7 @@ export default function ClimbDetail() {
                 return (
                   <div
                     key={rider.uid}
-                    className={`flex items-center gap-3 px-4 py-3 ${isMe ? 'bg-amber-400/10' : i % 2 === 0 ? 'bg-[#111827]' : 'bg-[#0d1424]'}`}
+                    className={`flex items-center gap-3 px-4 py-3 ${isMe ? 'bg-amber-400/10' : i % 2 === 0 ? 'bg-[#1c1915]' : 'bg-[#201c17]'}`}
                   >
                     <span className="w-5 text-center font-bold text-slate-500">{i + 1}</span>
                     {rider.photoURL ? (
@@ -284,10 +284,10 @@ export default function ClimbDetail() {
         {/* Watch the climb */}
         <section>
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <Play className="w-5 h-5 text-[#f2b53a]" /> Watch the climb
+            <Play className="w-5 h-5 text-[#dfa04a]" /> Watch the climb
           </h2>
           {climb.videoId ? (
-            <div className="relative w-full rounded-2xl overflow-hidden ring-1 ring-[#20242e] aspect-video">
+            <div className="relative w-full rounded-2xl overflow-hidden ring-1 ring-[#322b24] aspect-video">
               <iframe
                 className="absolute inset-0 w-full h-full"
                 src={`https://www.youtube.com/embed/${climb.videoId}`}
@@ -301,16 +301,16 @@ export default function ClimbDetail() {
               href={videoSearchUrl(climb)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 bg-[#12151c] ring-1 ring-[#20242e] hover:ring-[#f2b53a]/40 rounded-2xl px-5 py-4 transition-colors group"
+              className="flex items-center gap-3 bg-[#1c1915] ring-1 ring-[#322b24] hover:ring-[#dfa04a]/40 rounded-2xl px-5 py-4 transition-colors group"
             >
-              <span className="w-10 h-10 rounded-full bg-[#f2b53a]/15 flex items-center justify-center shrink-0">
-                <Play className="w-4 h-4 text-[#f2b53a]" />
+              <span className="w-10 h-10 rounded-full bg-[#dfa04a]/15 flex items-center justify-center shrink-0">
+                <Play className="w-4 h-4 text-[#dfa04a]" />
               </span>
               <span>
-                <span className="block text-white font-semibold group-hover:text-[#f2b53a] transition-colors">
+                <span className="block text-white font-semibold group-hover:text-[#dfa04a] transition-colors">
                   See {climb.name} from the saddle
                 </span>
-                <span className="block text-[13px] text-[#8b93a3]">
+                <span className="block text-[13px] text-[#a1968a]">
                   On-bike footage of the ascent on YouTube
                 </span>
               </span>
@@ -322,9 +322,9 @@ export default function ClimbDetail() {
         {nearby.length > 0 && (
           <section>
             <h2 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
-              <Compass className="w-5 h-5 text-[#f2b53a]" /> Ride these too
+              <Compass className="w-5 h-5 text-[#dfa04a]" /> Ride these too
             </h2>
-            <p className="text-[13px] text-[#8b93a3] mb-4">
+            <p className="text-[13px] text-[#a1968a] mb-4">
               Other climbs within reach — the makings of a trip.
             </p>
             <div className="grid sm:grid-cols-2 gap-2">
@@ -332,20 +332,20 @@ export default function ClimbDetail() {
                 <Link
                   key={n.id}
                   to={`/climb/${n.id}`}
-                  className="flex items-center gap-3 bg-[#12151c] ring-1 ring-[#20242e] hover:ring-[#f2b53a]/40 rounded-xl px-4 py-3 transition-colors group"
+                  className="flex items-center gap-3 bg-[#1c1915] ring-1 ring-[#322b24] hover:ring-[#dfa04a]/40 rounded-xl px-4 py-3 transition-colors group"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-white font-semibold truncate group-hover:text-[#f2b53a] transition-colors">
+                    <p className="text-white font-semibold truncate group-hover:text-[#dfa04a] transition-colors">
                       {n.name}
                     </p>
-                    <p className="text-[12px] text-[#8b93a3] truncate">
+                    <p className="text-[12px] text-[#a1968a] truncate">
                       {n.elevationM.toLocaleString('de-DE')} m · {n.lengthKm} km
                     </p>
                   </div>
-                  <span className="font-mono-dc text-[11px] text-[#6b7284] shrink-0">
+                  <span className="font-mono-dc text-[11px] text-[#7a7066] shrink-0">
                     {Math.round(km)} km
                   </span>
-                  {n.completed && <Check className="w-4 h-4 text-[#f2b53a] shrink-0" strokeWidth={3} />}
+                  {n.completed && <Check className="w-4 h-4 text-[#dfa04a] shrink-0" strokeWidth={3} />}
                 </Link>
               ))}
             </div>
@@ -358,13 +358,13 @@ export default function ClimbDetail() {
 
 function GuideItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex gap-3 bg-[#12151c] ring-1 ring-[#20242e] rounded-xl px-4 py-3">
-      <span className="text-[#f2b53a] mt-0.5 shrink-0">{icon}</span>
+    <div className="flex gap-3 bg-[#1c1915] ring-1 ring-[#322b24] rounded-xl px-4 py-3">
+      <span className="text-[#dfa04a] mt-0.5 shrink-0">{icon}</span>
       <span className="min-w-0">
-        <span className="block font-mono-dc text-[9px] tracking-[0.12em] uppercase text-[#5a6070] mb-1">
+        <span className="block font-mono-dc text-[9px] tracking-[0.12em] uppercase text-[#6b6157] mb-1">
           {label}
         </span>
-        <span className="block text-[14px] text-[#eef1f6] leading-snug">{value}</span>
+        <span className="block text-[14px] text-[#f4efe7] leading-snug">{value}</span>
       </span>
     </div>
   );

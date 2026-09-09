@@ -24,7 +24,7 @@ export default function MyClimbs() {
         </p>
         <button
           onClick={() => signIn()}
-          className="inline-flex items-center gap-2 bg-white text-[#0a0f1c] font-semibold px-5 py-2.5 rounded-full hover:bg-slate-200 transition"
+          className="inline-flex items-center gap-2 bg-white text-[#14120f] font-semibold px-5 py-2.5 rounded-full hover:bg-slate-200 transition"
         >
           <LogIn className="w-4 h-4" /> Sign in with Google
         </button>
@@ -69,9 +69,9 @@ export default function MyClimbs() {
       </div>
 
       {strava.configured && strava.connected && strava.outdated && (
-        <div className="mb-4 text-sm rounded-xl px-4 py-3 bg-[#f78e3d]/10 ring-1 ring-[#f78e3d]/30 text-[#f2b53a]">
+        <div className="mb-4 text-sm rounded-xl px-4 py-3 bg-[#c4633a]/10 ring-1 ring-[#c4633a]/30 text-[#dfa04a]">
           <strong className="font-semibold">Exact climb times are off.</strong>{' '}
-          <span className="text-[#c4cad6]">
+          <span className="text-[#d6cec2]">
             Your Strava proxy is running an older version, so times fall back to the whole ride.
             Paste the updated worker code into Val.town (once) and press Sync again.
           </span>
@@ -79,7 +79,7 @@ export default function MyClimbs() {
       )}
 
       {strava.status && (
-        <div className="mb-6 text-sm text-[#8b93a3] bg-[#12151c] ring-1 ring-[#20242e] rounded-xl px-4 py-2.5">
+        <div className="mb-6 text-sm text-[#a1968a] bg-[#1c1915] ring-1 ring-[#322b24] rounded-xl px-4 py-2.5">
           {strava.status}
         </div>
       )}
@@ -95,7 +95,7 @@ export default function MyClimbs() {
           Conquered <span className="text-amber-400 ml-1">{completed.length}</span>
         </h2>
         {completed.length === 0 ? (
-          <div className="bg-[#111827] ring-1 ring-white/8 rounded-2xl p-8 text-center">
+          <div className="bg-[#1c1915] ring-1 ring-white/8 rounded-2xl p-8 text-center">
             <Mountain className="w-10 h-10 text-slate-600 mx-auto mb-3" />
             <p className="text-slate-400">No climbs conquered yet.</p>
             <Link to="/" className="mt-2 inline-block text-sm text-amber-400 font-medium hover:underline">

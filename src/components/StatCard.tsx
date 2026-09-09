@@ -7,7 +7,7 @@ interface Props {
 
 export default function StatCard({ label, value, unit, icon }: Props) {
   return (
-    <div className="bg-[#111827] rounded-2xl ring-1 ring-white/8 p-4 flex items-center gap-3">
+    <div className="bg-[#1c1915] rounded-2xl ring-1 ring-white/8 p-4 flex items-center gap-3">
       {icon && (
         <div className="w-11 h-11 rounded-xl bg-amber-400/12 flex items-center justify-center text-amber-400">
           {icon}

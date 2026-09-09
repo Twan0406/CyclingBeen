@@ -3,8 +3,11 @@ import path from 'node:path';
 import type { Plugin } from 'vite';
 import { seedClimbs } from '../src/data/climbs';
 import { climbGuides } from '../src/data/climbGuides';
+import { destinations } from '../src/data/destinations';
+import { categories } from '../src/types/destination';
 import { seasonFor, nearbyClimbs } from '../src/lib/climbGuide';
 import type { Climb } from '../src/types/climb';
+import type { Destination } from '../src/types/destination';
 
 const SITE = 'https://cyclingbeen-28952.web.app';
 
@@ -48,36 +51,36 @@ function head(opts: {
  * (and anyone on a slow connection) get the real content immediately.
  */
 function shell(inner: string): string {
-  return `<div style="max-width:820px;margin:0 auto;padding:40px 24px;font-family:Sora,system-ui,sans-serif;color:#eef1f6;background:#0b0d12">${inner}</div>`;
+  return `<div style="max-width:820px;margin:0 auto;padding:40px 24px;font-family:Inter,system-ui,sans-serif;color:#f4efe7;background:#14120f">${inner}</div>`;
 }
 
 function climbBody(c: Climb): string {
   const near = nearbyClimbs(c, climbs, 75, 6);
   const parts: string[] = [];
   parts.push(`<h1 style="font-size:34px;margin:0 0 6px">${esc(c.name)}</h1>`);
-  parts.push(`<p style="color:#8b93a3;margin:0 0 20px">${esc(c.region)}, ${esc(c.country)}</p>`);
+  parts.push(`<p style="color:#a1968a;margin:0 0 20px">${esc(c.region)}, ${esc(c.country)}</p>`);
   parts.push(
-    `<ul style="list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:18px;margin:0 0 24px;color:#c4cad6">
+    `<ul style="list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:18px;margin:0 0 24px;color:#d6cec2">
       <li><strong>${c.elevationM.toLocaleString('de-DE')} m</strong> summit</li>
       <li><strong>${c.lengthKm} km</strong> long</li>
       <li><strong>${c.avgGradientPct}%</strong> average gradient</li>
       <li>${esc(c.difficulty === 'hors-categorie' ? 'Hors catégorie' : c.difficulty)}</li>
     </ul>`,
   );
-  parts.push(`<h2 style="font-size:20px;margin:24px 0 8px">The story</h2><p style="color:#c4cad6;line-height:1.6">${esc(c.story)}</p>`);
+  parts.push(`<h2 style="font-size:20px;margin:24px 0 8px">The story</h2><p style="color:#d6cec2;line-height:1.6">${esc(c.story)}</p>`);
   if (c.tourHistory) {
-    parts.push(`<h2 style="font-size:20px;margin:24px 0 8px">Race history</h2><p style="color:#c4cad6;line-height:1.6">${esc(c.tourHistory)}</p>`);
+    parts.push(`<h2 style="font-size:20px;margin:24px 0 8px">Race history</h2><p style="color:#d6cec2;line-height:1.6">${esc(c.tourHistory)}</p>`);
   }
   parts.push(
     `<h2 style="font-size:20px;margin:24px 0 8px">Plan your ride</h2>
-     <ul style="color:#c4cad6;line-height:1.7">
+     <ul style="color:#d6cec2;line-height:1.7">
        <li><strong>Best time to go:</strong> ${esc(seasonFor(c))}</li>
        <li><strong>Start from:</strong> ${esc(c.startTown ?? `${c.region}, ${c.country}`)}</li>
      </ul>`,
   );
   if (c.tips?.length) {
     parts.push(
-      `<h2 style="font-size:20px;margin:24px 0 8px">Local tips</h2><ul style="color:#c4cad6;line-height:1.7">${c.tips
+      `<h2 style="font-size:20px;margin:24px 0 8px">Local tips</h2><ul style="color:#d6cec2;line-height:1.7">${c.tips
         .map((t) => `<li>${esc(t)}</li>`)
         .join('')}</ul>`,
     );
@@ -87,27 +90,90 @@ function climbBody(c: Climb): string {
       `<h2 style="font-size:20px;margin:24px 0 8px">Ride these too</h2><ul style="line-height:1.8">${near
         .map(
           (n) =>
-            `<li><a style="color:#f2b53a" href="/climb/${n.climb.id}">${esc(n.climb.name)}</a> — ${Math.round(n.km)} km away</li>`,
+            `<li><a style="color:#dfa04a" href="/climb/${n.climb.id}">${esc(n.climb.name)}</a> — ${Math.round(n.km)} km away</li>`,
         )
         .join('')}</ul>`,
     );
   }
-  parts.push(`<p style="margin-top:28px"><a style="color:#f2b53a" href="/">All legendary climbs</a></p>`);
+  parts.push(`<p style="margin-top:28px"><a style="color:#dfa04a" href="/">All legendary climbs</a></p>`);
+  return shell(parts.join('\n'));
+}
+
+function placeBody(p: Destination): string {
+  const cat = categories.find((c) => c.id === p.category);
+  const parts: string[] = [];
+  parts.push(`<h1 style="font-size:34px;margin:0 0 6px">${esc(p.name)}</h1>`);
+  parts.push(`<p style="color:#a1968a;margin:0 0 20px">${esc(p.region)}, ${esc(p.country)}${cat ? ` \u00b7 ${esc(cat.label)}` : ''}</p>`);
+  parts.push(`<p style="color:#e8e0d4;font-size:18px;line-height:1.6;margin:0 0 20px">${esc(p.summary)}</p>`);
+  parts.push(`<p style="color:#d6cec2;line-height:1.7">${esc(p.story)}</p>`);
+  parts.push(
+    `<h2 style="font-size:20px;margin:24px 0 8px">Plan your ride</h2>
+     <ul style="color:#d6cec2;line-height:1.7">
+       <li><strong>Best time to go:</strong> ${esc(p.bestMonths)}</li>
+       <li><strong>Start from:</strong> ${esc(p.startTown)}</li>
+       <li><strong>Surface:</strong> ${esc(p.surface)}</li>
+       <li><strong>Typical ride:</strong> ${p.typicalRideKm} km${p.elevationGainM != null ? ` \u00b7 ${p.elevationGainM} m climbing` : ''}</li>
+     </ul>`,
+  );
+  if (p.tips.length) {
+    parts.push(
+      `<h2 style="font-size:20px;margin:24px 0 8px">Local tips</h2><ul style="color:#d6cec2;line-height:1.7">${p.tips
+        .map((x) => `<li>${esc(x)}</li>`)
+        .join('')}</ul>`,
+    );
+  }
+  parts.push(`<p style="margin-top:28px"><a style="color:#dfa04a" href="/rides">All cycling destinations</a></p>`);
+  return shell(parts.join('\n'));
+}
+
+function categoryBody(catId: string | null): string {
+  const cat = categories.find((c) => c.id === catId);
+  const places = destinations.filter((d) => !catId || d.category === catId);
+  const showClimbs = !catId || catId === 'climbs';
+  const parts: string[] = [];
+  parts.push(`<h1 style="font-size:34px;margin:0 0 8px">${esc(cat ? cat.label : 'Where to ride')}</h1>`);
+  parts.push(
+    `<p style="color:#a1968a;margin:0 0 24px;line-height:1.6">${esc(
+      cat ? cat.tagline : 'Mountains, gravel, hills, coastline and trails \u2014 all in one place.',
+    )}</p>`,
+  );
+  if (places.length) {
+    parts.push(
+      `<ul style="line-height:1.9">${places
+        .map(
+          (d) =>
+            `<li><a style="color:#dfa04a" href="/place/${d.id}">${esc(d.name)}</a> \u2014 ${esc(d.region)}, ${esc(d.country)}: ${esc(d.summary)}</li>`,
+        )
+        .join('')}</ul>`,
+    );
+  }
+  if (showClimbs) {
+    parts.push(`<h2 style="font-size:20px;margin:24px 0 8px">${climbs.length} legendary climbs</h2>`);
+    parts.push(
+      `<ul style="line-height:1.9">${climbs
+        .map(
+          (c) =>
+            `<li><a style="color:#dfa04a" href="/climb/${c.id}">${esc(c.name)}</a> \u2014 ${esc(c.region)}, ${esc(c.country)}</li>`,
+        )
+        .join('')}</ul>`,
+    );
+  }
   return shell(parts.join('\n'));
 }
 
 function homeBody(): string {
-  const list = climbs
-    .map(
-      (c) =>
-        `<li><a style="color:#f2b53a" href="/climb/${c.id}">${esc(c.name)}</a> — ${esc(c.region)}, ${esc(c.country)} · ${c.lengthKm} km at ${c.avgGradientPct}%</li>`,
-    )
+  const cats = categories
+    .map((c) => {
+      const n = c.id === 'climbs' ? climbs.length : destinations.filter((d) => d.category === c.id).length;
+      return `<li><a style="color:#dfa04a" href="/rides/${c.id}">${esc(c.label)}</a> \u2014 ${esc(c.tagline)} (${n})</li>`;
+    })
     .join('');
   return shell(
-    `<h1 style="font-size:34px;margin:0 0 8px">The legendary climbs of cycling</h1>
-     <p style="color:#8b93a3;margin:0 0 24px;line-height:1.6">Track the great ascents you have ridden, plan the ones you haven't, and compare your times with friends. ${climbs.length} climbs with ride guides, race history and practical advice.</p>
-     <h2 style="font-size:20px;margin:24px 0 8px">All ${climbs.length} climbs</h2>
-     <ul style="line-height:1.9">${list}</ul>`,
+    `<h1 style="font-size:34px;margin:0 0 8px">Every road is an adventure</h1>
+     <p style="color:#d6cec2;margin:0 0 24px;line-height:1.7">Legendary mountain passes, white gravel roads, sea dikes with endless horizons and singletrack that ends at the beach. Find where to ride \u2014 then keep a record of everything you have conquered.</p>
+     <h2 style="font-size:20px;margin:24px 0 8px">Pick your terrain</h2>
+     <ul style="line-height:1.9">${cats}</ul>
+     <p style="margin-top:20px"><a style="color:#dfa04a" href="/rides">Browse all destinations</a></p>`,
   );
 }
 
@@ -140,8 +206,8 @@ export function prerender(): Plugin {
         render(
           template,
           head({
-            title: 'Collect — the legendary climbs of cycling',
-            description: `Track and plan cycling's great ascents. ${climbs.length} legendary climbs with ride guides, race history, practical tips and your own times.`,
+            title: 'Cycling adventures — mountains, gravel, hills and trails',
+            description: `Find your next ride: ${climbs.length} legendary climbs plus hand-picked gravel, hill, coastal and mountain bike destinations, each with a practical guide.`,
             url: `${SITE}/`,
           }),
           homeBody(),
@@ -171,8 +237,70 @@ export function prerender(): Plugin {
         fs.writeFileSync(path.join(climbDir, `${c.id}.html`), render(template, meta, climbBody(c)));
       }
 
+      // One page per destination
+      const placeDir = path.join(outDir, 'place');
+      fs.mkdirSync(placeDir, { recursive: true });
+      for (const d of destinations) {
+        const url = `${SITE}/place/${d.id}`;
+        const description = `Cycling in ${d.name}, ${d.country}: ${d.summary}. Best time to go, where to start, and practical local tips.`;
+        const meta = head({
+          title: `${d.name} — cycling guide | Collect`,
+          description,
+          url,
+          jsonLd: {
+            '@context': 'https://schema.org',
+            '@type': 'TouristDestination',
+            name: d.name,
+            description,
+            url,
+            geo: { '@type': 'GeoCoordinates', latitude: d.lat, longitude: d.lng },
+            address: { '@type': 'PostalAddress', addressRegion: d.region, addressCountry: d.country },
+          },
+        });
+        fs.writeFileSync(path.join(placeDir, `${d.id}.html`), render(template, meta, placeBody(d)));
+      }
+
+      // Category landing pages
+      const ridesDir = path.join(outDir, 'rides');
+      fs.mkdirSync(ridesDir, { recursive: true });
+      const ridesIndex = render(
+          template,
+          head({
+            title: 'Where to ride — every cycling destination | Collect',
+            description:
+              'Browse every cycling destination: legendary mountain passes, gravel, hills, flat coastal riding and mountain bike trails, each with a practical ride guide.',
+            url: `${SITE}/rides`,
+          }),
+          categoryBody(null),
+      );
+      // Written both ways so Firebase resolves /rides regardless of whether it
+      // prefers the file or the directory index.
+      fs.writeFileSync(path.join(outDir, 'rides.html'), ridesIndex);
+      fs.writeFileSync(path.join(ridesDir, 'index.html'), ridesIndex);
+
+      for (const cat of categories) {
+        fs.writeFileSync(
+          path.join(ridesDir, `${cat.id}.html`),
+          render(
+            template,
+            head({
+              title: `${cat.label} — where to ride | Collect`,
+              description: `${cat.tagline}. Hand-picked ${cat.label.toLowerCase()} cycling destinations with practical ride guides.`,
+              url: `${SITE}/rides/${cat.id}`,
+            }),
+            categoryBody(cat.id),
+          ),
+        );
+      }
+
       // Sitemap + robots
-      const urls = [`${SITE}/`, ...climbs.map((c) => `${SITE}/climb/${c.id}`)];
+      const urls = [
+        `${SITE}/`,
+        `${SITE}/rides`,
+        ...categories.map((c) => `${SITE}/rides/${c.id}`),
+        ...climbs.map((c) => `${SITE}/climb/${c.id}`),
+        ...destinations.map((d) => `${SITE}/place/${d.id}`),
+      ];
       fs.writeFileSync(
         path.join(outDir, 'sitemap.xml'),
         `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
@@ -184,7 +312,7 @@ export function prerender(): Plugin {
         `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`,
       );
 
-      console.log(`\n  prerendered ${climbs.length + 1} pages + sitemap.xml`);
+      console.log(`\n  prerendered ${urls.length} pages + sitemap.xml`);
     },
   };
 }

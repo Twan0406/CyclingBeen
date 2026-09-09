@@ -7,33 +7,39 @@ export default function Navbar() {
   const location = useLocation();
   const { user, signIn, signOutUser } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) =>
+    path === '/rides'
+      ? location.pathname.startsWith('/rides') ||
+        location.pathname.startsWith('/place') ||
+        location.pathname.startsWith('/climb')
+      : location.pathname === path;
 
   const linkClass = (active: boolean) =>
     `flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
       active
-        ? 'bg-[#f2b53a]/15 text-[#f2b53a] ring-1 ring-[#f2b53a]/30'
-        : 'text-[#8b93a3] hover:text-white hover:bg-white/5'
+        ? 'bg-[#dfa04a]/15 text-[#dfa04a] ring-1 ring-[#dfa04a]/30'
+        : 'text-[#a1968a] hover:text-white hover:bg-white/5'
     }`;
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#0b0d12]/85 backdrop-blur-xl border-b border-[#20242e]">
+    <nav className="sticky top-0 z-50 bg-[#14120f]/85 backdrop-blur-xl border-b border-[#322b24]">
       <div className="max-w-[1240px] mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 font-semibold text-white text-lg">
-          <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#f2b53a] to-[#f78e3d] flex items-center justify-center shadow-lg shadow-[#f2b53a]/20">
-            <Mountain className="w-5 h-5 text-[#161009]" />
+          <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#dfa04a] to-[#c4633a] flex items-center justify-center shadow-lg shadow-[#dfa04a]/20">
+            <Mountain className="w-5 h-5 text-[#1a1206]" />
           </span>
-          <span className="tracking-tight">Collect</span>
+          <span className="tracking-tight font-display">Collect</span>
         </Link>
 
         <div className="flex items-center gap-1">
-          <Link to="/" className={linkClass(isActive('/'))}>
+          <Link to="/rides" className={linkClass(isActive('/rides'))}>
             <LayoutGrid className="w-4 h-4" />
-            <span className="hidden sm:inline">Explore</span>
+            <span className="hidden sm:inline">Where to ride</span>
           </Link>
+          <span className="w-px h-5 bg-[#322b24] mx-1.5 hidden sm:block" />
           <Link to="/my-climbs" className={linkClass(isActive('/my-climbs'))}>
             <User className="w-4 h-4" />
-            <span className="hidden sm:inline">My Climbs</span>
+            <span className="hidden sm:inline">My rides</span>
           </Link>
           <Link to="/friends" className={linkClass(isActive('/friends'))}>
             <Trophy className="w-4 h-4" />
@@ -57,7 +63,7 @@ export default function Navbar() {
               {menuOpen && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-                  <div className="absolute right-0 mt-2 w-52 bg-[#111827] ring-1 ring-white/10 rounded-xl shadow-xl z-20 overflow-hidden">
+                  <div className="absolute right-0 mt-2 w-52 bg-[#1c1915] ring-1 ring-white/10 rounded-xl shadow-xl z-20 overflow-hidden">
                     <div className="px-4 py-3 border-b border-white/8">
                       <p className="text-sm font-medium text-white truncate">{user.displayName || 'Rider'}</p>
                       <p className="text-xs text-slate-500 truncate">{user.email}</p>
@@ -75,7 +81,7 @@ export default function Navbar() {
           ) : (
             <button
               onClick={() => signIn()}
-              className="ml-1 flex items-center gap-2 bg-white text-[#0a0f1c] text-sm font-semibold px-3.5 py-1.5 rounded-full hover:bg-slate-200 transition"
+              className="ml-1 flex items-center gap-2 bg-white text-[#14120f] text-sm font-semibold px-3.5 py-1.5 rounded-full hover:bg-slate-200 transition"
             >
               <GoogleG /> <span className="hidden sm:inline">Sign in</span>
             </button>

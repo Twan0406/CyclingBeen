@@ -1,26 +1,32 @@
 import { useClimbPhoto } from '../lib/wikiPhoto';
-import type { Climb } from '../types/climb';
+
+/** Anything with a place and a Wikipedia title can carry a photo. */
+export interface PhotoSubject {
+  name: string;
+  wikiTitle: string;
+  lat: number;
+  lng: number;
+  gradient: string;
+  photoUrl?: string;
+}
 
 interface Props {
-  climb: Climb;
+  subject: PhotoSubject;
   size?: number;
   className?: string;
 }
 
-/** Renders the climb's photo over its gradient placeholder. */
-export default function ClimbPhoto({ climb, size = 800, className = '' }: Props) {
-  const fetched = useClimbPhoto(climb.wikiTitle, climb.lat, climb.lng, size);
-  const photo = climb.photoUrl ?? fetched;
+/** Renders the subject's photo over its gradient placeholder. */
+export default function ClimbPhoto({ subject, size = 800, className = '' }: Props) {
+  const fetched = useClimbPhoto(subject.wikiTitle, subject.lat, subject.lng, size);
+  const photo = subject.photoUrl ?? fetched;
 
   return (
-    <div
-      className={`bg-cover bg-center ${className}`}
-      style={{ background: climb.gradient }}
-    >
+    <div className={`bg-cover bg-center ${className}`} style={{ background: subject.gradient }}>
       {photo && (
         <img
           src={photo}
-          alt={climb.name}
+          alt={subject.name}
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover animate-[fadein_0.5s_ease]"
         />

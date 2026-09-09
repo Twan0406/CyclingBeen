@@ -23,7 +23,7 @@ const STYLE: maplibregl.StyleSpecification = {
     },
   },
   layers: [
-    { id: 'bg', type: 'background', paint: { 'background-color': '#0a0c11' } },
+    { id: 'bg', type: 'background', paint: { 'background-color': '#100e0c' } },
     { id: 'carto', type: 'raster', source: 'carto' },
   ],
 };
@@ -52,11 +52,11 @@ export default function ClimbMap({ climbs }: Props) {
     map.on('style.load', () => {
       map.setProjection({ type: 'globe' });
       map.setSky({
-        'sky-color': '#0b0d12',
+        'sky-color': '#14120f',
         'sky-horizon-blend': 0.5,
-        'horizon-color': '#20242e',
+        'horizon-color': '#322b24',
         'horizon-fog-blend': 0.6,
-        'fog-color': '#0b0d12',
+        'fog-color': '#14120f',
         'fog-ground-blend': 0.4,
         'atmosphere-blend': 0.9,
       });
@@ -108,23 +108,23 @@ export default function ClimbMap({ climbs }: Props) {
   }, [climbs]);
 
   return (
-    <div className="relative rounded-[24px] overflow-hidden border border-[#1a1e27] bg-[radial-gradient(120%_120%_at_50%_0%,#10131b_0%,#0a0c11_60%)]">
+    <div className="relative rounded-[24px] overflow-hidden border border-[#2a241e] bg-[radial-gradient(120%_120%_at_50%_0%,#1a1712_0%,#100e0c_60%)]">
       <div className="starfield absolute inset-0 pointer-events-none opacity-70" />
       <div ref={containerRef} style={{ height: '600px', width: '100%' }} className="relative z-[1]" />
 
       {/* Legend */}
-      <div className="absolute bottom-6 left-6 z-10 flex items-center gap-5 bg-[rgba(13,16,22,0.7)] backdrop-blur-md border border-[#20242e] rounded-full px-[18px] py-[10px]">
+      <div className="absolute bottom-6 left-6 z-10 flex items-center gap-5 bg-[rgba(22,19,16,0.7)] backdrop-blur-md border border-[#322b24] rounded-full px-[18px] py-[10px]">
         <span className="flex items-center gap-2">
-          <span className="w-[11px] h-[11px] rounded-full bg-[#f2b53a] shadow-[0_0_8px_rgba(242,181,58,0.8)]" />
-          <span className="text-[13px] text-[#eef1f6] font-medium">Conquered</span>
+          <span className="w-[11px] h-[11px] rounded-full bg-[#dfa04a] shadow-[0_0_8px_rgba(223,160,74,0.8)]" />
+          <span className="text-[13px] text-[#f4efe7] font-medium">Conquered</span>
         </span>
-        <span className="w-px h-4 bg-[#2a2f3a]" />
+        <span className="w-px h-4 bg-[#3a322a]" />
         <span className="flex items-center gap-2">
-          <span className="w-[11px] h-[11px] rounded-full border-2 border-[#7fa8e8] bg-transparent" />
-          <span className="text-[13px] text-[#c4cad6] font-medium">To climb</span>
+          <span className="w-[11px] h-[11px] rounded-full border-2 border-[#7d9aa8] bg-transparent" />
+          <span className="text-[13px] text-[#d6cec2] font-medium">To climb</span>
         </span>
-        <span className="w-px h-4 bg-[#2a2f3a] hidden sm:block" />
-        <span className="font-mono-dc text-[11px] text-[#6b7284] hidden sm:inline">drag to spin the globe</span>
+        <span className="w-px h-4 bg-[#3a322a] hidden sm:block" />
+        <span className="font-mono-dc text-[11px] text-[#7a7066] hidden sm:inline">drag to spin the globe</span>
       </div>
     </div>
   );

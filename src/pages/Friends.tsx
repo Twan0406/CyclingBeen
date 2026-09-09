@@ -45,7 +45,7 @@ export default function Friends() {
         <p className="text-slate-400 mb-6">Sign in to compare your climbs and times with other riders.</p>
         <button
           onClick={() => signIn()}
-          className="inline-flex items-center gap-2 bg-white text-[#0a0f1c] font-semibold px-5 py-2.5 rounded-full hover:bg-slate-200 transition"
+          className="inline-flex items-center gap-2 bg-white text-[#14120f] font-semibold px-5 py-2.5 rounded-full hover:bg-slate-200 transition"
         >
           <LogIn className="w-4 h-4" /> Sign in with Google
         </button>
@@ -100,7 +100,7 @@ export default function Friends() {
               <div
                 key={r.uid}
                 className={`flex items-center gap-3 rounded-2xl px-4 py-3 ring-1 transition ${
-                  isMe ? 'bg-amber-400/10 ring-amber-400/30' : 'bg-[#111827] ring-white/8'
+                  isMe ? 'bg-amber-400/10 ring-amber-400/30' : 'bg-[#1c1915] ring-white/8'
                 }`}
               >
                 <span className="w-6 text-center font-bold text-slate-500">{i + 1}</span>
@@ -176,7 +176,7 @@ function Compare({ me, other, onBack }: { me: Rider; other: Rider; onBack: () =>
               const a = me.climbTimes[c.id].seconds;
               const b = other.climbTimes[c.id].seconds;
               return (
-                <div key={c.id} className={`grid grid-cols-3 items-center px-4 py-3 text-sm ${i % 2 ? 'bg-[#0d1424]' : 'bg-[#111827]'}`}>
+                <div key={c.id} className={`grid grid-cols-3 items-center px-4 py-3 text-sm ${i % 2 ? 'bg-[#201c17]' : 'bg-[#1c1915]'}`}>
                   <span className={`font-semibold ${a <= b ? 'text-amber-300' : 'text-slate-400'}`}>{formatDuration(a)}</span>
                   <span className="text-center text-slate-300 text-xs">{c.name}</span>
                   <span className={`text-right font-semibold ${b <= a ? 'text-amber-300' : 'text-slate-400'}`}>{formatDuration(b)}</span>

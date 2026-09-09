@@ -69,7 +69,7 @@ export default function StravaCallback() {
           <p className="text-slate-400">{message}</p>
           <button
             onClick={() => navigate('/my-climbs')}
-            className="mt-4 bg-amber-400 text-[#0a0f1c] px-5 py-2 rounded-full font-semibold hover:bg-amber-300 transition-colors"
+            className="mt-4 bg-amber-400 text-[#14120f] px-5 py-2 rounded-full font-semibold hover:bg-amber-300 transition-colors"
           >
             Go back
           </button>
