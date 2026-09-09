@@ -13,30 +13,41 @@ in MVP2 wel voorbereid: elk achievement krijgt een `sport`-veld (default
 
 ---
 
-## ⏭️ VOLGENDE SESSIE — eerst dit, vóór de regio-gidsen
+## ⏭️ VOLGENDE SESSIE — stand van zaken (september 2026)
 
-Afgesproken met Twan. Deze drie punten gaan vóór de regio-gidsen uit sectie 7,
-omdat ze het fundament raken waarop die gidsen landen.
+### Afgerond in de vorige sessies
+- **Design herzien** ✅ — warm aarde-donker palet (#14120f basis, oker #dfa04a,
+  terracotta #c4633a, olijf/blauwgrijs per categorie), Fraunces voor koppen +
+  Inter voor tekst. Tailwind's amber/slate-schalen zijn hergedefinieerd in één
+  `@theme`-blok in `src/index.css`, dus componenten pikken het palet vanzelf op.
+- **Homepagina** ✅ — echte landingspagina met foto-hero, terreinkeuze,
+  uitgelichte bestemmingen en een blok over het bijhouden van je ritten.
+- **Breder dan klimmen** ✅ — zeven categorieën: Mountains, Gravel, Hills,
+  Flat & coastal, Mountain bike, Bikepacking, Events. 20 bestemmingen +
+  13 avonturen (6 bikepacking-routes, 7 evenementen), elk met een gids.
+- **Gidsdiepte** ✅ — routesuggesties, hoogtepunten en praktische info
+  (heen komen, waar verblijven, eten & water) in `src/data/destinationGuides.ts`.
+- **My rides** ✅ — dekt nu alle categorieën: klims veroverd (Strava-tijden),
+  plekken gereden (`visited`), opgeslagen doelen (`wishlist`) en voortgang per
+  terrein. Bestemmingen markeer je handmatig; alleen klims worden automatisch
+  via GPS herkend (bewuste keuze: een gebied "gereden" is niet betrouwbaar
+  af te leiden uit nabijheid).
 
-1. **Design herzien.** Twan is niet tevreden over het huidige ontwerp, zeker nu
-   de app richting een fiets-blog/magazine beweegt. Het moet werken voor
-   langere, leesbare artikelen én voor de "trofeeënkast". Belangrijk: vraag
-   éérst om referenties (welke sites/apps vindt hij wél mooi) voordat er
-   opnieuw gebouwd wordt — stijl is subjectief en dit is de tweede ronde.
-   Huidige stijl: donker (#0b0d12), amber accent (#f2b53a), Sora + DM Mono.
-2. **Naam breder kiezen.** "CyclingBeen" is een werktitel; "Collect" en
-   "MyCols" zijn kandidaten maar niet definitief. De naam moet breder werken
-   (koepelmerk + verticals, zie strategie-sectie) en passen bij een
-   inspiratie-/contentplatform, niet alleen bij afvinken. Inclusief domein-
-   en merkcheck vóór publiciteit.
-3. **Homepagina versterken.** Die "mist nu iets": nu is het globe + grid.
-   Moet een echte landingspagina worden die het verhaal vertelt (inspiratie
-   én collectie) en bezoekers zonder account overtuigt.
+### Nog open — hier oppakken
+1. **Foto's per bestemming controleren.** De resolver zoekt nu op Commons met
+   een fiets-specifieke `photoQuery` per plek (zie `destinationGuides.ts` en
+   `adventures.ts`). Claude kan Wikimedia niet bereiken vanuit de sandbox en
+   heeft de resultaten dus nooit gezien: **vraag Twan welke plekken een
+   verkeerde of lelijke foto hebben** en stel per plek de zoekterm bij.
+2. **De naam.** "Collect"/"CyclingBeen"/"MyCols" passen niet meer nu de site
+   over fietsavonturen in de breedte gaat (gravel, bikepacking, evenementen).
+   Nieuwe richting nodig; daarna pas Google Search Console (zie hieronder).
+3. **Friends-pagina** staat nog in de oude opmaak en vergelijkt alleen
+   klimtijden. Zou ook gereden plekken en lijstjes kunnen vergelijken.
+4. **Meer bestemmingen** per categorie (nu 4-6 per terrein).
 
-**Afhankelijkheid — belangrijk:** Twan dient de sitemap pas in bij Google
-Search Console zodra naam/branding vaststaan; anders indexeert Google onder een
-naam die nog verandert. Volgorde dus: **naam → design → homepage → Search
-Console → regio-gidsen**.
+**Afhankelijkheid:** sitemap pas indienen bij Google Search Console als de
+naam vaststaat — anders indexeert Google onder een naam die nog verandert.
 
 ## 1. Klimmen over de hele wereld 🌍 (must-have)
 
