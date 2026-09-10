@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Mountain, Trophy, Route } from 'lucide-react';
+import { ArrowRight, Mountain, Trophy, Route, Compass } from 'lucide-react';
 import { useClimbs } from '../context/ClimbsContext';
 import { useAuth } from '../context/AuthContext';
 import { allDestinations as destinations } from '../data/allDestinations';
@@ -57,6 +57,12 @@ export default function Home() {
                 className="inline-flex items-center gap-2 bg-[#c4633a] hover:bg-[#d4703f] text-[#fdf6ec] font-semibold px-6 py-3 rounded-full transition-colors"
               >
                 Explore destinations <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                to="/find"
+                className="inline-flex items-center gap-2 border border-[#4a4038] hover:border-[#6b6157] text-[#f4efe7] font-medium px-6 py-3 rounded-full transition-colors"
+              >
+                <Compass className="w-4 h-4" /> Find my trip
               </Link>
               <Link
                 to={user ? '/my-climbs' : '/rides/climbs'}

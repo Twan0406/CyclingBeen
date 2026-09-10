@@ -363,6 +363,32 @@ export function prerender(): Plugin {
         }
       }
 
+      // The trip finder
+      const findBody = `<h1 style="font-size:34px;margin:0 0 10px">Find your next cycling adventure</h1>
+        <p style="color:#e8e0d4;font-size:18px;line-height:1.6">Answer five questions \u2014 how long you have got, how far you want to go, which bike you are taking, what you are after and how hard you want it \u2014 and get a trip from this guide that actually fits, with the reasons it fits and the catches spelled out.</p>
+        <h2 style="font-size:20px;margin:24px 0 8px">What it asks</h2>
+        <ul style="color:#d6cec2;line-height:1.7">
+          <li>How long have you got: a day, a weekend, a week or longer</li>
+          <li>How far you want to travel from the Low Countries</li>
+          <li>Road bike, gravel bike or mountain bike</li>
+          <li>Mountains, quiet open roads, short steep hills, trails, or an event to train for</li>
+          <li>How hard you want it, and which month you are going</li>
+        </ul>
+        <p style="color:#d6cec2;line-height:1.7"><a style="color:#dfa04a" href="/rides">Or browse every destination instead.</a></p>`;
+      fs.writeFileSync(
+        path.join(outDir, 'find.html'),
+        render(
+          template,
+          head({
+            title: 'Find your next cycling adventure | Ridewild',
+            description:
+              'Answer a handful of questions — how long you have, how far you will go, which bike, what you are after — and get a cycling trip that actually fits.',
+            url: `${SITE}/find`,
+          }),
+          findBody,
+        ),
+      );
+
       // Category landing pages
       const ridesDir = path.join(outDir, 'rides');
       fs.mkdirSync(ridesDir, { recursive: true });
@@ -400,6 +426,7 @@ export function prerender(): Plugin {
       const urls = [
         `${SITE}/`,
         `${SITE}/rides`,
+        `${SITE}/find`,
         ...categories.map((c) => `${SITE}/rides/${c.id}`),
         ...climbs.map((c) => `${SITE}/climb/${c.id}`),
         ...destinations.map((d) => `${SITE}/place/${d.id}`),

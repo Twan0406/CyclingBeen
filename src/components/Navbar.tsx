@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, User, LogOut, Trophy } from 'lucide-react';
+import { LayoutGrid, User, LogOut, Trophy, Compass } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
@@ -36,6 +36,10 @@ export default function Navbar() {
           <Link to="/rides" className={linkClass(isActive('/rides'))}>
             <LayoutGrid className="w-4 h-4" />
             <span className="hidden sm:inline">Where to ride</span>
+          </Link>
+          <Link to="/find" className={linkClass(isActive('/find'))}>
+            <Compass className="w-4 h-4" />
+            <span className="hidden md:inline">Find a trip</span>
           </Link>
           <span className="w-px h-5 bg-[#322b24] mx-1.5 hidden sm:block" />
           <Link to="/my-climbs" className={linkClass(isActive('/my-climbs'))}>
