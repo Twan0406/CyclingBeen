@@ -8,6 +8,8 @@
  */
 export interface ClimbGuide {
   startTown?: string;
+  /** Commons search phrase, so the photo shows the road, not the ski resort. */
+  photoQuery?: string;
   bestMonths?: string;
   tips?: string[];
   /** Curated YouTube video id; without one the page links to a search. */
@@ -16,6 +18,7 @@ export interface ClimbGuide {
 
 export const climbGuides: Record<string, ClimbGuide> = {
   'mont-ventoux': {
+    photoQuery: 'Mont Ventoux summit road cyclists',
     startTown: 'Bédoin (the classic side)',
     tips: [
       'Three roads reach the summit: Bédoin is the famous one, Malaucène is a touch shorter and steeper in places, Sault is the gentlest.',
@@ -26,6 +29,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'alpe-dhuez': {
+    photoQuery: "Alpe d'Huez hairpins road mountain",
     startTown: "Bourg d'Oisans",
     tips: [
       'The 21 hairpins count down from 21 at the bottom to 1 at the top, each named after a stage winner.',
@@ -35,6 +39,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'col-du-galibier': {
+    photoQuery: 'Col du Galibier road pass mountains',
     startTown: 'Valloire (north) or Col du Lautaret (south)',
     tips: [
       'Usually snowbound until late May or June — check the pass status before travelling.',
@@ -44,6 +49,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'stelvio-pass': {
+    photoQuery: 'Stelvio Pass hairpins road',
     startTown: 'Prato allo Stelvio (48 hairpins) or Bormio',
     tips: [
       'The Prato side is the postcard: 48 numbered hairpins stacked up the mountain.',
@@ -53,6 +59,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'col-du-tourmalet': {
+    photoQuery: 'Col du Tourmalet road pass Pyrenees',
     startTown: 'Luz-Saint-Sauveur (west) or Sainte-Marie-de-Campan (east)',
     tips: [
       'The most-used climb in Tour history — both sides are genuine HC ascents.',
@@ -62,6 +69,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'sa-calobra': {
+    photoQuery: 'Sa Calobra road hairpin Mallorca',
     startTown: 'Coll dels Reis (you descend it first, then climb back)',
     bestMonths: 'Year-round — Mallorca is a winter training classic',
     tips: [
@@ -72,6 +80,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'angliru': {
+    photoQuery: 'Angliru road climb Asturias',
     startTown: 'La Vega / Riosa',
     tips: [
       'One of the hardest paved climbs in professional cycling; the difficulty is all in the second half.',
@@ -81,6 +90,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'zoncolan': {
+    photoQuery: 'Monte Zoncolan road climb',
     startTown: 'Ovaro (the brutal side) or Sutrio (the gentler one)',
     tips: [
       'From Ovaro this is arguably the steepest sustained climb used by the Giro — long stretches around 15%.',
@@ -90,6 +100,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'mortirolo': {
+    photoQuery: 'Mortirolo pass road hairpins',
     startTown: 'Mazzo di Valtellina',
     tips: [
       'The Mazzo side is the legendary one, and the gradient rarely relents once the trees close in.',
@@ -99,6 +110,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'grossglockner': {
+    photoQuery: 'Grossglockner High Alpine Road hairpins',
     startTown: 'Bruck (north) or Heiligenblut (south)',
     tips: [
       'This is a toll road: cyclists are currently admitted free, but the road has opening hours and a season.',
@@ -108,6 +120,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'mount-teide': {
+    photoQuery: 'Teide road landscape Tenerife',
     startTown: 'Sea level — El Médano, Puerto de la Cruz or Los Cristianos',
     bestMonths: 'Year-round, and a favourite winter training base',
     tips: [
@@ -118,6 +131,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'muur-van-geraardsbergen': {
+    photoQuery: 'Muur van Geraardsbergen kasseien wielrenners',
     startTown: 'Geraardsbergen town centre',
     bestMonths: 'Year-round — the Flemish classics season peaks in spring',
     tips: [
@@ -128,6 +142,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'oude-kwaremont': {
+    photoQuery: 'Oude Kwaremont kasseien wielrenners',
     startTown: 'Kluisbergen',
     bestMonths: 'Year-round — best in the spring classics season',
     tips: [
@@ -137,6 +152,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'cauberg': {
+    photoQuery: 'Cauberg Valkenburg wielrenners',
     startTown: 'Valkenburg aan de Geul',
     bestMonths: 'Year-round',
     tips: [
@@ -146,6 +162,7 @@ export const climbGuides: Record<string, ClimbGuide> = {
     ],
   },
   'passo-gavia': {
+    photoQuery: 'Passo Gavia road pass mountains',
     startTown: 'Ponte di Legno (south) or Bormio (north)',
     tips: [
       'Narrow, wild and high — the Gavia feels more remote than its neighbours.',

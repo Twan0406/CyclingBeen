@@ -18,7 +18,7 @@ export interface DestinationGuide {
 
 export const destinationGuides: Record<string, DestinationGuide> = {
   'veluwe-gravel': {
-    photoQuery: 'gravel cycling Veluwe forest track bicycle',
+    photoQuery: 'Veluwe fietsers bospad heide',
     basedIn: 'Otterlo sits in the middle of everything; Apeldoorn and Ede have better rail links.',
     gettingThere: 'Trains to Ede-Wageningen or Apeldoorn, then ride in — the forest starts almost immediately.',
     refuel: 'Pancake houses and forest cafés are frequent, but many close early and some shut on Mondays.',
@@ -52,7 +52,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'crete-senesi': {
-    photoQuery: 'Strade Bianche gravel cyclist Tuscany white road',
+    photoQuery: 'Strade Bianche cyclists white gravel road',
     basedIn: 'Siena for restaurants and rail; Buonconvento or Asciano to be surrounded by the gravel.',
     gettingThere: 'Fly to Florence or Pisa, then train to Siena. A car is useful but not required.',
     refuel: 'Village bars in Asciano, Buonconvento and Montalcino; long empty stretches in between.',
@@ -86,7 +86,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'girona-gravel': {
-    photoQuery: 'Girona cycling cyclists road Catalonia',
+    photoQuery: 'cyclists road Girona Catalonia countryside',
     basedIn: 'Girona old town — most riders never need a car.',
     gettingThere: 'Fly to Girona or Barcelona; a fast train links Barcelona to Girona in under 40 minutes.',
     refuel: 'Cafés built around cycling in the old town, and village bars in every direction.',
@@ -120,7 +120,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'ardennen-gravel': {
-    photoQuery: 'gravel cycling Ardennes forest cyclist Belgium',
+    photoQuery: 'Ardennes forest road valley Ourthe',
     basedIn: 'La Roche-en-Ardenne or Houffalize, both surrounded by forest tracks.',
     gettingThere: 'Trains reach Marloie or Libramont; the valleys are a short ride from either.',
     refuel: 'Small towns in the valleys, but the plateaus between them are genuinely empty.',
@@ -154,7 +154,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'black-forest-gravel': {
-    photoQuery: 'Black Forest cycling gravel forest road cyclist',
+    photoQuery: 'Schwarzwald forest road panorama valley',
     basedIn: 'Freiburg for city comforts; Freudenstadt to be deeper in the forest.',
     gettingThere: 'Fast trains to Freiburg or Karlsruhe; regional lines run up into the valleys.',
     refuel: 'Forest inns are frequent but keep short hours — carry a reserve.',
@@ -188,7 +188,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'zuid-limburg': {
-    photoQuery: 'Cauberg cycling Limburg cyclists climb',
+    photoQuery: 'Cauberg Valkenburg wielrenners beklimming',
     basedIn: 'Valkenburg is the traditional base and sits at the foot of the Cauberg.',
     gettingThere: 'Direct trains to Maastricht and Valkenburg from across the Netherlands.',
     refuel: 'Cafés in every village; Valkenburg itself is built around visiting cyclists.',
@@ -222,7 +222,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'vlaamse-ardennen': {
-    photoQuery: 'Koppenberg cobbles cycling Flanders cyclists',
+    photoQuery: 'Oude Kwaremont kasseien wielrenners',
     basedIn: 'Oudenaarde, at the centre of the bergs and home to the Tour of Flanders centre.',
     gettingThere: 'Trains from Ghent and Brussels to Oudenaarde in well under an hour.',
     refuel: 'Cafés at the foot of most famous climbs — stopping at them is part of the tradition.',
@@ -256,7 +256,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'peak-district': {
-    photoQuery: 'Peak District cycling road cyclists Derbyshire',
+    photoQuery: 'Winnats Pass Peak District road',
     basedIn: 'Bakewell for the centre of the park; Hathersage or Buxton for quick access to the hills.',
     gettingThere: 'Trains from Manchester and Sheffield reach Buxton, Hope and Edale.',
     refuel: 'Village pubs and tearooms throughout — Bakewell puddings are non-negotiable.',
@@ -290,7 +290,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   chianti: {
-    photoQuery: 'Chianti cycling cyclists Tuscany vineyard road',
+    photoQuery: 'Tuscany cypress road vineyard hills',
     basedIn: 'Greve in Chianti, halfway between Florence and Siena.',
     gettingThere: 'Fly to Florence; Greve is a short transfer south.',
     refuel: 'Village bars and enoteche everywhere — this is not a region where you go hungry.',
@@ -324,7 +324,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   eifel: {
-    photoQuery: 'Eifel cycling cyclists Vennbahn road Germany',
+    photoQuery: 'Vennbahn cycle path Eifel',
     basedIn: 'Monschau for the north, Daun for the volcanic lakes.',
     gettingThere: 'Trains to Aachen or Trier, then regional lines into the uplands.',
     refuel: 'Village bakeries and Gaststätten; Sundays can be quiet outside the towns.',
@@ -358,7 +358,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   zeeland: {
-    photoQuery: 'Zeeland cycling cyclists dike Netherlands coast',
+    photoQuery: 'Oosterscheldekering stormvloedkering Zeeland',
     basedIn: 'Middelburg or Zierikzee, both handsome old towns with good bases.',
     gettingThere: 'Trains to Middelburg and Vlissingen; the islands are linked by bridges and dams.',
     refuel: 'Beach pavilions and harbour cafés; the dikes themselves have nothing at all.',
@@ -392,7 +392,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   texel: {
-    photoQuery: 'Texel cycling cyclists dunes bicycle path',
+    photoQuery: 'Texel duinen fietspad De Slufter',
     basedIn: 'Den Burg, the island\'s main village and geographic centre.',
     gettingThere: 'Train to Den Helder, then the twenty-minute ferry — bikes travel as standard.',
     refuel: 'Beach pavilions on the west coast and cafés in every village.',
@@ -419,7 +419,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   camargue: {
-    photoQuery: 'Camargue cycling cyclist road flamingos France',
+    photoQuery: 'Camargue flamingos lagoon horses',
     basedIn: 'Arles for food and history; Saintes-Maries for the sea.',
     gettingThere: 'TGV to Avignon or Nîmes, then a short train or ride to Arles.',
     refuel: 'Sparse in the delta itself — carry supplies once you leave the towns.',
@@ -453,7 +453,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'west-jutland': {
-    photoQuery: 'Denmark west coast cycling cyclists dunes',
+    photoQuery: 'Hvide Sande dunes North Sea beach Denmark',
     basedIn: 'Ringkøbing or Hvide Sande, on either side of the fjord.',
     gettingThere: 'Danish trains reach Ringkøbing and Esbjerg and carry bikes readily.',
     refuel: 'Harbour smokehouses and village bakeries; distances between them can be long.',
@@ -480,7 +480,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'ferrara-po': {
-    photoQuery: 'Ferrara cycling bicycles city walls Italy',
+    photoQuery: 'Ferrara bicycles city walls street',
     basedIn: 'Ferrara itself — one of the most bike-friendly cities in Europe.',
     gettingThere: 'Ferrara is on the main line between Bologna and Venice.',
     refuel: 'Everything in Ferrara; in the delta, plan around the small villages.',
@@ -514,7 +514,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   'finale-ligure': {
-    photoQuery: 'Finale Ligure mountain biking trail rider',
+    photoQuery: 'Finale Ligure coast cliffs Mediterranean',
     basedIn: 'Finalborgo, the old town, where the bike shops and shuttles gather.',
     gettingThere: 'Fly to Genoa or Nice; Finale is on the coastal railway line.',
     refuel: 'Bars and focaccerie in Finalborgo; nothing at all on the high trails.',
@@ -548,7 +548,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   morzine: {
-    photoQuery: 'Morzine bike park mountain biking rider Portes du Soleil',
+    photoQuery: 'Portes du Soleil mountain bike trail summer',
     basedIn: 'Morzine for nightlife and lift access; Les Gets for gentler trails.',
     gettingThere: 'Fly to Geneva; Morzine is about ninety minutes by road.',
     refuel: 'Mountain restaurants at most lift stations, and plenty in the valley.',
@@ -582,7 +582,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   houffalize: {
-    photoQuery: 'Houffalize mountain bike World Cup rider Ardennes',
+    photoQuery: 'Houffalize Ourthe valley forest Ardennes',
     basedIn: 'Houffalize itself, a small town built around the racing.',
     gettingThere: 'Train to Libramont or Gouvy, then a short transfer.',
     refuel: 'Cafés in town; the forest loops have nothing.',
@@ -609,7 +609,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   livigno: {
-    photoQuery: 'Livigno mountain biking bike park alpine trail',
+    photoQuery: 'Livigno valley summer alpine meadow',
     basedIn: 'Livigno village, strung along the valley floor.',
     gettingThere: 'Fly to Milan or Innsbruck; the transfer is long but spectacular.',
     refuel: 'The valley is full of restaurants; mountain huts serve the higher trails.',
@@ -643,7 +643,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   winterberg: {
-    photoQuery: 'Winterberg bike park mountain biking rider Germany',
+    photoQuery: 'Sauerland forest hills summer landscape',
     basedIn: 'Winterberg town, at the foot of the lifts.',
     gettingThere: 'Direct trains from Dortmund; an easy drive from the Netherlands and Belgium.',
     refuel: 'Everything in town and at the lift stations.',

@@ -20,11 +20,64 @@ interface Target {
 }
 
 function keyFor(t: Target) {
-  return `climbphoto:2:${t.size}:${t.query ?? t.title}`;
+  return `climbphoto:3:${t.size}:${t.query ?? t.title}`;
 }
 
 function isPhoto(name: string) {
   return /\.(jpe?g)$/i.test(name); // skip svg/png maps, logos and diagrams
+}
+
+/**
+ * Titles that are never a good photo of a place: maps, logos, coats of arms,
+ * diagrams. Commons search matches text, so "Zeeland" happily returns a map of
+ * the province — these have to be thrown out rather than merely ranked down.
+ */
+const REJECT = [
+  /\b(map|maps|kaart|karte|carte|mapa|mappa)\b/,
+  /\b(logo|icon|symbol|emblem|seal|badge|pictogram)\b/,
+  /coat of arms|wapen van|blason|wappen/,
+  /\b(flag|vlag|drapeau|flagge)\b/,
+  /\b(diagram|chart|graph|scheme|schema|plattegrond|grundriss)\b/,
+  /\b(poster|banner|leaflet|cover|stamp|postzegel|coin|munt)\b/,
+  /\b(signpost|wegwijzer|signage|nameplate|plaque)\b/,
+  /\b(portrait|headshot|bust|statue of)\b/,
+  /\b(profile|elevation profile|hoogteprofiel)\b/,
+];
+
+/** Words that suggest the photo actually shows riding. */
+const CYCLING = /bicycl|bike|biking|cycling|cyclist|peloton|fiets|wielren|radfahr|radweg|vélo|velo|mtb|gravel|randonneur/;
+/** Words that suggest an appealing outdoor scene. */
+const SCENIC = /landscape|panorama|view|vista|road|route|trail|path|pass|col|hairpin|mountain|coast|beach|dune|forest|valley|lake|vineyard|cobbl/;
+/** Wrong season for most of these destinations. */
+const WINTER = /\b(snow|winter|ski|skiing|schnee|neige|sneeuw|piste)\b/;
+
+interface Candidate {
+  title: string;
+  index: number;
+  thumburl: string;
+  mime?: string;
+  width?: number;
+  height?: number;
+}
+
+function scoreCandidate(c: Candidate): number | null {
+  const title = c.title.toLowerCase();
+  if (REJECT.some((r) => r.test(title))) return null;
+  if (c.mime && c.mime !== 'image/jpeg' && !/\.jpe?g$/i.test(c.title)) return null;
+  if (c.width && c.width < 640) return null;
+
+  const ratio = c.width && c.height ? c.width / c.height : 1.5;
+  if (ratio < 1.1 || ratio > 2.8) return null; // crops badly in a card
+
+  let score = 0;
+  if (CYCLING.test(title)) score += 6;
+  if (SCENIC.test(title)) score += 2;
+  if (WINTER.test(title)) score -= 3;
+  if (c.width && c.width >= 1600) score += 1;
+  if (ratio >= 1.3 && ratio <= 2.1) score += 1;
+  // Commons' own relevance still counts, but only as a tie-breaker.
+  score -= c.index * 0.05;
+  return score;
 }
 
 /** Free-text image search on Commons — lets us ask for cycling specifically. */
@@ -32,32 +85,38 @@ async function commonsSearch(t: Target): Promise<string | null> {
   if (!t.query) return null;
   const url =
     `https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*` +
-    `&generator=search&gsrnamespace=6&gsrlimit=15` +
+    `&generator=search&gsrnamespace=6&gsrlimit=30` +
     `&gsrsearch=${encodeURIComponent(`${t.query} filetype:bitmap`)}` +
     `&prop=imageinfo&iiprop=url|mime|size&iiurlwidth=${t.size}`;
   const res = await fetch(url);
   const data = await res.json();
   const pages = data?.query?.pages;
   if (!pages) return null;
-  const imgs = (
+
+  const scored = (
     Object.values(pages) as Array<{
       title?: string;
       index?: number;
       imageinfo?: Array<{ thumburl?: string; mime?: string; width?: number; height?: number }>;
     }>
   )
-    .filter((p) => p.imageinfo?.[0]?.thumburl)
-    // Landscape photos only — portraits and thin panoramas crop badly in cards.
-    .filter((p) => {
+    .filter((p) => p.imageinfo?.[0]?.thumburl && p.title)
+    .map((p) => {
       const i = p.imageinfo![0];
-      if (!i.width || !i.height) return true;
-      const ratio = i.width / i.height;
-      return ratio > 1.1 && ratio < 2.6;
+      const c: Candidate = {
+        title: p.title!,
+        index: p.index ?? 0,
+        thumburl: i.thumburl!,
+        mime: i.mime,
+        width: i.width,
+        height: i.height,
+      };
+      return { c, score: scoreCandidate(c) };
     })
-    .filter((p) => p.imageinfo![0].mime === 'image/jpeg' || (p.title ? isPhoto(p.title) : false))
-    // Keep Commons' own relevance ranking.
-    .sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-  return imgs[0]?.imageinfo?.[0]?.thumburl ?? null;
+    .filter((x): x is { c: Candidate; score: number } => x.score !== null)
+    .sort((a, b) => b.score - a.score);
+
+  return scored[0]?.c.thumburl ?? null;
 }
 
 async function wikipediaLeadImage(t: Target): Promise<string | null> {

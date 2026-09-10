@@ -41,6 +41,8 @@ export interface Climb {
   tips?: string[];
   /** Curated YouTube video id for an embedded ascent. */
   videoId?: string;
+  /** Commons search phrase, so the photo shows the climb rather than the resort. */
+  photoQuery?: string;
 
   completed: boolean;
 }

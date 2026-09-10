@@ -50,7 +50,7 @@ export const adventures: Destination[] = [
       'It is not an organised event: you ride it yourself, at your own pace and risk.',
     ],
     wikiTitle: 'Colle delle Finestre',
-    photoQuery: 'bikepacking Alps gravel road cyclist',
+    photoQuery: 'Colle delle Finestre gravel hairpins road',
     gradient: g(0),
   },
   {
@@ -84,7 +84,7 @@ export const adventures: Destination[] = [
       'There is an organised grand départ each year, but the route can be ridden any time.',
     ],
     wikiTitle: 'Tabernas Desert',
-    photoQuery: 'bikepacking desert gravel cyclist Spain',
+    photoQuery: 'Gorafe desert Andalusia canyon landscape',
     gradient: g(2),
   },
   {
@@ -118,7 +118,7 @@ export const adventures: Destination[] = [
       'This is a route you can do on any bike, including a loaded touring bike with panniers.',
     ],
     wikiTitle: 'Danube Cycle Path',
-    photoQuery: 'Danube cycle path cyclists Wachau',
+    photoQuery: 'Wachau Danube valley vineyards river',
     gradient: g(3),
   },
   {
@@ -152,7 +152,7 @@ export const adventures: Destination[] = [
       'Switzerland is expensive but huts and fountains make it manageable.',
     ],
     wikiTitle: 'Swiss Alps',
-    photoQuery: 'bikepacking Swiss Alps mountain bike trail',
+    photoQuery: 'Swiss Alps mountain panorama summer trail',
     gradient: g(1),
   },
   {
@@ -186,7 +186,7 @@ export const adventures: Destination[] = [
       'Waterproofs are not pessimism here, they are standard equipment.',
     ],
     wikiTitle: 'Scottish Highlands',
-    photoQuery: 'bikepacking Scotland Highlands mountain bike track',
+    photoQuery: 'Scottish Highlands glen mountains landscape',
     gradient: g(4),
   },
   {
@@ -219,8 +219,8 @@ export const adventures: Destination[] = [
       'Several estuary crossings use ferries, some of which are seasonal. Check timetables.',
       'It works beautifully as a long weekend rather than a full expedition.',
     ],
-    wikiTitle: 'North Sea Cycle Route',
-    photoQuery: 'cyclists Dutch coast dunes cycle path',
+    wikiTitle: 'Wadden Sea',
+    photoQuery: 'Noordzee duinen fietspad kust',
     gradient: g(3),
   },
 
@@ -257,7 +257,7 @@ export const adventures: Destination[] = [
       'The route can be ridden outside the event too, and the stamp card still exists.',
     ],
     wikiTitle: 'Elfstedentocht',
-    photoQuery: 'Friesland cycling tour cyclists Netherlands',
+    photoQuery: 'Elfstedentocht fietsers Friesland peloton',
     gradient: g(3),
   },
   {
@@ -291,8 +291,8 @@ export const adventures: Destination[] = [
       'Early April in Flanders can be anything from mild to freezing rain. Pack for both.',
       'The shorter distances still include the famous climbs, so ambition is optional.',
     ],
-    wikiTitle: 'Tour of Flanders',
-    photoQuery: 'Tour of Flanders cyclists cobbles Koppenberg',
+    wikiTitle: 'Oude Kwaremont',
+    photoQuery: 'Ronde van Vlaanderen peloton kasseien',
     gradient: g(2),
   },
   {
@@ -327,7 +327,7 @@ export const adventures: Destination[] = [
       'Book accommodation early — the whole region fills up that weekend.',
     ],
     wikiTitle: 'Amstel Gold Race',
-    photoQuery: 'Amstel Gold Race Cauberg cyclists',
+    photoQuery: 'Cauberg wielrenners Valkenburg',
     gradient: g(0),
   },
   {
@@ -361,8 +361,8 @@ export const adventures: Destination[] = [
       'Descending the Glandon is neutralised for safety in the event — take it seriously anyway.',
       'Arrive several days early if you live at sea level; the altitude is noticeable.',
     ],
-    wikiTitle: 'La Marmotte',
-    photoQuery: "Alpe d'Huez cyclists hairpins",
+    wikiTitle: "Alpe d'Huez",
+    photoQuery: "Alpe d'Huez hairpins road mountain",
     gradient: g(0),
   },
   {
@@ -397,7 +397,7 @@ export const adventures: Destination[] = [
       'It is a festival as much as a ride; the valley is worth several days.',
     ],
     wikiTitle: 'Maratona dles Dolomites',
-    photoQuery: 'Maratona dles Dolomites cyclists Sella pass',
+    photoQuery: 'Passo Sella Dolomites road peloton',
     gradient: g(4),
   },
   {
@@ -431,8 +431,8 @@ export const adventures: Destination[] = [
       'Riders typically train for this specifically for a season — it is a goal, not a day out.',
       'The Ötztal valley is a fine place to ride even without the event.',
     ],
-    wikiTitle: 'Ötztaler Radmarathon',
-    photoQuery: 'Timmelsjoch cyclists alpine pass',
+    wikiTitle: 'Timmelsjoch',
+    photoQuery: 'Timmelsjoch pass road mountains',
     gradient: g(1),
   },
   {
@@ -466,8 +466,8 @@ export const adventures: Destination[] = [
       'Tape everything you value on the bike, and check your bottles will stay in their cages.',
       'The flat profile is deceptive — cobbles cost far more energy than the numbers suggest.',
     ],
-    wikiTitle: 'Paris–Roubaix',
-    photoQuery: 'Paris Roubaix cobbles cyclists Arenberg',
+    wikiTitle: "Trouée d'Arenberg",
+    photoQuery: 'Arenberg pave cobblestones cyclists',
     gradient: g(2),
   },
 ];
