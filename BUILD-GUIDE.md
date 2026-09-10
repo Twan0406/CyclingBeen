@@ -228,6 +228,10 @@ met CSS-klassen (gouden pulse voor 'veroverd'). Auto-rotatie via
     description, canonical, Open Graph, JSON-LD, de tekst zelf en interne
     links) lost dat op zonder SSR-complexiteit — React vervangt de statische
     markup gewoon bij het mounten.
+18. **Snelheid is een eis, geen bijzaak — en runtime-lookups slopen hem.**
+    Elke foto werd in de browser opgezocht via meerdere API-stappen *na elkaar*,
+    en veertig kaarten begonnen daar tegelijk aan. Resultaat: seconden wachten
+    op beeld dat al vaststond. Zie §13 — dit is de harde regel voor elk project.
 
 ## 12. Herbruikbaar recept voor een volgende app
 
@@ -239,3 +243,26 @@ met CSS-klassen (gouden pulse voor 'veroverd'). Auto-rotatie via
 6. Externe API's met secrets → gratis Val.town-proxy (§7)
 7. Zware features (kaarten e.d.) lazy-loaden (§10)
 8. Diagnostiek en fallbacks vanaf dag één (§11)
+
+## 13. Prestatie-eis voor elk project (hard)
+
+**Alles moet binnen een seconde staan.** Dit geldt voor elke site en app die we
+bouwen, niet alleen deze. Concreet:
+
+- **Doe geen netwerkwerk voor iets dat al vaststaat.** Content die bij de build
+  bekend is (foto's, teksten, coördinaten) hoort in de data of in de HTML, niet
+  in een lookup bij het openen van de pagina. Een runtime-API is voor wat écht
+  per bezoeker verschilt.
+- **Nooit ketens van afhankelijke requests.** Vier bronnen ná elkaar proberen is
+  vier keer de latency. Draai ze parallel en kies de beste die antwoordde.
+- **Laad alleen wat in beeld is.** Een lijst van veertig kaarten mag niet
+  veertig verzoeken tegelijk starten: de kaarten die de gebruiker bekijkt komen
+  dan achter de rest in de wachtrij. `IntersectionObserver` met een marge.
+- **Toon meteen iets.** Een kleurverloop, skeleton of statische HTML op de plek
+  van het beeld, zodat de pagina nooit leeg of springend is.
+- **Cache wat je ophaalt**, in geheugen én `localStorage`, met een versienummer
+  in de sleutel zodat een verbetering de oude waarden ongeldig maakt.
+- **`preconnect` naar elke externe host** die je zeker gaat gebruiken; dat
+  scheelt DNS + TLS op het eerste verzoek.
+- **Zware libraries lazy** (`React.lazy`), zodat de eerste paint niet wacht.
+- **Meet het**, niet op gevoel: Network-tab met throttling, of Lighthouse.

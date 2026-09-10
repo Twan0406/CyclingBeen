@@ -326,7 +326,7 @@ export const destinationGuides: Record<string, DestinationGuide> = {
     ],
   },
   eifel: {
-    photoQuery: 'Vennbahn cycle path Eifel',
+    photoQuery: 'Vulkaneifel Maar crater lake landscape road Eifel',
     basedIn: 'Monschau for the north, Daun for the volcanic lakes.',
     gettingThere: 'Trains to Aachen or Trier, then regional lines into the uplands.',
     refuel: 'Village bakeries and Gaststätten; Sundays can be quiet outside the towns.',

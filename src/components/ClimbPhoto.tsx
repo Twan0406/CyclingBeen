@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useClimbPhoto } from '../lib/wikiPhoto';
 
 /** Anything with a place and a Wikipedia title can carry a photo. */
@@ -23,6 +23,32 @@ interface Props {
 
 /** Renders the subject's photo over its gradient placeholder. */
 export default function ClimbPhoto({ subject, size = 800, className = '' }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  // A browse page holds forty cards. Resolving every photo at once floods the
+  // connection pool and the ones you are actually looking at queue behind the
+  // ones you are not, so a photo is only looked up once its card is near view.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || visible) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '400px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [visible]);
+
   const fetched = useClimbPhoto(
     subject.wikiTitle,
     subject.lat,
@@ -30,6 +56,7 @@ export default function ClimbPhoto({ subject, size = 800, className = '' }: Prop
     size,
     subject.photoQuery,
     subject.photoFile,
+    visible,
   );
   const candidate = subject.photoUrl ?? fetched;
   const [broken, setBroken] = useState<string | null>(null);
@@ -38,7 +65,11 @@ export default function ClimbPhoto({ subject, size = 800, className = '' }: Prop
   const photo = candidate && candidate !== broken ? candidate : null;
 
   return (
-    <div className={`bg-cover bg-center ${className}`} style={{ background: subject.gradient }}>
+    <div
+      ref={ref}
+      className={`bg-cover bg-center ${className}`}
+      style={{ background: subject.gradient }}
+    >
       {photo && (
         <img
           src={photo}

@@ -103,7 +103,7 @@ async function pinnedFile(t: Target): Promise<string | null> {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=${t.size}`;
 }
 
-async function commonsSearch(t: Target, minScore = 2): Promise<string | null> {
+async function commonsSearch(t: Target): Promise<string | null> {
   if (!t.query) return null;
   const url =
     `https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*` +
@@ -141,8 +141,9 @@ async function commonsSearch(t: Target, minScore = 2): Promise<string | null> {
   // Surviving the reject list is not the same as being a good photo. Without a
   // cycling or scenic word in the title this is just "an image that mentions
   // the place" — a wine bottle, a church, a crystal. Better to fall through.
-  const best = scored[0];
-  return best && best.score >= minScore ? best.c.thumburl : null;
+  // The reject list has already thrown out the maps, logos and monuments, and
+  // the ranking puts cycling and scenery first, so the top survivor is taken.
+  return scored[0]?.c.thumburl ?? null;
 }
 
 async function wikipediaLeadImage(t: Target): Promise<string | null> {
@@ -189,28 +190,30 @@ async function resolvePhoto(t: Target): Promise<string | null> {
     return val;
   }
 
-  // Order matters more than any single heuristic here. A Wikipedia article's
-  // lead image is chosen to define the subject, not to sell a bike trip: for a
-  // region it is a locator map, for a wine area a bottle, for a town its
-  // castle. So it is consulted only when there is no search phrase to work
-  // with — otherwise a weaker Commons photo of the right place wins, and if
-  // nothing passes, the gradient does.
-  const steps: Array<() => Promise<string | null>> = [
-    () => pinnedFile(t),
-    () => commonsSearch(t, 2),
-    () => commonsSearch(t, 0),
-    () => commonsNearby(t),
-  ];
-  if (!t.query) steps.splice(1, 0, () => wikipediaLeadImage(t));
-
+  // Order still matters, but waiting for each source in turn cost a page of
+  // cards up to four round-trips apiece. The sources run together now and the
+  // best answer that came back wins, so the slowest one no longer sets the
+  // pace. A pinned file needs no request at all and short-circuits the rest.
   let url: string | null = null;
-  for (const step of steps) {
-    if (url) break;
-    try {
-      url = await step();
-    } catch {
-      /* try the next source */
-    }
+
+  if (t.file) {
+    url = await pinnedFile(t);
+  } else {
+    const settle = async (fn: () => Promise<string | null>) => {
+      try {
+        return await fn();
+      } catch {
+        return null;
+      }
+    };
+    // Two requests at most, in parallel: the steered search, and a fallback for
+    // when it comes back empty. Ranked best-first — the search wins if it
+    // answered, and the slowest source no longer holds up the card.
+    const ranked = await Promise.all([
+      settle(() => commonsSearch(t)),
+      settle(() => (t.query ? commonsNearby(t) : wikipediaLeadImage(t))),
+    ]);
+    url = ranked.find((u): u is string => !!u) ?? null;
   }
 
   try {
@@ -229,11 +232,13 @@ export function useClimbPhoto(
   size = 800,
   query?: string,
   file?: string,
+  enabled = true,
 ): string | null {
   const target: Target = { title, lat, lng, size, query, file };
   const [url, setUrl] = useState<string | null>(() => memory.get(keyFor(target)) ?? null);
 
   useEffect(() => {
+    if (!enabled) return;
     let alive = true;
     resolvePhoto({ title, lat, lng, size, query, file }).then((u) => {
       if (alive) setUrl(u);
@@ -241,7 +246,7 @@ export function useClimbPhoto(
     return () => {
       alive = false;
     };
-  }, [title, lat, lng, size, query, file]);
+  }, [title, lat, lng, size, query, file, enabled]);
 
   return url;
 }

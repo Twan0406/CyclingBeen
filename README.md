@@ -1,6 +1,26 @@
 # Ridewild
 
-A cycling climb tracker web app built with React, TypeScript, Vite, Tailwind CSS, and Firebase. Browse 10 iconic climbs from cycling history, mark them as conquered, and track your stats. Strava OAuth integration lets you connect your Strava account.
+A cycling adventure guide built with React, TypeScript, Vite, Tailwind CSS and
+Firebase. Browse destinations, worked-out routes with GPX downloads, multi-day
+bikepacking trips and events; keep a record of the climbs and places you have
+ridden, and compare with friends via Strava.
+
+## Performance is a requirement, not a nice-to-have
+
+**Everything must be on screen within a second.** This is a standing rule for
+this project and every project we build. The rules that follow from it, and the
+mistake that produced them, are written up in
+[BUILD-GUIDE.md §13](BUILD-GUIDE.md#13-prestatie-eis-voor-elk-project-hard).
+The short version:
+
+- Never look up at runtime what is already known at build time.
+- Never chain dependent requests — run them in parallel and take the best.
+- Only load what is in view; forty cards must not fire forty requests.
+- Always show something immediately (gradient, skeleton, prerendered HTML).
+- Cache what you fetch, with a version in the key so fixes invalidate it.
+- `preconnect` to every external host you are certain to use.
+- Lazy-load heavy libraries so the first paint never waits.
+- Measure it in the Network tab or Lighthouse, don't go on feel.
 
 ## Local Development
 
