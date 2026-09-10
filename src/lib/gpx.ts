@@ -1,4 +1,5 @@
 import type { RouteSuggestion } from '../types/destination';
+import { routeSlug } from './routeSlug';
 
 const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -50,7 +51,7 @@ export function downloadGpx(route: RouteSuggestion, placeName: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${route.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.gpx`;
+  a.download = `${routeSlug(route.name)}.gpx`;
   document.body.appendChild(a);
   a.click();
   a.remove();

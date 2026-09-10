@@ -7,7 +7,8 @@ import { allDestinations as destinations } from '../src/data/allDestinations';
 import { categories } from '../src/types/destination';
 import { seasonFor, nearbyClimbs } from '../src/lib/climbGuide';
 import type { Climb } from '../src/types/climb';
-import type { Destination } from '../src/types/destination';
+import type { Destination, RouteSuggestion } from '../src/types/destination';
+import { routeSlug } from '../src/lib/routeSlug';
 
 const SITE = 'https://cyclingbeen-28952.web.app';
 
@@ -99,6 +100,33 @@ function climbBody(c: Climb): string {
   return shell(parts.join('\n'));
 }
 
+function routeBody(p: Destination, r: RouteSuggestion): string {
+  const cat = categories.find((c) => c.id === p.category);
+  const parts: string[] = [];
+  parts.push(`<p style="color:#7a7066;margin:0 0 6px">${cat ? esc(cat.label) : ''} \u00b7 <a style="color:#dfa04a" href="/place/${p.id}">${esc(p.name)}</a>, ${esc(p.country)}</p>`);
+  parts.push(`<h1 style="font-size:34px;margin:0 0 8px">${esc(r.name)}</h1>`);
+  parts.push(
+    `<p style="color:#a1968a;margin:0 0 20px">${r.distanceKm} km${r.elevationM != null ? ` \u00b7 ${r.elevationM} m climbing` : ''} \u00b7 ${esc(r.difficulty)}</p>`,
+  );
+  parts.push(`<p style="color:#e8e0d4;font-size:18px;line-height:1.6">${esc(r.description)}</p>`);
+  if (r.waypoints?.length) {
+    parts.push(
+      `<h2 style="font-size:20px;margin:24px 0 8px">The way it goes</h2><ol style="color:#d6cec2;line-height:1.7">${r.waypoints
+        .map((w) => `<li>${esc(w.name)}</li>`)
+        .join('')}</ol>`,
+    );
+  }
+  parts.push(
+    `<h2 style="font-size:20px;margin:24px 0 8px">Riding here</h2>
+     <ul style="color:#d6cec2;line-height:1.7">
+       <li><strong>Best time to go:</strong> ${esc(p.bestMonths)}</li>
+       <li><strong>Start from:</strong> ${esc(p.startTown)}</li>
+       <li><strong>Surface:</strong> ${esc(p.surface)}</li>
+     </ul>`,
+  );
+  return parts.join('\n');
+}
+
 function placeBody(p: Destination): string {
   const cat = categories.find((c) => c.id === p.category);
   const parts: string[] = [];
@@ -130,7 +158,7 @@ function placeBody(p: Destination): string {
       `<h2 style="font-size:20px;margin:24px 0 8px">Rides to do here</h2>${p.routes
         .map(
           (r) =>
-            `<h3 style="font-size:17px;margin:16px 0 4px">${esc(r.name)}</h3><p style="color:#7a7066;margin:0 0 4px">${r.distanceKm} km${r.elevationM != null ? ` \u00b7 ${r.elevationM} m climbing` : ''} \u00b7 ${esc(r.difficulty)}</p><p style="color:#d6cec2;line-height:1.7;margin:0">${esc(r.description)}</p>`,
+            `<h3 style="font-size:17px;margin:16px 0 4px"><a style="color:#f4efe7" href="/place/${p.id}/route/${routeSlug(r.name)}">${esc(r.name)}</a></h3><p style="color:#7a7066;margin:0 0 4px">${r.distanceKm} km${r.elevationM != null ? ` \u00b7 ${r.elevationM} m climbing` : ''} \u00b7 ${esc(r.difficulty)}</p><p style="color:#d6cec2;line-height:1.7;margin:0">${esc(r.description)}</p>`,
         )
         .join('')}`,
     );
@@ -296,6 +324,45 @@ export function prerender(): Plugin {
         fs.writeFileSync(path.join(placeDir, `${d.id}.html`), render(template, meta, placeBody(d)));
       }
 
+      // One page per suggested route
+      for (const d of destinations) {
+        if (!d.routes?.length) continue;
+        const dir = path.join(placeDir, d.id, 'route');
+        fs.mkdirSync(dir, { recursive: true });
+        for (const r of d.routes) {
+          const slug = routeSlug(r.name);
+          const url = `${SITE}/place/${d.id}/route/${slug}`;
+          const description = `${r.name}: a ${r.distanceKm} km ${r.difficulty} ride from ${d.name}, ${d.country}. Route map, what to expect and a GPX download.`;
+          fs.writeFileSync(
+            path.join(dir, `${slug}.html`),
+            render(
+              template,
+              head({
+                title: `${r.name} — ${d.name} | Ridewild`,
+                description,
+                url,
+                jsonLd: {
+                  '@context': 'https://schema.org',
+                  '@type': 'TouristTrip',
+                  name: r.name,
+                  description,
+                  url,
+                  itinerary: {
+                    '@type': 'ItemList',
+                    itemListElement: (r.waypoints ?? []).map((w, i) => ({
+                      '@type': 'ListItem',
+                      position: i + 1,
+                      name: w.name,
+                    })),
+                  },
+                },
+              }),
+              routeBody(d, r),
+            ),
+          );
+        }
+      }
+
       // Category landing pages
       const ridesDir = path.join(outDir, 'rides');
       fs.mkdirSync(ridesDir, { recursive: true });
@@ -336,6 +403,9 @@ export function prerender(): Plugin {
         ...categories.map((c) => `${SITE}/rides/${c.id}`),
         ...climbs.map((c) => `${SITE}/climb/${c.id}`),
         ...destinations.map((d) => `${SITE}/place/${d.id}`),
+        ...destinations.flatMap((d) =>
+          (d.routes ?? []).map((r) => `${SITE}/place/${d.id}/route/${routeSlug(r.name)}`),
+        ),
       ];
       fs.writeFileSync(
         path.join(outDir, 'sitemap.xml'),

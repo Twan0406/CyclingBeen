@@ -118,6 +118,20 @@ h1, h2, h3, .font-display {
   50% { box-shadow: 0 0 14px 4px rgba(223, 160, 74, 0.85), 0 0 28px rgba(223, 160, 74, 0.45); }
 }
 
+/* Numbered pin for the waypoints of a single route. */
+.route-pin {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #14120f;
+  border: 2px solid var(--dot, #dfa04a);
+  color: var(--dot, #dfa04a);
+  font: 600 11px/18px "Inter", system-ui, sans-serif;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(20, 18, 15, 0.6);
+}
+
 /* Category-coloured marker: --dot carries the terrain accent. */
 .ride-dot {
   width: 12px;

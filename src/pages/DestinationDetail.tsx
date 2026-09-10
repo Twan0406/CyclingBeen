@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ArrowLeft, CalendarDays, MapPin, Route, TrendingUp, Layers, Lightbulb, Compass, Play,
-  Tent, Flag, Sparkles, Backpack, Train, Home, Coffee, Check, Bookmark, Download,
+  Tent, Flag, Sparkles, Backpack, Train, Home, Coffee, Check, Bookmark, Map, ChevronRight,
 } from 'lucide-react';
 import ClimbPhoto from '../components/ClimbPhoto';
 import { allDestinations as destinations } from '../data/allDestinations';
@@ -9,7 +9,7 @@ import { categories } from '../types/destination';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { distanceKm } from '../lib/polyline';
 import { useClimbs } from '../context/ClimbsContext';
-import { downloadGpx } from '../lib/gpx';
+import { routeSlug } from '../lib/routeSlug';
 
 export default function DestinationDetail() {
   const { id } = useParams<{ id: string }>();
@@ -155,15 +155,15 @@ export default function DestinationDetail() {
               <Route className="w-5 h-5 text-[#dfa04a]" /> Rides to do here
             </h2>
             <p className="text-[13px] text-[#a1968a] mb-4">
-              Suggested routes, from a half day to a full one. The GPX files are course
-              outlines through the real places each ride passes — import one into Komoot,
-              Garmin or RideWithGPS and it snaps onto the roads.
+              Suggested routes, from a half day to a full one. Open one for the map, the
+              full description and a GPX you can load straight into your computer.
             </p>
             <div className="space-y-3">
               {place.routes.map((r) => (
-                <article
+                <Link
                   key={r.name}
-                  className="bg-[#1c1915] ring-1 ring-[#322b24] rounded-2xl px-5 py-4"
+                  to={`/place/${place.id}/route/${routeSlug(r.name)}`}
+                  className="block bg-[#1c1915] ring-1 ring-[#322b24] hover:ring-[#4a4038] rounded-2xl px-5 py-4 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <h3 className="text-[17px] font-semibold text-[#f4efe7]">{r.name}</h3>
@@ -184,18 +184,16 @@ export default function DestinationDetail() {
                   <p className="text-[15px] text-[#d6cec2] mt-2 leading-relaxed">{r.description}</p>
                   {r.waypoints && r.waypoints.length > 1 && (
                     <>
-                      <button
-                        onClick={() => downloadGpx(r, place.name)}
-                        className="mt-3 inline-flex items-center gap-2 text-[13px] font-semibold text-[#dfa04a] border border-[#dfa04a]/40 hover:bg-[#dfa04a]/10 rounded-full px-4 py-1.5 transition-colors"
-                      >
-                        <Download className="w-[15px] h-[15px]" /> Download GPX
-                      </button>
                       <p className="font-mono-dc text-[10px] text-[#6b6157] mt-2">
                         via {r.waypoints.map((w) => w.name).join(' · ')}
                       </p>
+                      <span className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#dfa04a]">
+                        <Map className="w-[15px] h-[15px]" /> Route map & GPX
+                        <ChevronRight className="w-4 h-4" />
+                      </span>
                     </>
                   )}
-                </article>
+                </Link>
               ))}
             </div>
           </section>

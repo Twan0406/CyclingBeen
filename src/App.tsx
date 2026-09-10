@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Explore from './pages/Explore';
 import ClimbDetail from './pages/ClimbDetail';
 import DestinationDetail from './pages/DestinationDetail';
+import RouteDetail from './pages/RouteDetail';
 import MyClimbs from './pages/MyClimbs';
 import Friends from './pages/Friends';
 import StravaCallback from './pages/StravaCallback';
@@ -24,6 +25,7 @@ export default function App() {
                 <Route path="/rides/:category" element={<Explore />} />
                 <Route path="/climb/:id" element={<ClimbDetail />} />
                 <Route path="/place/:id" element={<DestinationDetail />} />
+                <Route path="/place/:id/route/:route" element={<RouteDetail />} />
                 <Route path="/my-climbs" element={<MyClimbs />} />
                 <Route path="/friends" element={<Friends />} />
                 <Route path="/strava-callback" element={<StravaCallback />} />
