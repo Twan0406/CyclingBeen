@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Mountain, LayoutGrid, User, LogOut, Trophy } from 'lucide-react';
+import { LayoutGrid, User, LogOut, Trophy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
@@ -24,11 +24,12 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-[#14120f]/85 backdrop-blur-xl border-b border-[#322b24]">
       <div className="max-w-[1240px] mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5 font-semibold text-white text-lg">
-          <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#dfa04a] to-[#c4633a] flex items-center justify-center shadow-lg shadow-[#dfa04a]/20">
-            <Mountain className="w-5 h-5 text-[#1a1206]" />
-          </span>
-          <span className="tracking-tight font-display">Ridewild</span>
+        {/* Wordmark only — the serif carries the brand, no icon needed. */}
+        <Link
+          to="/"
+          className="font-display text-[23px] font-semibold text-[#f4efe7] hover:text-[#dfa04a] transition-colors leading-none"
+        >
+          Ridewild
         </Link>
 
         <div className="flex items-center gap-1">
