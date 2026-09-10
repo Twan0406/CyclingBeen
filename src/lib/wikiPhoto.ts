@@ -22,7 +22,7 @@ interface Target {
 }
 
 function keyFor(t: Target) {
-  return `climbphoto:4:${t.size}:${t.file ?? t.query ?? t.title}`;
+  return `climbphoto:5:${t.size}:${t.file ?? t.query ?? t.title}`;
 }
 
 function isPhoto(name: string) {
@@ -35,14 +35,17 @@ function isPhoto(name: string) {
  * the province — these have to be thrown out rather than merely ranked down.
  */
 const REJECT = [
-  /\b(map|maps|kaart|karte|carte|mapa|mappa)\b/,
+  /\b(map|maps|kaart|karte|carte|mapa|mappa|karta|kort)\b/,
+  /\b(locator|location map|topograph\w*|relief|atlas|itinerar\w*|mapping)\b/,
   /\b(logo|icon|symbol|emblem|seal|badge|pictogram)\b/,
   /coat of arms|wapen van|blason|wappen/,
   /\b(flag|vlag|drapeau|flagge)\b/,
   /\b(diagram|chart|graph|scheme|schema|plattegrond|grundriss)\b/,
   /\b(poster|banner|leaflet|cover|stamp|postzegel|coin|munt)\b/,
-  /\b(signpost|wegwijzer|signage|nameplate|plaque)\b/,
-  /\b(portrait|headshot|bust|statue of)\b/,
+  /\b(signpost|wegwijzer|signage|nameplate|plaque|wegweiser)\b/,
+  /\b(portrait|headshot|bust|statue|sculpture|monument|memorial)\b/,
+  /\b(mural|fresco|shrine|altar|chapel interior|interior|museum)\b/,
+  /\b(bottle|fiasco|wine|glass|vineyard bottle|cheese|dish|recipe)\b/,
   /\b(profile|elevation profile|hoogteprofiel)\b/,
 ];
 
@@ -100,7 +103,7 @@ async function pinnedFile(t: Target): Promise<string | null> {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=${t.size}`;
 }
 
-async function commonsSearch(t: Target): Promise<string | null> {
+async function commonsSearch(t: Target, minScore = 2): Promise<string | null> {
   if (!t.query) return null;
   const url =
     `https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*` +
@@ -139,7 +142,7 @@ async function commonsSearch(t: Target): Promise<string | null> {
   // cycling or scenic word in the title this is just "an image that mentions
   // the place" — a wine bottle, a church, a crystal. Better to fall through.
   const best = scored[0];
-  return best && best.score >= 2 ? best.c.thumburl : null;
+  return best && best.score >= minScore ? best.c.thumburl : null;
 }
 
 async function wikipediaLeadImage(t: Target): Promise<string | null> {
@@ -186,11 +189,25 @@ async function resolvePhoto(t: Target): Promise<string | null> {
     return val;
   }
 
+  // Order matters more than any single heuristic here. A Wikipedia article's
+  // lead image is chosen to define the subject, not to sell a bike trip: for a
+  // region it is a locator map, for a wine area a bottle, for a town its
+  // castle. So it is consulted only when there is no search phrase to work
+  // with — otherwise a weaker Commons photo of the right place wins, and if
+  // nothing passes, the gradient does.
+  const steps: Array<() => Promise<string | null>> = [
+    () => pinnedFile(t),
+    () => commonsSearch(t, 2),
+    () => commonsSearch(t, 0),
+    () => commonsNearby(t),
+  ];
+  if (!t.query) steps.splice(1, 0, () => wikipediaLeadImage(t));
+
   let url: string | null = null;
-  for (const step of [pinnedFile, commonsSearch, wikipediaLeadImage, commonsNearby]) {
+  for (const step of steps) {
     if (url) break;
     try {
-      url = await step(t);
+      url = await step();
     } catch {
       /* try the next source */
     }

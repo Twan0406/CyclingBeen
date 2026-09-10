@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useClimbPhoto } from '../lib/wikiPhoto';
 
 /** Anything with a place and a Wikipedia title can carry a photo. */
@@ -30,7 +31,11 @@ export default function ClimbPhoto({ subject, size = 800, className = '' }: Prop
     subject.photoQuery,
     subject.photoFile,
   );
-  const photo = subject.photoUrl ?? fetched;
+  const candidate = subject.photoUrl ?? fetched;
+  const [broken, setBroken] = useState<string | null>(null);
+  // A pinned file that no longer exists on Commons must not leave a broken
+  // image behind — fall back to the gradient instead.
+  const photo = candidate && candidate !== broken ? candidate : null;
 
   return (
     <div className={`bg-cover bg-center ${className}`} style={{ background: subject.gradient }}>
@@ -39,6 +44,7 @@ export default function ClimbPhoto({ subject, size = 800, className = '' }: Prop
           src={photo}
           alt={subject.name}
           loading="lazy"
+          onError={() => setBroken(photo)}
           className="absolute inset-0 w-full h-full object-cover animate-[fadein_0.5s_ease]"
         />
       )}
