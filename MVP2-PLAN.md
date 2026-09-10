@@ -48,10 +48,22 @@ in MVP2 wel voorbereid: elk achievement krijgt een `sport`-veld (default
 3. **Friends-pagina** — ✅ AFGEROND: nieuwe stijl, ranglijst op klims +
    gereden plekken, vergelijking over alle categorieën, en "you both want to
    do" voor gedeelde doelen.
-4. **Meer bestemmingen** per categorie (nu 4-6 per terrein) — nog open.
+4. **Meer bestemmingen** per categorie — ✅ AFGEROND (september 2026): elke
+   categorie heeft nu 7-10 bestemmingen. Nieuwe plekken staan in
+   `moreDestinations.ts`, met hun gids (routes, waypoints, highlights,
+   logistiek) inline in dezelfde entry.
+5. **Wereldbol overal** — ✅ AFGEROND: `ClimbMap` is vervangen door de generieke
+   `RideMap`, die elk punt in zijn categoriekleur toont. Hij staat op elke
+   `/rides`-weergave, en op "All" zie je alles tegelijk.
+6. **GPX-downloads** — ✅ AFGEROND: routes dragen de plaatsen waar ze langs gaan
+   (`routeWaypoints.ts` voor de oude set, inline voor de nieuwe), en de knop
+   bouwt daar in de browser een GPX 1.1-course van. Let op: het is een
+   *course-outline*, geen opgenomen track — een planner snapt hem op de weg.
+   Bikepark- en shuttledagen hebben bewust geen GPX. 48 van de 56 oude routes
+   en alle nieuwe routes hebben waypoints.
 
 **Volgende logische stap:** domein/merkcheck voor Ridewild, daarna de sitemap
-indienen bij Google Search Console.
+indienen bij Google Search Console (die is nu 105 pagina's groot).
 
 ## 1. Klimmen over de hele wereld 🌍 (must-have)
 
