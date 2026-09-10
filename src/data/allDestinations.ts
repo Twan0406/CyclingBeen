@@ -3,9 +3,15 @@ import { destinations } from './destinations';
 import { adventures } from './adventures';
 import { destinationGuides } from './destinationGuides';
 import { routeWaypoints } from './routeWaypoints';
+import { moreDestinations, moreAdventures } from './moreDestinations';
 
 /** Every destination and adventure, with its editorial guide and route waypoints merged in. */
-export const allDestinations: Destination[] = [...destinations, ...adventures].map((d) => {
+export const allDestinations: Destination[] = [
+  ...destinations,
+  ...moreDestinations,
+  ...adventures,
+  ...moreAdventures,
+].map((d) => {
   const guide = destinationGuides[d.id] ?? {};
   const wp = routeWaypoints[d.id];
   return {
