@@ -9,6 +9,10 @@ export interface Rider {
   climbTimes: Record<string, ClimbTime>;
   friends: string[];
   stravaName: string | null;
+  /** Destination ids this rider has marked as ridden. */
+  visited: string[];
+  /** Climb and destination ids saved as a goal. */
+  wishlist: string[];
 }
 
 export async function loadRiders(): Promise<Rider[]> {
@@ -26,6 +30,8 @@ export async function loadRiders(): Promise<Rider[]> {
       climbTimes: (data.climbTimes as Record<string, ClimbTime>) ?? {},
       friends: (data.friends as string[]) ?? [],
       stravaName: strava?.athleteName ?? null,
+      visited: (data.visited as string[]) ?? [],
+      wishlist: (data.wishlist as string[]) ?? [],
     };
   });
 }
