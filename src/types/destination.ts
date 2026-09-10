@@ -36,6 +36,19 @@ export interface RouteSuggestion {
   elevationM?: number;
   difficulty: 'easy' | 'moderate' | 'hard';
   description: string;
+  /**
+   * The route as an ordered list of real places it passes through, which is what
+   * the GPX download is built from. It is a course outline, not a surveyed
+   * track: planners like Komoot or Garmin snap it back onto roads.
+   */
+  waypoints?: RouteWaypoint[];
+}
+
+/** A named point a route passes through. */
+export interface RouteWaypoint {
+  name: string;
+  lat: number;
+  lng: number;
 }
 
 /**

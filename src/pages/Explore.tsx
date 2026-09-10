@@ -8,14 +8,16 @@ import { allDestinations as destinations } from '../data/allDestinations';
 import { categories, type RideCategory } from '../types/destination';
 import { usePageMeta } from '../hooks/usePageMeta';
 
-const ClimbMap = lazy(() => import('../components/ClimbMap'));
+const RideMap = lazy(() => import('../components/RideMap'));
+
+const CLIMB_COLOR = categories.find((c) => c.id === 'climbs')!.color;
 
 type Tab = RideCategory | 'all';
 
 export default function Explore() {
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
-  const { climbs } = useClimbs();
+  const { climbs, visited } = useClimbs();
   const [query, setQuery] = useState('');
 
   const tab: Tab = (categories.find((c) => c.id === category)?.id ?? 'all') as Tab;
@@ -44,6 +46,37 @@ export default function Explore() {
   );
 
   const count = shownClimbs.length + shownPlaces.length;
+
+  /** Everything currently listed, plotted on the globe in its category colour. */
+  const points = useMemo(
+    () => [
+      ...shownClimbs.map((c) => ({
+        id: c.id,
+        name: c.name,
+        lat: c.lat,
+        lng: c.lng,
+        color: CLIMB_COLOR,
+        done: c.completed,
+        href: `/climb/${c.id}`,
+      })),
+      ...shownPlaces.map((d) => ({
+        id: d.id,
+        name: d.name,
+        lat: d.lat,
+        lng: d.lng,
+        color: categories.find((c) => c.id === d.category)?.color ?? '#7d9aa8',
+        done: visited.has(d.id),
+        href: `/place/${d.id}`,
+      })),
+    ],
+    [shownClimbs, shownPlaces, visited],
+  );
+
+  /** Only the categories actually on the map, so the legend stays honest. */
+  const legend = useMemo(() => {
+    const present = new Set(points.map((p) => p.color));
+    return categories.filter((c) => present.has(c.color)).map((c) => ({ label: c.label, color: c.color }));
+  }, [points]);
 
   usePageMeta({
     title: meta
@@ -91,11 +124,11 @@ export default function Explore() {
         />
       </div>
 
-      {/* Globe, only where it earns its place */}
-      {tab === 'climbs' && !q && (
+      {/* The globe follows the tab: one category, or everything at once. */}
+      {points.length > 0 && (
         <div className="mt-8">
           <Suspense fallback={<div className="h-[560px] rounded-[24px] bg-[#1a1712] animate-pulse" />}>
-            <ClimbMap climbs={climbs} />
+            <RideMap points={points} legend={legend} />
           </Suspense>
         </div>
       )}

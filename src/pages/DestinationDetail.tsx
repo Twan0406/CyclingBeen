@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ArrowLeft, CalendarDays, MapPin, Route, TrendingUp, Layers, Lightbulb, Compass, Play,
-  Tent, Flag, Sparkles, Backpack, Train, Home, Coffee, Check, Bookmark,
+  Tent, Flag, Sparkles, Backpack, Train, Home, Coffee, Check, Bookmark, Download,
 } from 'lucide-react';
 import ClimbPhoto from '../components/ClimbPhoto';
 import { allDestinations as destinations } from '../data/allDestinations';
@@ -9,6 +9,7 @@ import { categories } from '../types/destination';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { distanceKm } from '../lib/polyline';
 import { useClimbs } from '../context/ClimbsContext';
+import { downloadGpx } from '../lib/gpx';
 
 export default function DestinationDetail() {
   const { id } = useParams<{ id: string }>();
@@ -154,7 +155,9 @@ export default function DestinationDetail() {
               <Route className="w-5 h-5 text-[#dfa04a]" /> Rides to do here
             </h2>
             <p className="text-[13px] text-[#a1968a] mb-4">
-              Suggested routes, from a half day to a full one.
+              Suggested routes, from a half day to a full one. The GPX files are course
+              outlines through the real places each ride passes — import one into Komoot,
+              Garmin or RideWithGPS and it snaps onto the roads.
             </p>
             <div className="space-y-3">
               {place.routes.map((r) => (
@@ -179,6 +182,19 @@ export default function DestinationDetail() {
                     {r.elevationM != null ? ` · ${r.elevationM.toLocaleString('de-DE')} m climbing` : ''}
                   </p>
                   <p className="text-[15px] text-[#d6cec2] mt-2 leading-relaxed">{r.description}</p>
+                  {r.waypoints && r.waypoints.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => downloadGpx(r, place.name)}
+                        className="mt-3 inline-flex items-center gap-2 text-[13px] font-semibold text-[#dfa04a] border border-[#dfa04a]/40 hover:bg-[#dfa04a]/10 rounded-full px-4 py-1.5 transition-colors"
+                      >
+                        <Download className="w-[15px] h-[15px]" /> Download GPX
+                      </button>
+                      <p className="font-mono-dc text-[10px] text-[#6b6157] mt-2">
+                        via {r.waypoints.map((w) => w.name).join(' · ')}
+                      </p>
+                    </>
+                  )}
                 </article>
               ))}
             </div>
