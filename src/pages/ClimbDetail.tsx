@@ -49,7 +49,7 @@ export default function ClimbDetail() {
   const nearby = climb ? nearbyClimbs(climb, climbs) : [];
 
   usePageMeta({
-    title: climb ? `${climb.name} — cycling guide | Collect` : 'Climb | Collect',
+    title: climb ? `${climb.name} — cycling guide | Ridewild` : 'Climb | Ridewild',
     description: climb
       ? `${climb.name}: ${climb.lengthKm} km at ${climb.avgGradientPct}% to ${climb.elevationM} m in ${climb.region}, ${climb.country}. ${climb.shortDescription}`
       : undefined,

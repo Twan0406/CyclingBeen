@@ -36,7 +36,7 @@ function head(opts: {
     `<meta property="og:description" content="${esc(description)}">`,
     `<meta property="og:url" content="${esc(url)}">`,
     `<meta property="og:type" content="article">`,
-    `<meta property="og:site_name" content="Collect">`,
+    `<meta property="og:site_name" content="Ridewild">`,
     `<meta name="twitter:card" content="summary_large_image">`,
     jsonLd
       ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`
@@ -242,7 +242,7 @@ export function prerender(): Plugin {
         render(
           template,
           head({
-            title: 'Cycling adventures — mountains, gravel, hills and trails',
+            title: 'Ridewild — cycling adventures: mountains, gravel, bikepacking and events',
             description: `Find your next ride: ${climbs.length} legendary climbs plus hand-picked gravel, hill, coastal and mountain bike destinations, each with a practical guide.`,
             url: `${SITE}/`,
           }),
@@ -257,7 +257,7 @@ export function prerender(): Plugin {
         const url = `${SITE}/climb/${c.id}`;
         const description = `${c.name}: ${c.lengthKm} km at ${c.avgGradientPct}% to ${c.elevationM} m in ${c.region}, ${c.country}. ${c.shortDescription}`;
         const meta = head({
-          title: `${c.name} — cycling guide | Collect`,
+          title: `${c.name} — cycling guide | Ridewild`,
           description,
           url,
           jsonLd: {
@@ -280,7 +280,7 @@ export function prerender(): Plugin {
         const url = `${SITE}/place/${d.id}`;
         const description = `Cycling in ${d.name}, ${d.country}: ${d.summary}. Best time to go, where to start, and practical local tips.`;
         const meta = head({
-          title: `${d.name} — cycling guide | Collect`,
+          title: `${d.name} — cycling guide | Ridewild`,
           description,
           url,
           jsonLd: {
@@ -302,7 +302,7 @@ export function prerender(): Plugin {
       const ridesIndex = render(
           template,
           head({
-            title: 'Where to ride — every cycling destination | Collect',
+            title: 'Where to ride — every cycling destination | Ridewild',
             description:
               'Browse every cycling destination: legendary mountain passes, gravel, hills, flat coastal riding and mountain bike trails, each with a practical ride guide.',
             url: `${SITE}/rides`,
@@ -320,7 +320,7 @@ export function prerender(): Plugin {
           render(
             template,
             head({
-              title: `${cat.label} — where to ride | Collect`,
+              title: `${cat.label} — where to ride | Ridewild`,
               description: `${cat.tagline}. Hand-picked ${cat.label.toLowerCase()} cycling destinations with practical ride guides.`,
               url: `${SITE}/rides/${cat.id}`,
             }),

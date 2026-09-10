@@ -1,7 +1,7 @@
 import type { Climb } from '../types/climb';
 
 /**
- * Inclusion criteria — a climb earns a place in Collect when it meets at least one of:
+ * Inclusion criteria — a climb earns a place in Ridewild when it meets at least one of:
  *  1. Rated hors-categorie or category 1 in a Grand Tour (Tour de France, Giro, Vuelta)
  *  2. Hosted a Grand Tour summit finish
  *  3. Iconic status: record-book climbs, monument-classic walls, or famous training meccas

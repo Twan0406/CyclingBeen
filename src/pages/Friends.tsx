@@ -35,7 +35,7 @@ export default function Friends() {
   const [selected, setSelected] = useState<string | null>(null);
   const [myFriends, setMyFriends] = useState<string[]>([]);
 
-  usePageMeta({ title: 'Friends & leaderboard | Collect' });
+  usePageMeta({ title: 'Friends & leaderboard | Ridewild' });
 
   useEffect(() => {
     if (!user) return;

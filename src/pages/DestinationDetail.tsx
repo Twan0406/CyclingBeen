@@ -20,7 +20,7 @@ export default function DestinationDetail() {
   const isWished = id ? wishlist.has(id) : false;
 
   usePageMeta({
-    title: place ? `${place.name} — cycling guide | Collect` : 'Destination | Collect',
+    title: place ? `${place.name} — cycling guide | Ridewild` : 'Destination | Ridewild',
     description: place
       ? `Cycling in ${place.name}, ${place.country}: ${place.summary}. Best time to go, where to start, and practical local tips.`
       : undefined,

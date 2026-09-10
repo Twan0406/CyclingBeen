@@ -19,7 +19,7 @@ export default function MyClimbs() {
   const { user, signIn } = useAuth();
   const strava = useStrava();
 
-  usePageMeta({ title: 'My rides | Collect' });
+  usePageMeta({ title: 'My rides | Ridewild' });
 
   const conqueredClimbs = useMemo(() => climbs.filter((c) => c.completed), [climbs]);
   const visitedPlaces = useMemo(

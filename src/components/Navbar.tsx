@@ -28,7 +28,7 @@ export default function Navbar() {
           <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#dfa04a] to-[#c4633a] flex items-center justify-center shadow-lg shadow-[#dfa04a]/20">
             <Mountain className="w-5 h-5 text-[#1a1206]" />
           </span>
-          <span className="tracking-tight font-display">Collect</span>
+          <span className="tracking-tight font-display">Ridewild</span>
         </Link>
 
         <div className="flex items-center gap-1">

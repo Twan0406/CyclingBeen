@@ -1,4 +1,4 @@
-# Collect
+# Ridewild
 
 A cycling climb tracker web app built with React, TypeScript, Vite, Tailwind CSS, and Firebase. Browse 10 iconic climbs from cycling history, mark them as conquered, and track your stats. Strava OAuth integration lets you connect your Strava account.
 

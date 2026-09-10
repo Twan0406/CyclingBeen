@@ -26,7 +26,7 @@ export default function Home() {
   const conquered = climbs.filter((c) => c.completed).length;
 
   usePageMeta({
-    title: 'Cycling adventures — mountains, gravel, hills and trails',
+    title: 'Ridewild — cycling adventures: mountains, gravel, bikepacking and events',
     description: `Find your next ride: ${climbs.length} legendary climbs and hand-picked gravel, hill, coastal and mountain bike destinations, with practical guides for each. Track what you've ridden and compare with friends.`,
   });
 

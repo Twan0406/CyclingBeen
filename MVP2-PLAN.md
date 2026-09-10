@@ -1,4 +1,4 @@
-# Collect — MVP2 Plan
+# Ridewild — MVP2 Plan
 
 Status MVP1 (live op https://cyclingbeen-28952.web.app):
 3D-globe, 46 Europese klims met foto's/historie/pro-records, Google-login,
@@ -39,15 +39,19 @@ in MVP2 wel voorbereid: elk achievement krijgt een `sport`-veld (default
    `adventures.ts`). Claude kan Wikimedia niet bereiken vanuit de sandbox en
    heeft de resultaten dus nooit gezien: **vraag Twan welke plekken een
    verkeerde of lelijke foto hebben** en stel per plek de zoekterm bij.
-2. **De naam.** "Collect"/"CyclingBeen"/"MyCols" passen niet meer nu de site
-   over fietsavonturen in de breedte gaat (gravel, bikepacking, evenementen).
-   Nieuwe richting nodig; daarna pas Google Search Console (zie hieronder).
-3. **Friends-pagina** staat nog in de oude opmaak en vergelijkt alleen
-   klimtijden. Zou ook gereden plekken en lijstjes kunnen vergelijken.
-4. **Meer bestemmingen** per categorie (nu 4-6 per terrein).
+2. **De naam** — ✅ GEKOZEN: **Ridewild** (voorlopig, september 2026).
+   Dekt de volle breedte (bergen, gravel, bikepacking, events), is in elke taal
+   uitspreekbaar en klinkt als een merk in plaats van een functie. Overal
+   doorgevoerd: navigatie, paginatitels, Open Graph en pre-rendering.
+   **Nog te doen door Twan:** domein- en merkcheck (.cc/.app/.bike), en pas
+   daarna de sitemap indienen bij Google Search Console.
+3. **Friends-pagina** — ✅ AFGEROND: nieuwe stijl, ranglijst op klims +
+   gereden plekken, vergelijking over alle categorieën, en "you both want to
+   do" voor gedeelde doelen.
+4. **Meer bestemmingen** per categorie (nu 4-6 per terrein) — nog open.
 
-**Afhankelijkheid:** sitemap pas indienen bij Google Search Console als de
-naam vaststaat — anders indexeert Google onder een naam die nog verandert.
+**Volgende logische stap:** domein/merkcheck voor Ridewild, daarna de sitemap
+indienen bij Google Search Console.
 
 ## 1. Klimmen over de hele wereld 🌍 (must-have)
 
@@ -124,7 +128,7 @@ De app moet helpen dromen en plannen: "wat rijd ik nog meer in die regio?"
 
 1. **Badges/mijlpalen**: "Eerste HC", "5 landen", "Alle Dolomieten", etc.
    Puur client-side afleidbaar uit completed-lijst — goedkoop te bouwen.
-2. **Uitnodigingslink**: deelbare URL ("Vergelijk je met mij op Collect").
+2. **Uitnodigingslink**: deelbare URL ("Vergelijk je met mij op Ridewild").
 3. **Activiteitenfeed op Friends**: "Twan veroverde Mont Ventoux 🏔️".
 4. **Jaaroverzicht**: jouw klim-jaar in cijfers.
 

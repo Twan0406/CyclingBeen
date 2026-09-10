@@ -47,8 +47,8 @@ export default function Explore() {
 
   usePageMeta({
     title: meta
-      ? `${meta.label} — where to ride | Collect`
-      : 'Where to ride — every destination | Collect',
+      ? `${meta.label} — where to ride | Ridewild`
+      : 'Where to ride — every destination | Ridewild',
     description: meta
       ? `${meta.tagline}. Hand-picked ${meta.label.toLowerCase()} destinations with practical ride guides.`
       : 'Browse every cycling destination: legendary mountain passes, gravel, hills, flat coastal riding and mountain bike trails.',
