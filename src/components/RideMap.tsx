@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { baseStyle } from '../lib/basemap';
 
 /** Anything that can sit on the globe: a climb, a destination, an event. */
 export interface MapPoint {
@@ -23,26 +24,6 @@ interface Props {
   height?: number;
 }
 
-const STYLE: maplibregl.StyleSpecification = {
-  version: 8,
-  sources: {
-    carto: {
-      type: 'raster',
-      tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-      ],
-      tileSize: 256,
-      attribution: '© OpenStreetMap © CARTO',
-    },
-  },
-  layers: [
-    { id: 'bg', type: 'background', paint: { 'background-color': '#100e0c' } },
-    { id: 'carto', type: 'raster', source: 'carto' },
-  ],
-};
-
 export default function RideMap({ points, legend = [], height = 560 }: Props) {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -54,7 +35,7 @@ export default function RideMap({ points, legend = [], height = 560 }: Props) {
     if (!containerRef.current || mapRef.current) return;
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: STYLE,
+      style: baseStyle,
       center: [8, 44],
       zoom: 2.1,
       pitch: 0,

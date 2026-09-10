@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Download, MapPin, Route as RouteIcon, TrendingUp, Layers, CalendarDays } from 'lucide-react';
 import { allDestinations as destinations } from '../data/allDestinations';
@@ -6,7 +6,7 @@ import { categories } from '../types/destination';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { routeSlug } from '../lib/routeSlug';
 import { downloadGpx } from '../lib/gpx';
-import { distanceKm } from '../lib/polyline';
+import { snapRoute, type SnapState } from '../lib/snapRoute';
 
 const RouteMap = lazy(() => import('../components/RouteMap'));
 
@@ -16,6 +16,31 @@ export default function RouteDetail() {
   const place = destinations.find((d) => d.id === id);
   const route = place?.routes?.find((r) => routeSlug(r.name) === slug);
   const cat = categories.find((c) => c.id === place?.category);
+
+  const wp = useMemo(() => route?.waypoints ?? [], [route]);
+  const [snap, setSnap] = useState<SnapState>({ status: 'idle' });
+
+  // Snap the outline onto real roads in the visitor's browser. The straight
+  // line stays on screen until it lands, and stays for good if it never does.
+  useEffect(() => {
+    if (!place || !route || wp.length < 2) return;
+    let cancelled = false;
+    setSnap({ status: 'loading' });
+    snapRoute(`${place.id}/${routeSlug(route.name)}`, wp, place.category)
+      .then((track) => {
+        if (cancelled) return;
+        setSnap(track ? { status: 'ready', track } : { status: 'failed' });
+      })
+      .catch(() => !cancelled && setSnap({ status: 'failed' }));
+    return () => {
+      cancelled = true;
+    };
+  }, [place, route, wp]);
+
+  const track = snap.status === 'ready' ? snap.track : null;
+  const line: [number, number][] = track
+    ? track.coords.map(([lng, lat]) => [lng, lat])
+    : wp.map((w) => [w.lng, w.lat]);
 
   usePageMeta({
     title: route && place ? `${route.name} — ${place.name} | Ridewild` : 'Route | Ridewild',
@@ -36,13 +61,6 @@ export default function RouteDetail() {
     );
 
   const color = cat?.color ?? '#dfa04a';
-  const wp = route.waypoints ?? [];
-
-  /** Straight-line length through the waypoints — a floor for the real distance. */
-  const outlineKm = wp.reduce(
-    (sum, w, i) => (i === 0 ? 0 : sum + distanceKm(wp[i - 1].lat, wp[i - 1].lng, w.lat, w.lng)),
-    0,
-  );
 
   const others = (place.routes ?? []).filter((r) => r.name !== route.name);
 
@@ -63,11 +81,14 @@ export default function RouteDetail() {
       </h1>
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4">
-        <Stat icon={<RouteIcon className="w-4 h-4" />} value={`${route.distanceKm} km`} />
-        {route.elevationM != null && (
+        <Stat
+          icon={<RouteIcon className="w-4 h-4" />}
+          value={`${track ? track.distanceKm.toFixed(1) : route.distanceKm} km`}
+        />
+        {(track?.elevationM ?? route.elevationM) != null && (
           <Stat
             icon={<TrendingUp className="w-4 h-4" />}
-            value={`${route.elevationM.toLocaleString('de-DE')} m climbing`}
+            value={`${Math.round(track?.elevationM ?? route.elevationM!).toLocaleString('de-DE')} m climbing`}
           />
         )}
         <span
@@ -81,11 +102,16 @@ export default function RouteDetail() {
       {wp.length > 1 && (
         <div className="mt-7">
           <Suspense fallback={<div className="h-[420px] rounded-[20px] bg-[#1a1712] animate-pulse" />}>
-            <RouteMap waypoints={wp} color={color} />
+            <RouteMap waypoints={wp} line={line} color={color} />
           </Suspense>
           <p className="font-mono-dc text-[10px] text-[#6b6157] mt-2">
-            Course outline through {wp.length} points, {Math.round(outlineKm)} km as drawn — a
-            planner snaps it onto the roads, which is where the extra kilometres come from.
+            {snap.status === 'loading' && 'Working out the roads between the points…'}
+            {snap.status === 'ready' &&
+              `Routed over real roads and tracks: ${track!.distanceKm.toFixed(1)} km${
+                track!.elevationM ? `, ${Math.round(track!.elevationM)} m climbing` : ''
+              }. Routing by BRouter.`}
+            {snap.status === 'failed' &&
+              `The routing service could not be reached, so this is the outline through the ${wp.length} points — a planner will snap it onto the roads on import.`}
           </p>
         </div>
       )}
@@ -95,11 +121,12 @@ export default function RouteDetail() {
       {wp.length > 1 && (
         <>
           <button
-            onClick={() => downloadGpx(route, place.name)}
+            onClick={() => downloadGpx(route, place.name, track)}
             className="mt-7 inline-flex items-center gap-2 text-[15px] font-semibold text-[#1a1206] rounded-full px-6 py-3 transition-opacity hover:opacity-90"
             style={{ background: color }}
           >
-            <Download className="w-[17px] h-[17px]" /> Download GPX
+            <Download className="w-[17px] h-[17px]" />
+            {track ? 'Download GPX' : 'Download GPX outline'}
           </button>
 
           <section className="mt-10">
