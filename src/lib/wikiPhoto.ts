@@ -17,10 +17,12 @@ interface Target {
   size: number;
   /** Commons search phrase, e.g. "cycling Veluwe forest track". */
   query?: string;
+  /** An exact Commons file, e.g. "Alpe d'Huez hairpins.jpg". Beats every search. */
+  file?: string;
 }
 
 function keyFor(t: Target) {
-  return `climbphoto:3:${t.size}:${t.query ?? t.title}`;
+  return `climbphoto:4:${t.size}:${t.file ?? t.query ?? t.title}`;
 }
 
 function isPhoto(name: string) {
@@ -50,6 +52,13 @@ const CYCLING = /bicycl|bike|biking|cycling|cyclist|peloton|fiets|wielren|radfah
 const SCENIC = /landscape|panorama|view|vista|road|route|trail|path|pass|col|hairpin|mountain|coast|beach|dune|forest|valley|lake|vineyard|cobbl/;
 /** Wrong season for most of these destinations. */
 const WINTER = /\b(snow|winter|ski|skiing|schnee|neige|sneeuw|piste)\b/;
+
+/** Reject on the filename alone — used where only a URL comes back. */
+function fileLooksWrong(name: string): boolean {
+  const n = decodeURIComponent(name).toLowerCase().replace(/_/g, ' ');
+  if (!isPhoto(n)) return true;
+  return REJECT.some((r) => r.test(n));
+}
 
 interface Candidate {
   title: string;
@@ -81,6 +90,16 @@ function scoreCandidate(c: Candidate): number | null {
 }
 
 /** Free-text image search on Commons — lets us ask for cycling specifically. */
+/**
+ * An exact Commons file, chosen by hand. Search is a guess; this is not, so it
+ * is how any photo that comes out wrong gets fixed for good.
+ */
+async function pinnedFile(t: Target): Promise<string | null> {
+  if (!t.file) return null;
+  const name = t.file.replace(/^File:/i, '').replace(/ /g, '_');
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=${t.size}`;
+}
+
 async function commonsSearch(t: Target): Promise<string | null> {
   if (!t.query) return null;
   const url =
@@ -116,7 +135,11 @@ async function commonsSearch(t: Target): Promise<string | null> {
     .filter((x): x is { c: Candidate; score: number } => x.score !== null)
     .sort((a, b) => b.score - a.score);
 
-  return scored[0]?.c.thumburl ?? null;
+  // Surviving the reject list is not the same as being a good photo. Without a
+  // cycling or scenic word in the title this is just "an image that mentions
+  // the place" — a wine bottle, a church, a crystal. Better to fall through.
+  const best = scored[0];
+  return best && best.score >= 2 ? best.c.thumburl : null;
 }
 
 async function wikipediaLeadImage(t: Target): Promise<string | null> {
@@ -127,7 +150,11 @@ async function wikipediaLeadImage(t: Target): Promise<string | null> {
   const data = await res.json();
   const pages = data?.query?.pages ?? {};
   const page = Object.values(pages)[0] as { thumbnail?: { source?: string } } | undefined;
-  return page?.thumbnail?.source ?? null;
+  const src = page?.thumbnail?.source;
+  if (!src) return null;
+  // The article's lead image is whatever the editors chose to open with, which
+  // for a wine region is a bottle and for a province is a map. Vet the filename.
+  return fileLooksWrong(src.split('/').pop() ?? '') ? null : src;
 }
 
 async function commonsNearby(t: Target): Promise<string | null> {
@@ -143,10 +170,9 @@ async function commonsNearby(t: Target): Promise<string | null> {
     title?: string;
     imageinfo?: Array<{ thumburl?: string; mime?: string }>;
   }>).filter((p) => p.imageinfo?.[0]?.thumburl);
-  const jpg = imgs.find(
-    (p) => (p.imageinfo![0].mime === 'image/jpeg') || (p.title ? isPhoto(p.title) : false),
-  );
-  return (jpg ?? imgs[0])?.imageinfo?.[0]?.thumburl ?? null;
+  const ok = imgs.filter((p) => p.title && !fileLooksWrong(p.title));
+  const jpg = ok.find((p) => p.imageinfo![0].mime === 'image/jpeg');
+  return (jpg ?? ok[0])?.imageinfo?.[0]?.thumburl ?? null;
 }
 
 async function resolvePhoto(t: Target): Promise<string | null> {
@@ -161,7 +187,7 @@ async function resolvePhoto(t: Target): Promise<string | null> {
   }
 
   let url: string | null = null;
-  for (const step of [commonsSearch, wikipediaLeadImage, commonsNearby]) {
+  for (const step of [pinnedFile, commonsSearch, wikipediaLeadImage, commonsNearby]) {
     if (url) break;
     try {
       url = await step(t);
@@ -185,19 +211,20 @@ export function useClimbPhoto(
   lng: number,
   size = 800,
   query?: string,
+  file?: string,
 ): string | null {
-  const target: Target = { title, lat, lng, size, query };
+  const target: Target = { title, lat, lng, size, query, file };
   const [url, setUrl] = useState<string | null>(() => memory.get(keyFor(target)) ?? null);
 
   useEffect(() => {
     let alive = true;
-    resolvePhoto({ title, lat, lng, size, query }).then((u) => {
+    resolvePhoto({ title, lat, lng, size, query, file }).then((u) => {
       if (alive) setUrl(u);
     });
     return () => {
       alive = false;
     };
-  }, [title, lat, lng, size, query]);
+  }, [title, lat, lng, size, query, file]);
 
   return url;
 }

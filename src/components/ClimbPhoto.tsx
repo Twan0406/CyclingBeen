@@ -10,6 +10,8 @@ export interface PhotoSubject {
   photoUrl?: string;
   /** Commons search phrase, used to steer towards cycling imagery. */
   photoQuery?: string;
+  /** An exact Commons file, pinned by hand when search gets it wrong. */
+  photoFile?: string;
 }
 
 interface Props {
@@ -26,6 +28,7 @@ export default function ClimbPhoto({ subject, size = 800, className = '' }: Prop
     subject.lng,
     size,
     subject.photoQuery,
+    subject.photoFile,
   );
   const photo = subject.photoUrl ?? fetched;
 

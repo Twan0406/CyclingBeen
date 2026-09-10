@@ -78,6 +78,8 @@ export interface Destination {
   wikiTitle: string;
   /** Commons search phrase so the photo shows cycling, not just scenery. */
   photoQuery?: string;
+  /** An exact Commons file, pinned by hand when the search gets it wrong. */
+  photoFile?: string;
   gradient: string;
 
   // --- Guide depth (optional; pages degrade gracefully without them) ---

@@ -10,6 +10,8 @@ export interface ClimbGuide {
   startTown?: string;
   /** Commons search phrase, so the photo shows the road, not the ski resort. */
   photoQuery?: string;
+  /** An exact Commons file, pinned by hand when the search gets it wrong. */
+  photoFile?: string;
   bestMonths?: string;
   tips?: string[];
   /** Curated YouTube video id; without one the page links to a search. */

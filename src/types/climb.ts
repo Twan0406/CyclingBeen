@@ -27,6 +27,8 @@ export interface Climb {
   /** English Wikipedia page title; the photo is fetched from the Wikipedia API at runtime. */
   wikiTitle: string;
   photoUrl?: string;
+  /** An exact Commons file, pinned by hand when the search gets it wrong. */
+  photoFile?: string;
   gradient: string;
   tourHistory?: string;
   proRecords?: ProRecord[];

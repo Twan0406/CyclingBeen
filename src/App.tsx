@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ClimbsProvider } from './context/ClimbsContext';
 import Navbar from './components/Navbar';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Explore from './pages/Explore';
 import ClimbDetail from './pages/ClimbDetail';
@@ -18,6 +19,7 @@ export default function App() {
       <AuthProvider>
         <ClimbsProvider>
           <div className="min-h-screen bg-[#14120f]">
+            <ScrollToTop />
             <Navbar />
             <main>
               <Routes>

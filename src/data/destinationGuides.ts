@@ -9,6 +9,8 @@ import type { RouteSuggestion } from '../types/destination';
  */
 export interface DestinationGuide {
   photoQuery?: string;
+  /** An exact Commons file, pinned by hand when the search gets it wrong. */
+  photoFile?: string;
   routes?: RouteSuggestion[];
   highlights?: string[];
   gettingThere?: string;
