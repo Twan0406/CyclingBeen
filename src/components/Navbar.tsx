@@ -27,7 +27,7 @@ export default function Navbar() {
         {/* Wordmark only — the serif carries the brand, no icon needed. */}
         <Link
           to="/"
-          className="font-display text-[23px] font-semibold text-[#f4efe7] hover:text-[#dfa04a] transition-colors leading-none"
+          className="font-display text-[28px] font-semibold tracking-[-0.02em] text-[#f4efe7] hover:text-[#dfa04a] transition-colors leading-none"
         >
           Ridewild
         </Link>
