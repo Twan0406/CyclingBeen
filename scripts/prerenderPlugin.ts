@@ -5,6 +5,7 @@ import { seedClimbs } from '../src/data/climbs';
 import { climbGuides } from '../src/data/climbGuides';
 import { allDestinations as destinations } from '../src/data/allDestinations';
 import { categories } from '../src/types/destination';
+import { photoFor } from '../src/data/photos';
 import { seasonFor, nearbyClimbs } from '../src/lib/climbGuide';
 import type { Climb } from '../src/types/climb';
 import type { Destination, RouteSuggestion } from '../src/types/destination';
@@ -27,8 +28,13 @@ function head(opts: {
   description: string;
   url: string;
   jsonLd?: object;
+  /** Subject id, so the page's own photo can be preloaded and shared. */
+  photoId?: string;
 }): string {
-  const { title, description, url, jsonLd } = opts;
+  const { title, description, url, jsonLd, photoId } = opts;
+  // The hero image is known at build time, so the browser can start fetching it
+  // from the very first bytes of HTML instead of waiting for React to mount.
+  const hero = photoId ? photoFor(photoId, 1024) : null;
   return [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}">`,
@@ -39,6 +45,8 @@ function head(opts: {
     `<meta property="og:type" content="article">`,
     `<meta property="og:site_name" content="Ridewild">`,
     `<meta name="twitter:card" content="summary_large_image">`,
+    hero ? `<link rel="preload" as="image" href="${esc(hero.url)}" fetchpriority="high">` : '',
+    hero ? `<meta property="og:image" content="${esc(hero.url)}">` : '',
     jsonLd
       ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`
       : '',
@@ -288,6 +296,7 @@ export function prerender(): Plugin {
           title: `${c.name} — cycling guide | Ridewild`,
           description,
           url,
+          photoId: c.id,
           jsonLd: {
             '@context': 'https://schema.org',
             '@type': 'TouristAttraction',
@@ -311,6 +320,7 @@ export function prerender(): Plugin {
           title: `${d.name} — cycling guide | Ridewild`,
           description,
           url,
+          photoId: d.id,
           jsonLd: {
             '@context': 'https://schema.org',
             '@type': 'TouristDestination',

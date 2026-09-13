@@ -35,7 +35,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative h-[68vh] min-h-[440px] max-h-[640px]">
         {hero && (
-          <ClimbPhoto subject={hero} size={1600} className="absolute inset-0 w-full h-full" />
+          <ClimbPhoto subject={hero} size={1600} className="absolute inset-0 w-full h-full" showCredit />
         )}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,15,0.55)_0%,rgba(20,18,15,0.35)_40%,rgba(20,18,15,0.97)_100%)]" />
         <div className="absolute inset-0 flex items-end">

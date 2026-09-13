@@ -47,7 +47,7 @@ export default function DestinationDetail() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="relative h-72 md:h-96">
-        <ClimbPhoto subject={place} size={1024} className="absolute inset-0 w-full h-full" />
+        <ClimbPhoto subject={place} size={1024} className="absolute inset-0 w-full h-full" showCredit />
         <button
           onClick={() => navigate(-1)}
           className="absolute top-4 left-4 bg-[#14120f]/60 hover:bg-[#14120f]/90 backdrop-blur text-white rounded-full p-2 transition-colors z-10 ring-1 ring-white/10"

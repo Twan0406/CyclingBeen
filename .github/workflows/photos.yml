@@ -1,0 +1,63 @@
+name: Refresh photos
+
+# Resolves every destination's and climb's photo from Wikimedia Commons and
+# commits src/data/photos.json, so visitors never pay for that lookup.
+#
+# Deliberately separate from the deploy: a slow or unavailable Commons must
+# never be able to fail a deploy, and the manifest is reviewable in the diff
+# before it goes live.
+
+on:
+  workflow_dispatch:
+    inputs:
+      refresh:
+        description: 'Re-resolve entries that already have a photo'
+        type: boolean
+        default: false
+      only:
+        description: 'Comma-separated ids to resolve, e.g. eifel,chianti'
+        type: string
+        default: ''
+  schedule:
+    # Monthly: files do occasionally get renamed or deleted on Commons.
+    - cron: '0 4 1 * *'
+
+permissions:
+  contents: write
+
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/nice-cannon-l14vfr
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Resolve photos
+        run: |
+          ARGS=""
+          if [ "${{ inputs.refresh }}" = "true" ]; then ARGS="$ARGS --refresh"; fi
+          if [ -n "${{ inputs.only }}" ]; then ARGS="$ARGS --only=${{ inputs.only }}"; fi
+          npx vite-node scripts/fetchPhotos.ts $ARGS
+
+      - name: Check it still builds
+        run: npm run build
+
+      - name: Commit the manifest
+        run: |
+          if git diff --quiet -- src/data/photos.json; then
+            echo "No photo changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/photos.json
+          git commit -m "chore: refresh the build-time photo manifest"
+          git push

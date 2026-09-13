@@ -1,4 +1,10 @@
 import { useEffect, useState } from 'react';
+import {
+  type Candidate,
+  commonsFileUrl,
+  fileLooksWrong,
+  scoreCandidate,
+} from './photoRank';
 
 // Resolves a real photo. Runs in the browser (which can reach Wikipedia and
 // Wikimedia Commons). Strategy, in order:
@@ -25,82 +31,13 @@ function keyFor(t: Target) {
   return `climbphoto:5:${t.size}:${t.file ?? t.query ?? t.title}`;
 }
 
-function isPhoto(name: string) {
-  return /\.(jpe?g)$/i.test(name); // skip svg/png maps, logos and diagrams
-}
-
-/**
- * Titles that are never a good photo of a place: maps, logos, coats of arms,
- * diagrams. Commons search matches text, so "Zeeland" happily returns a map of
- * the province — these have to be thrown out rather than merely ranked down.
- */
-const REJECT = [
-  /\b(map|maps|kaart|karte|carte|mapa|mappa|karta|kort)\b/,
-  /\b(locator|location map|topograph\w*|relief|atlas|itinerar\w*|mapping)\b/,
-  /\b(logo|icon|symbol|emblem|seal|badge|pictogram)\b/,
-  /coat of arms|wapen van|blason|wappen/,
-  /\b(flag|vlag|drapeau|flagge)\b/,
-  /\b(diagram|chart|graph|scheme|schema|plattegrond|grundriss)\b/,
-  /\b(poster|banner|leaflet|cover|stamp|postzegel|coin|munt)\b/,
-  /\b(signpost|wegwijzer|signage|nameplate|plaque|wegweiser)\b/,
-  /\b(portrait|headshot|bust|statue|sculpture|monument|memorial)\b/,
-  /\b(mural|fresco|shrine|altar|chapel interior|interior|museum)\b/,
-  /\b(bottle|fiasco|wine|glass|vineyard bottle|cheese|dish|recipe)\b/,
-  /\b(profile|elevation profile|hoogteprofiel)\b/,
-];
-
-/** Words that suggest the photo actually shows riding. */
-const CYCLING = /bicycl|bike|biking|cycling|cyclist|peloton|fiets|wielren|radfahr|radweg|vélo|velo|mtb|gravel|randonneur/;
-/** Words that suggest an appealing outdoor scene. */
-const SCENIC = /landscape|panorama|view|vista|road|route|trail|path|pass|col|hairpin|mountain|coast|beach|dune|forest|valley|lake|vineyard|cobbl/;
-/** Wrong season for most of these destinations. */
-const WINTER = /\b(snow|winter|ski|skiing|schnee|neige|sneeuw|piste)\b/;
-
-/** Reject on the filename alone — used where only a URL comes back. */
-function fileLooksWrong(name: string): boolean {
-  const n = decodeURIComponent(name).toLowerCase().replace(/_/g, ' ');
-  if (!isPhoto(n)) return true;
-  return REJECT.some((r) => r.test(n));
-}
-
-interface Candidate {
-  title: string;
-  index: number;
-  thumburl: string;
-  mime?: string;
-  width?: number;
-  height?: number;
-}
-
-function scoreCandidate(c: Candidate): number | null {
-  const title = c.title.toLowerCase();
-  if (REJECT.some((r) => r.test(title))) return null;
-  if (c.mime && c.mime !== 'image/jpeg' && !/\.jpe?g$/i.test(c.title)) return null;
-  if (c.width && c.width < 640) return null;
-
-  const ratio = c.width && c.height ? c.width / c.height : 1.5;
-  if (ratio < 1.1 || ratio > 2.8) return null; // crops badly in a card
-
-  let score = 0;
-  if (CYCLING.test(title)) score += 6;
-  if (SCENIC.test(title)) score += 2;
-  if (WINTER.test(title)) score -= 3;
-  if (c.width && c.width >= 1600) score += 1;
-  if (ratio >= 1.3 && ratio <= 2.1) score += 1;
-  // Commons' own relevance still counts, but only as a tie-breaker.
-  score -= c.index * 0.05;
-  return score;
-}
-
 /** Free-text image search on Commons — lets us ask for cycling specifically. */
 /**
  * An exact Commons file, chosen by hand. Search is a guess; this is not, so it
  * is how any photo that comes out wrong gets fixed for good.
  */
 async function pinnedFile(t: Target): Promise<string | null> {
-  if (!t.file) return null;
-  const name = t.file.replace(/^File:/i, '').replace(/ /g, '_');
-  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=${t.size}`;
+  return t.file ? commonsFileUrl(t.file, t.size) : null;
 }
 
 async function commonsSearch(t: Target): Promise<string | null> {
