@@ -1,9 +1,20 @@
 {
+  "alpe-dhuez": {
+    "file": "Guillou-Kleuker hand-shaped organ in Notre-Dame des Neiges, Alpe d'Huez France - distant shot.jpg",
+    "credit": "Tedder",
+    "license": "CC BY-SA 4.0",
+    "via": "de-duplicated"
+  },
   "amstel-gold-toerversie": {
     "file": "Valkenburg, Daalhemerweg.jpg",
     "credit": "Kleon3",
     "license": "CC BY-SA 4.0",
     "via": "geosearch"
+  },
+  "angliru": {
+    "file": "El angliru desde el Monsacro.jpg",
+    "license": "CC BY-SA 3.0",
+    "via": "wikidata P18"
   },
   "ardennen-gravel": {
     "file": "Trois ponts - Pont cycliste.jpg",
@@ -29,10 +40,22 @@
     "license": "CC BY 2.0",
     "via": "commons category"
   },
+  "blockhaus": {
+    "file": "Blockhaus - panoramio.jpg",
+    "credit": "ildirettore",
+    "license": "CC BY 3.0",
+    "via": "geosearch"
+  },
   "camargue": {
     "file": "065F Camargue (15844970442).jpg",
     "credit": "Rüdiger Stehn from Kiel, Deutschland",
     "license": "CC BY-SA 2.0",
+    "via": "commons category"
+  },
+  "cauberg": {
+    "file": "Wielrennen, sport, Bestanddeelnr 905-1654.jpg",
+    "credit": "Harry Pot for Anefo",
+    "license": "CC0",
     "via": "commons category"
   },
   "chianti": {
@@ -40,6 +63,102 @@
     "credit": "Rollooo",
     "license": "Public domain",
     "via": "commons category"
+  },
+  "col-daspin": {
+    "file": "Cyclistes amateurs au sommet du Col d'Aspin.jpg",
+    "credit": "chourmo86",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "col-daubisque": {
+    "file": "Recueil. Tour de France cycliste de 1939. Journée du 19 juillet. 9e étape Pau-Toulouse - lot de photographies de presse - Agence Meurisse - btv1b90772960 (1 of 5).jpg",
+    "credit": "Agence de presse Meurisse. Agence photographique présumée (commanditaire)",
+    "license": "Public domain",
+    "via": "commons category"
+  },
+  "col-de-joux-plane": {
+    "file": "Col joux plane.jpg",
+    "credit": "own work",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "col-de-la-bonette": {
+    "file": "Alpes-de-Haute-Provence & Alpes-Maritimes Col de la Bonette 001.jpg",
+    "credit": "Zairon",
+    "license": "CC BY 4.0",
+    "via": "commons category"
+  },
+  "col-de-la-croix-de-fer": {
+    "file": "Col de la Croix-de-Fer (Savoie).JPG",
+    "credit": "Florian Pépellin",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "col-de-la-loze": {
+    "file": "Col de la Loze final kilometers.jpg",
+    "credit": "Wompratte",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "col-de-la-madeleine": {
+    "file": "RD 213 marquée Tour de France au Col de la Madeleine (août 2025).JPG",
+    "credit": "Florian Pépellin",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "col-de-peyresourde": {
+    "file": "Yellow jersey peloton with crowd in Peyresourdes during stage 14 of Tour de France 2025.jpg",
+    "credit": "Hugo LUC",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "col-dizoard": {
+    "file": "Au col d'Izoard.JPG",
+    "credit": "Anthospace",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "col-du-galibier": {
+    "file": "Panneaux cyclistes et C14 Col du Galibier ouvert au Lautaret.jpg",
+    "credit": "Marc Mongenet",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "col-du-glandon": {
+    "file": "ColduGlandon.jpg",
+    "credit": "Benoit Kornmann",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "col-du-granon": {
+    "file": "ColduGranon.JPG",
+    "credit": "Benj05",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "col-du-tourmalet": {
+    "file": "2003 Mountain Pass Cycling Milestone - Col du Tourmalet St Marie de Campan.jpg",
+    "credit": "Cyclingralph",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "coll-de-rates": {
+    "file": "StoppOmat Coll de Rates.JPG",
+    "credit": "Roland Hecht",
+    "license": "CC0",
+    "via": "search: Coll de Rates cycling"
+  },
+  "colle-dellagnello": {
+    "file": "Col Agnel, cyclists.jpg",
+    "credit": "Mikel Ortega from Errenteria, Spain",
+    "license": "CC BY-SA 2.0",
+    "via": "commons category"
+  },
+  "colle-delle-finestre": {
+    "file": "Forte d'Aval e Monte Albergian (upper left corner) (9770693046).jpg",
+    "credit": "Fulvio Spada from Torino, Italy",
+    "license": "CC BY-SA 2.0",
+    "via": "de-duplicated"
   },
   "crete-senesi": {
     "file": "Cretesenesi panorama.jpg",
@@ -58,6 +177,12 @@
     "credit": "User Walter Koch on de.wikipedia",
     "license": "CC BY-SA 3.0",
     "via": "wikidata P18"
+  },
+  "etape-du-tour": {
+    "file": "Tour de France slate bike on the descent of the Col du Tourmalet during stage 14 of the TDF 2024.jpg",
+    "credit": "Hugo LUC",
+    "license": "CC BY-SA 4.0",
+    "via": "search: L'Étape du Tour cycling"
   },
   "ferrara-po": {
     "file": "Castello esterno.jpg",
@@ -83,6 +208,42 @@
     "license": "CC BY-SA 3.0",
     "via": "wikidata P18"
   },
+  "gotthard-tremola": {
+    "file": "St. Gotthard hospiz overview.jpg",
+    "credit": "Nowic",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "grand-colombier": {
+    "file": "Grand Colombier from St Pierre Island.jpg",
+    "credit": "Duda12345",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "granfondo-stelvio": {
+    "file": "Graubünden Umbrailpass 21.JPG",
+    "credit": "Zairon",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "grossglockner": {
+    "file": "BMW 248 R65.jpg",
+    "credit": "JoLaNi",
+    "license": "CC BY-SA 2.5",
+    "via": "commons category"
+  },
+  "hardknott-pass": {
+    "file": "Hardknott Pass and Eskdale.jpg",
+    "credit": "Mick Knapton at English Wikipedia",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "hautacam": {
+    "file": "Paysage depuis le col de Moulata.jpg",
+    "credit": "Samantha d'Orlan de Polignac",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
   "highland-trail-550": {
     "file": "Scottish lake 2018.jpg",
     "credit": "Azerifactory",
@@ -107,10 +268,34 @@
     "license": "CC BY 2.5",
     "via": "commons category"
   },
+  "kings-alfreds-way": {
+    "file": "Colebrook Street, Winchester - geograph.org.uk - 1131046.jpg",
+    "credit": "Keith Edkins",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "kitzbueheler-horn": {
+    "file": "Mountain peak in a lake (Unsplash).jpg",
+    "credit": "Orlova Maria orlovamaria",
+    "license": "CC0",
+    "via": "commons category"
+  },
   "la-marmotte": {
     "file": "Mountain rescue Alpe d'Huez.jpg",
     "credit": "No machine-readable author provided. Stevage assumed (based on copyright claims).",
     "license": "CC BY-SA 2.5",
+    "via": "commons category"
+  },
+  "la-redoute": {
+    "file": "2018 LBL Redoute W05.jpg",
+    "credit": "Hoebele",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Côte de la Redoute cycling"
+  },
+  "lagos-de-covadonga": {
+    "file": "Vistas desde el Mirador del Príncipe (Lagos de Covadonga, Picos de Europa, Asturias, España) 02.JPG",
+    "credit": "Tanja Freibott",
+    "license": "CC BY-SA 3.0 es",
     "via": "commons category"
   },
   "livigno": {
@@ -122,6 +307,18 @@
   "loire-a-velo": {
     "file": "View of Saint-Michel-sur-Loire.jpg",
     "credit": "Duch.seb",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "los-machucos": {
+    "file": "Sedimentary Rocks near San Roque de Riomiera in Cantabria Spain.jpg",
+    "credit": "Graeme Churchard (GOC53) https://www.flickr.com/people/graeme/",
+    "license": "CC BY 2.0",
+    "via": "geosearch"
+  },
+  "luz-ardiden": {
+    "file": "Montée vers Luz Ardiden 291.jpg",
+    "credit": "Tim Kops",
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
@@ -137,11 +334,47 @@
     "license": "CC BY-SA 4.0",
     "via": "wikidata P18"
   },
+  "mont-cenis": {
+    "file": "Col du Mont Cenis.jpg",
+    "credit": "Gunther Hissler",
+    "license": "CC BY-SA 3.0",
+    "via": "wikidata P18"
+  },
+  "mont-ventoux": {
+    "file": "Col des tempêtes, Mont Ventoux par Bédoin - P1000657 (2).jpg",
+    "credit": "Vi..Cult...",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "mortirolo": {
+    "file": "Passo del Mortirolo.JPG",
+    "credit": "Gabri80",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
   "morzine": {
     "file": "Dranse et Route de la Manche à Morzine (octobre 2021).JPG",
     "credit": "Florian Pépellin",
     "license": "CC BY-SA 4.0",
     "via": "commons category"
+  },
+  "mount-teide": {
+    "file": "Clouds on the way to Pico del Teide from Vilaflor (399921084).jpg",
+    "credit": "Tony Hisgett from Birmingham, UK",
+    "license": "CC BY 2.0",
+    "via": "commons category"
+  },
+  "mur-de-huy": {
+    "file": "Emily Collins + Marion Rousse 2013 Flèche.jpg",
+    "credit": "...some guy",
+    "license": "CC BY 2.0",
+    "via": "commons category"
+  },
+  "muur-van-geraardsbergen": {
+    "file": "Muur van Geraardsbergen en kasseiweg Oudenbergstraat.jpg",
+    "credit": "Severien Malfait",
+    "license": "CC BY-SA 3.0",
+    "via": "wikidata P18"
   },
   "noordzeeroute-nl": {
     "file": "13-09-29-nordfriesisches-wattenmeer-RalfR-19.jpg",
@@ -149,10 +382,52 @@
     "license": "CC BY-SA 3.0",
     "via": "wikidata P18"
   },
+  "oetztaler-radmarathon": {
+    "file": "PassstraßeTimmelsjoch.JPG",
+    "credit": "Arne Hückelheim",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
   "osterlen-gravel": {
     "file": "Brösarps backar okt 2005.jpg",
     "credit": "TS Eriksson",
     "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "oude-kwaremont": {
+    "file": "Kluisbergen - Kwaremont - Kwaremontplein zn - Parochiekerk Sint-Amandus (2020-11-25 15-06-42).jpg",
+    "credit": "Johan Allard",
+    "license": "CC BY-SA 4.0",
+    "via": "de-duplicated"
+  },
+  "paris-roubaix-challenge": {
+    "file": "The peloton through Trouée d'Arenberg, Paris-Roubaix 2008.jpg",
+    "credit": "Jack Thurston",
+    "license": "CC BY-SA 2.0",
+    "via": "commons category"
+  },
+  "passo-fedaia": {
+    "file": "Passo fedaia westrampe.jpg",
+    "credit": "Sönke Kraft aka Arnulf zu Linden",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "passo-gavia": {
+    "file": "Gavia Pass, Lombardy, Italy (July 4 2004).jpg",
+    "credit": "Marco Mayer, Germany",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "passo-giau": {
+    "file": "Passo giau16-12-07.jpg",
+    "credit": "Passfahrer",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "passo-pordoi": {
+    "file": "Passo pordoi.jpg",
+    "credit": "No machine-readable author provided. Egil assumed (based on copyright claims).",
+    "license": "CC BY 2.5",
     "via": "commons category"
   },
   "peak-district": {
@@ -161,9 +436,38 @@
     "license": "CC BY-SA 2.0",
     "via": "commons category"
   },
+  "pico-veleta": {
+    "file": "Veleta-pico.JPG",
+    "credit": "No machine-readable author provided. Miguel303xm~commonswiki assumed (based on copyright claims).",
+    "license": "CC BY-SA 2.5",
+    "via": "wikidata P18"
+  },
+  "plateau-de-beille": {
+    "file": "Plateau de Beille.JPG",
+    "credit": "Maeva Loillier et Florent Paitrault",
+    "license": "CC BY-SA 3.0",
+    "via": "wikidata P18"
+  },
+  "puig-major": {
+    "file": "Coll de Cal Reis and Puig Major.jpg",
+    "credit": "Wasquewhat",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "puy-de-dome": {
+    "file": "Puy de come 2001-06-22.jpg",
+    "license": "CC BY-SA 2.0 fr",
+    "via": "commons category"
+  },
   "ronde-van-vlaanderen-cyclo": {
     "file": "Kwaremont.jpg",
     "credit": "marcel baguet",
+    "license": "CC BY-SA 3.0",
+    "via": "wikidata P18"
+  },
+  "sa-calobra": {
+    "file": "Down to sa Calobra - panoramio.jpg",
+    "credit": "deepeye",
     "license": "CC BY-SA 3.0",
     "via": "wikidata P18"
   },
@@ -178,6 +482,12 @@
     "license": "CC BY-SA 3.0",
     "via": "wikidata P18"
   },
+  "stelvio-pass": {
+    "file": "Fausto Coppi Stelvio.jpg",
+    "credit": "Andreas Stiasny",
+    "license": "CC BY-SA 3.0",
+    "via": "de-duplicated"
+  },
   "texel": {
     "file": "Texel island.jpg",
     "credit": "Cycletours Holidays",
@@ -190,11 +500,28 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
+  "tre-cime": {
+    "file": "Dolomites - Dobbiaco area - Day 5 to Tre Cime (Drei Zinnen) - classic, stormy views of the peaks - (11059231115).jpg",
+    "credit": "Murray Foubister",
+    "license": "CC BY-SA 2.0",
+    "via": "commons category"
+  },
+  "vatternrundan": {
+    "file": "Vätternrundan route.jpg",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
   "veluwe-gravel": {
     "file": "Fietsroutenetwerk Veluwe 2.jpg",
     "credit": "FrDr",
     "license": "CC BY-SA 4.0",
     "via": "commons category"
+  },
+  "via-francigena-alps": {
+    "file": "Grand St Bernard.jpg",
+    "credit": "Hans Hillewaert",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
   },
   "vlaamse-ardennen": {
     "file": "Lierde.JPG",
@@ -230,6 +557,12 @@
     "file": "Aerial view of the coast of Belgium from Bruges to the coast of Zeeland in the Netherlands.jpg",
     "credit": "Treehill",
     "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "zoncolan": {
+    "file": "Monte Coglians visto dal monte Zoncolan.jpg",
+    "credit": "No machine-readable author provided. Alecobbe assumed (based on copyright claims).",
+    "license": "Public domain",
     "via": "commons category"
   },
   "zuid-limburg": {
