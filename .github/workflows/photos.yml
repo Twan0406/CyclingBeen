@@ -3,9 +3,14 @@ name: Refresh photos
 # Resolves every destination's and climb's photo from Wikimedia Commons and
 # commits src/data/photos.json, so visitors never pay for that lookup.
 #
-# Deliberately separate from the deploy: a slow or unavailable Commons must
-# never be able to fail a deploy, and the manifest is reviewable in the diff
-# before it goes live.
+# The deploy fills in whatever is missing on every push. This workflow is for
+# the deliberate runs: re-resolving everything after a change to the ranking, a
+# single id after a bad pick, and a monthly sweep for files renamed or deleted
+# on Commons.
+#
+# Note: workflow_dispatch only appears in the Actions tab once this file is on
+# the repository's default branch (main). Until then, use the deploy's own
+# step or run `npm run photos` locally.
 
 on:
   workflow_dispatch:

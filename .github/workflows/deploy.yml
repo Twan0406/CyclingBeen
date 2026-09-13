@@ -5,17 +5,42 @@ on:
     branches:
       - claude/nice-cannon-l14vfr
 
+permissions:
+  contents: write
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: claude/nice-cannon-l14vfr
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - run: npm install
+
+      # Fill in any photo the manifest is still missing, so visitors never wait
+      # on Commons. Allowed to fail: a slow or unavailable Commons must not be
+      # able to break a deploy — the app falls back to a live lookup.
+      - name: Resolve missing photos
+        continue-on-error: true
+        run: npx vite-node scripts/fetchPhotos.ts
+
+      - name: Commit the photo manifest
+        continue-on-error: true
+        run: |
+          if git diff --quiet -- src/data/photos.json; then
+            echo "No photo changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/photos.json
+          git commit -m "chore: fill in the build-time photo manifest [skip ci]"
+          git push
 
       - run: npm run build
         env:
