@@ -148,7 +148,12 @@ async function commonsCategory(title: string, lat: number, lng: number): Promise
     .filter((x): x is { c: Candidate; score: number } => x.score !== null)
     .sort((a, b) => b.score - a.score);
 
-  return scored[0]?.c.title ?? null;
+  // Being filed under the place is not enough on its own: the category for a
+  // ski resort holds the church, the cable car and — genuinely — the organ in
+  // Notre-Dame des Neiges. Insist on a word that means outdoors or riding, and
+  // otherwise let the next source try.
+  const best = scored[0];
+  return best && best.score >= 2 ? best.c.title : null;
 }
 
 /** Commons search, returning the best file name rather than a thumbnail URL. */

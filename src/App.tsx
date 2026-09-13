@@ -9,6 +9,7 @@ import ClimbDetail from './pages/ClimbDetail';
 import DestinationDetail from './pages/DestinationDetail';
 import RouteDetail from './pages/RouteDetail';
 import FindAdventure from './pages/FindAdventure';
+import PhotoReview from './pages/PhotoReview';
 import MyClimbs from './pages/MyClimbs';
 import Friends from './pages/Friends';
 import StravaCallback from './pages/StravaCallback';
@@ -26,6 +27,8 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/rides" element={<Explore />} />
                 <Route path="/find" element={<FindAdventure />} />
+                {/* Internal: not linked, not in the sitemap. */}
+                <Route path="/photos" element={<PhotoReview />} />
                 <Route path="/rides/:category" element={<Explore />} />
                 <Route path="/climb/:id" element={<ClimbDetail />} />
                 <Route path="/place/:id" element={<DestinationDetail />} />

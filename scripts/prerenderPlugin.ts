@@ -452,7 +452,7 @@ export function prerender(): Plugin {
       );
       fs.writeFileSync(
         path.join(outDir, 'robots.txt'),
-        `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`,
+        `User-agent: *\nAllow: /\nDisallow: /photos\n\nSitemap: ${SITE}/sitemap.xml\n`,
       );
 
       console.log(`\n  prerendered ${urls.length} pages + sitemap.xml`);
