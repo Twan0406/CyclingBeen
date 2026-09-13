@@ -237,6 +237,12 @@ async function credits(file: string): Promise<{ credit?: string; license?: strin
   }
 }
 
+/** Written as we go, so a crash can never discard an hour of resolving. */
+function save(entries: Record<string, PhotoEntry>) {
+  const sorted = Object.fromEntries(Object.entries(entries).sort(([a], [b]) => a.localeCompare(b)));
+  fs.writeFileSync(OUT, `${JSON.stringify(sorted, null, 2)}\n`);
+}
+
 function subjects(): Subject[] {
   const places = allDestinations.map((d) => ({
     id: d.id,
@@ -281,12 +287,15 @@ async function main() {
   let found = 0;
   const failed: string[] = [];
 
+  // One subject must never be able to end the run: an unhandled throw here
+  // cost every climb its photo, because they are resolved after the places.
   for (const s of todo) {
-    let file: string | null = null;
-    let via = '';
-    // Best evidence first: a picture someone recorded as being of this subject,
-    // then the subject's own Commons category, and only then a text search.
     try {
+      let file: string | null = null;
+      let via = '';
+
+      // Best evidence first: a picture someone recorded as being of this
+      // subject, then its own Commons category, and only then a text search.
       if (s.title) {
         file = await commonsCategory(s.title, s.lat, s.lng);
         via = 'commons category';
@@ -307,40 +316,41 @@ async function main() {
         file = await nearby(s.lat, s.lng);
         via = 'geosearch';
       }
-    } catch (err) {
-      console.warn(`  ${s.id}: ${(err as Error).message}`);
-    }
 
-    if (!file) {
-      failed.push(s.id);
-      console.log(`  ✗ ${s.id}`);
-      continue;
-    }
+      if (file) {
+        const taken = Object.entries(existing).find(([id, e]) => id !== s.id && e.file === file);
+        if (taken) {
+          // Two subjects sharing one photo makes the guide look thin, and it is
+          // usually a sign the second one matched something generic.
+          console.log(`  ↷ ${s.id}: ${file} already used by ${taken[0]}, searching on`);
+          file = (s.query ? await search(s.query) : null) ?? (await nearby(s.lat, s.lng));
+          via = 'de-duplicated';
+        }
+      }
 
-    const taken = Object.entries(existing).find(([id, e]) => id !== s.id && e.file === file);
-    if (taken) {
-      // Two subjects sharing one photo makes the guide look thin, and it is
-      // usually a sign the second one matched something generic.
-      console.log(`  ↷ ${s.id}: ${file} already used by ${taken[0]}, searching on`);
-      file = (s.query ? await search(s.query) : null) ?? (await nearby(s.lat, s.lng));
-      via = 'de-duplicated';
       if (!file) {
         failed.push(s.id);
+        console.log(`  ✗ ${s.id}`);
         continue;
       }
+
+      const meta = await credits(file);
+      existing[s.id] = { file, ...meta, via };
+      found++;
+      console.log(`  ✓ ${s.id} → ${file}`);
+    } catch (err) {
+      failed.push(s.id);
+      console.warn(`  ✗ ${s.id}: ${(err as Error).message}`);
     }
 
-    const meta = await credits(file);
-    existing[s.id] = { file, ...meta, via };
-    found++;
-    console.log(`  ✓ ${s.id} → ${file}`);
+    if (found % 10 === 0) save(existing);
 
     // Commons asks for a gentle pace; this runs once per build, not per visit.
     await new Promise((r) => setTimeout(r, 250));
   }
 
+  save(existing);
   const sorted = Object.fromEntries(Object.entries(existing).sort(([a], [b]) => a.localeCompare(b)));
-  fs.writeFileSync(OUT, `${JSON.stringify(sorted, null, 2)}\n`);
 
   const missing = all.filter((s) => !sorted[s.id]).map((s) => s.id);
   console.log(`\nresolved ${found}, still without a photo: ${missing.length}`);
