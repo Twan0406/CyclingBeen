@@ -57,6 +57,87 @@ async function api(url: string): Promise<unknown> {
   return res.json();
 }
 
+
+/**
+ * The image Wikidata records for the subject itself (P18).
+ *
+ * This is the decisive improvement over searching: P18 is a human saying "this
+ * picture shows this thing". Free-text search only knows that a file's title
+ * mentions some of the same words, which is how a Spitfire ended up on West
+ * Jutland and a war memorial on the Ötztaler.
+ */
+async function wikidataImage(title: string): Promise<string | null> {
+  const idUrl =
+    `https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=1` +
+    `&titles=${encodeURIComponent(title)}&prop=pageprops&ppprop=wikibase_item`;
+  const idData = (await api(idUrl)) as {
+    query?: { pages?: Record<string, { pageprops?: { wikibase_item?: string } }> };
+  };
+  const qid = Object.values(idData.query?.pages ?? {})[0]?.pageprops?.wikibase_item;
+  if (!qid) return null;
+
+  const claimUrl = `https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&property=P18&entity=${qid}`;
+  const claimData = (await api(claimUrl)) as {
+    claims?: { P18?: Array<{ mainsnak?: { datavalue?: { value?: string } } }> };
+  };
+  const file = claimData.claims?.P18?.[0]?.mainsnak?.datavalue?.value;
+  if (!file || fileLooksWrong(file)) return null;
+  return file;
+}
+
+/** The Commons category for the subject, which is curated per place. */
+async function commonsCategory(title: string): Promise<string | null> {
+  const idUrl =
+    `https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=1` +
+    `&titles=${encodeURIComponent(title)}&prop=pageprops&ppprop=wikibase_item`;
+  const idData = (await api(idUrl)) as {
+    query?: { pages?: Record<string, { pageprops?: { wikibase_item?: string } }> };
+  };
+  const qid = Object.values(idData.query?.pages ?? {})[0]?.pageprops?.wikibase_item;
+  if (!qid) return null;
+
+  const catUrl = `https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&property=P373&entity=${qid}`;
+  const catData = (await api(catUrl)) as {
+    claims?: { P373?: Array<{ mainsnak?: { datavalue?: { value?: string } } }> };
+  };
+  const category = catData.claims?.P373?.[0]?.mainsnak?.datavalue?.value;
+  if (!category) return null;
+
+  // Everything filed under the place, ranked by our own scorer — so a photo
+  // that shows riding wins over one that shows the church.
+  const listUrl =
+    `https://commons.wikimedia.org/w/api.php?action=query&format=json` +
+    `&generator=categorymembers&gcmtitle=${encodeURIComponent(`Category:${category}`)}` +
+    `&gcmtype=file&gcmlimit=100&prop=imageinfo&iiprop=url|mime|size`;
+  const listData = (await api(listUrl)) as {
+    query?: { pages?: Record<string, {
+      title?: string;
+      imageinfo?: Array<{ url?: string; mime?: string; width?: number; height?: number }>;
+    }> };
+  };
+  const pages = listData.query?.pages;
+  if (!pages) return null;
+
+  const scored = Object.values(pages)
+    .filter((p) => p.title && p.imageinfo?.[0])
+    .map((p, i) => {
+      const info = p.imageinfo![0];
+      const c: Candidate = {
+        title: p.title!.replace(/^File:/, ''),
+        index: i,
+        thumburl: info.url ?? '',
+        mime: info.mime,
+        width: info.width,
+        height: info.height,
+      };
+      return { c, score: scoreCandidate(c) };
+    })
+    .filter((x): x is { c: Candidate; score: number } => x.score !== null)
+    .sort((a, b) => b.score - a.score);
+
+  return scored[0]?.c.title ?? null;
+}
+
 /** Commons search, returning the best file name rather than a thumbnail URL. */
 async function search(query: string): Promise<string | null> {
   const url =
@@ -185,8 +266,18 @@ async function main() {
   for (const s of todo) {
     let file: string | null = null;
     let via = '';
+    // Best evidence first: a picture someone recorded as being of this subject,
+    // then the subject's own Commons category, and only then a text search.
     try {
-      if (s.query) {
+      if (s.title) {
+        file = await commonsCategory(s.title);
+        via = 'commons category';
+      }
+      if (!file && s.title) {
+        file = await wikidataImage(s.title);
+        via = 'wikidata P18';
+      }
+      if (!file && s.query) {
         file = await search(s.query);
         via = `search: ${s.query}`;
       }
