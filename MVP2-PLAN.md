@@ -392,3 +392,48 @@ volledige redactionele dekking.
 Na de webfeatures (fase 1-3), maar de **pre-rendering/SEO-stap is een
 prerequisite** en kan al eerder. Volgorde: SEO-fundament → automatische
 klimgidsen → 5 regio-gidsen → user-generated tips → video-embeds.
+
+---
+
+## Waar we gebleven zijn (13-09-2026) — foto's
+
+**Af en live:** wereldbol op elke categorie, ritpagina's met echte routering en
+GPX, de trip-finder op `/find`, scroll naar boven bij navigatie, en de foto's
+worden nu **bij de build** opgehaald (`scripts/fetchPhotos.ts` →
+`src/data/photos.json`) in plaats van in de browser van de bezoeker.
+
+**Open punt: de kwaliteit van de fotoselectie.**
+
+Stand van zaken per ronde, met het manifest als bewijs:
+
+| ronde | dekking | oordeel |
+|---|---|---|
+| vrije-tekstzoek op Commons | 96/96 | ± helft fout (Spitfire, oorlogsmonument, trein) |
+| Commons-categorie + Wikidata P18 | 96/96 | meeste goed, ± 10 duidelijk fout |
+| eis "landschap- of fietswoord" op álle bronnen | **34/96** | dekking ingestort |
+
+**De laatste ronde klopt niet en moet uitgezocht worden.** De eis wordt blijkbaar
+te streng toegepast: goede bestanden als `Muur van Geraardsbergen en kasseiweg
+Oudenbergstraat.jpg` scoren 1 en vallen af (geen woord uit de SCENIC-lijst),
+terwijl `BMW 248 R65.jpg` (score 1) juist wél in het manifest staat. Die twee
+kunnen niet allebei waar zijn — vermoedelijk draaide de CI-run nog op de vorige
+versie van het script, of een bron omzeilt de drempel.
+
+**Eerst uitzoeken, vóór er weer aan regels wordt gedraaid:**
+1. Lees de log van de "Resolve missing photos"-stap van de laatste run en
+   controleer welke `via` de foute entries hadden.
+2. Test `scoreCandidate` tegen de titels die nu in het manifest staan
+   (`npx vite-node` met een scriptje) en kijk of de drempel doet wat hij belooft.
+3. Breid de SCENIC-lijst uit met woorden die wél terrein beschrijven maar
+   ontbreken: `kassei`, `cobble`, `berg`, `heuvel`, `backar`, `polder`, `strand`,
+   `duin`, `bos`, `heide`, `col`, `passo`, `puerto`, `alto`.
+
+**Daarna niet meer blind bijstellen.** `/photos` toont alle 96 foto's met hun id
+en Commons-bestand; wat daar fout staat wordt met de hand gepind
+(`"pinned": true` in `src/data/photos.json`), en dat overschrijft geen enkele
+latere run.
+
+**Les (hoort bij §11 van BUILD-GUIDE):** een heuristiek op bestandsnamen heeft
+een plafond. Toen het manifest er eenmaal was, kostte het controleren van 96
+keuzes een minuut in plaats van een tocht over de site — die zichtbaarheid had
+er vanaf het begin moeten zijn.
