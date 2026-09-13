@@ -33,7 +33,21 @@ export const REJECT = [
   /\b(car|cars|vehicle|automobile|lorry|truck|bus|tram|train|locomotive|aircraft|spitfire)\b/,
   // Reproductions of printed matter rather than photographs of the place.
   /\b(postcard|carte postale|cartes postales|engraving|lithograph|painting|drawing|book|brochure)\b/,
+  // Press clippings and albums rather than a photograph of the place.
+  /\b(recueil|collection|album|scrapbook|clipping|journal)\b/,
+  // Buildings that happen to stand there. A guide is about the riding.
+  /\b(church|chapel|cathedral|abbey|basilica|kerk|kirche|église|iglesia|chiesa|organ|hospiz|hospice)\b/,
 ];
+
+/**
+ * The bar every candidate has to clear, whichever source proposed it.
+ *
+ * A title that mentions neither the outdoors nor riding is not a photo worth
+ * showing — that is how an organ, a motorbike and a Polish polder arrived in a
+ * cycling guide. Falling through to the next source, or to the gradient, is
+ * the better answer.
+ */
+export const MIN_SCORE = 2;
 
 /** Words that suggest the photo actually shows riding. */
 export const CYCLING =

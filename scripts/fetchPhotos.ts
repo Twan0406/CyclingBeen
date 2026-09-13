@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { seedClimbs } from '../src/data/climbs';
 import { climbGuides } from '../src/data/climbGuides';
 import { allDestinations } from '../src/data/allDestinations';
-import { type Candidate, fileLooksWrong, scoreCandidate } from '../src/lib/photoRank';
+import { type Candidate, MIN_SCORE, fileLooksWrong, scoreCandidate } from '../src/lib/photoRank';
 import { distanceKm } from '../src/lib/polyline';
 
 const OUT = path.resolve(
@@ -86,7 +86,10 @@ async function wikidataImage(title: string): Promise<string | null> {
   };
   const file = claimData.claims?.P18?.[0]?.mainsnak?.datavalue?.value;
   if (!file || fileLooksWrong(file)) return null;
-  return file;
+  // P18 says "this is a picture of the subject", which still allows the organ
+  // inside the church on the mountain. It has to clear the bar as well.
+  const score = scoreCandidate({ title: file, index: 0, thumburl: '' });
+  return score !== null && score >= MIN_SCORE ? file : null;
 }
 
 /** The Commons category for the subject, which is curated per place. */
@@ -153,7 +156,7 @@ async function commonsCategory(title: string, lat: number, lng: number): Promise
   // Notre-Dame des Neiges. Insist on a word that means outdoors or riding, and
   // otherwise let the next source try.
   const best = scored[0];
-  return best && best.score >= 2 ? best.c.title : null;
+  return best && best.score >= MIN_SCORE ? best.c.title : null;
 }
 
 /** Commons search, returning the best file name rather than a thumbnail URL. */
@@ -190,7 +193,8 @@ async function search(query: string): Promise<string | null> {
     .filter((x): x is { c: Candidate; score: number } => x.score !== null)
     .sort((a, b) => b.score - a.score);
 
-  return scored[0]?.c.title ?? null;
+  const best = scored[0];
+  return best && best.score >= MIN_SCORE ? best.c.title : null;
 }
 
 /** Geotagged photos near the coordinates — the last resort before giving up. */
@@ -209,7 +213,11 @@ async function nearby(lat: number, lng: number): Promise<string | null> {
   if (!pages) return null;
   const ok = Object.values(pages)
     .filter((p) => p.title && !fileLooksWrong(p.title))
-    .filter((p) => (p.imageinfo?.[0]?.width ?? 0) >= 640);
+    .filter((p) => (p.imageinfo?.[0]?.width ?? 0) >= 640)
+    .filter((p) => {
+      const score = scoreCandidate({ title: p.title!, index: 0, thumburl: '' });
+      return score !== null && score >= MIN_SCORE;
+    });
   return ok[0]?.title?.replace(/^File:/, '') ?? null;
 }
 
