@@ -26,7 +26,13 @@ export const REJECT = [
   /\b(portrait|headshot|bust|statue|sculpture|monument|memorial)\b/,
   /\b(mural|fresco|shrine|altar|chapel interior|interior|museum)\b/,
   /\b(bottle|fiasco|wine|glass|vineyard bottle|cheese|dish|recipe)\b/,
-  /\b(profile|elevation profile|hoogteprofiel)\b/,
+  /\b(profile|profil|elevation profile|hoogteprofiel|hohenprofil)\b/,
+  // Seen from orbit or from a plane: technically the place, useless as a photo.
+  /\biss0|\bsts-\d|view of earth|satellite|aerial view overhead/,
+  // A machine in front of the scenery, not the scenery.
+  /\b(car|cars|vehicle|automobile|lorry|truck|bus|tram|train|locomotive|aircraft|spitfire)\b/,
+  // Reproductions of printed matter rather than photographs of the place.
+  /\b(postcard|carte postale|cartes postales|engraving|lithograph|painting|drawing|book|brochure)\b/,
 ];
 
 /** Words that suggest the photo actually shows riding. */

@@ -22,11 +22,15 @@ import { seedClimbs } from '../src/data/climbs';
 import { climbGuides } from '../src/data/climbGuides';
 import { allDestinations } from '../src/data/allDestinations';
 import { type Candidate, fileLooksWrong, scoreCandidate } from '../src/lib/photoRank';
+import { distanceKm } from '../src/lib/polyline';
 
 const OUT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '../src/data/photos.json',
 );
+
+/** How far a geotagged photo may sit from the subject and still count. */
+const MAX_PHOTO_KM = 60;
 
 const UA = 'Ridewild/1.0 (https://cyclingbeen-28952.web.app; build-time photo resolver)';
 
@@ -86,7 +90,7 @@ async function wikidataImage(title: string): Promise<string | null> {
 }
 
 /** The Commons category for the subject, which is curated per place. */
-async function commonsCategory(title: string): Promise<string | null> {
+async function commonsCategory(title: string, lat: number, lng: number): Promise<string | null> {
   const idUrl =
     `https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=1` +
     `&titles=${encodeURIComponent(title)}&prop=pageprops&ppprop=wikibase_item`;
@@ -108,10 +112,11 @@ async function commonsCategory(title: string): Promise<string | null> {
   const listUrl =
     `https://commons.wikimedia.org/w/api.php?action=query&format=json` +
     `&generator=categorymembers&gcmtitle=${encodeURIComponent(`Category:${category}`)}` +
-    `&gcmtype=file&gcmlimit=100&prop=imageinfo&iiprop=url|mime|size`;
+    `&gcmtype=file&gcmlimit=100&prop=imageinfo|coordinates&iiprop=url|mime|size`;
   const listData = (await api(listUrl)) as {
     query?: { pages?: Record<string, {
       title?: string;
+      coordinates?: Array<{ lat?: number; lon?: number }>;
       imageinfo?: Array<{ url?: string; mime?: string; width?: number; height?: number }>;
     }> };
   };
@@ -120,6 +125,14 @@ async function commonsCategory(title: string): Promise<string | null> {
 
   const scored = Object.values(pages)
     .filter((p) => p.title && p.imageinfo?.[0])
+    // A category can cover a whole river or province, so a geotag far from the
+    // subject is a different place entirely — that is how a Bulgarian harbour
+    // arrived on the Danube route. Files without a geotag are left alone.
+    .filter((p) => {
+      const c = p.coordinates?.[0];
+      if (c?.lat == null || c.lon == null) return true;
+      return distanceKm(lat, lng, c.lat, c.lon) <= MAX_PHOTO_KM;
+    })
     .map((p, i) => {
       const info = p.imageinfo![0];
       const c: Candidate = {
@@ -270,7 +283,7 @@ async function main() {
     // then the subject's own Commons category, and only then a text search.
     try {
       if (s.title) {
-        file = await commonsCategory(s.title);
+        file = await commonsCategory(s.title, s.lat, s.lng);
         via = 'commons category';
       }
       if (!file && s.title) {
@@ -297,6 +310,19 @@ async function main() {
       failed.push(s.id);
       console.log(`  ✗ ${s.id}`);
       continue;
+    }
+
+    const taken = Object.entries(existing).find(([id, e]) => id !== s.id && e.file === file);
+    if (taken) {
+      // Two subjects sharing one photo makes the guide look thin, and it is
+      // usually a sign the second one matched something generic.
+      console.log(`  ↷ ${s.id}: ${file} already used by ${taken[0]}, searching on`);
+      file = (s.query ? await search(s.query) : null) ?? (await nearby(s.lat, s.lng));
+      via = 'de-duplicated';
+      if (!file) {
+        failed.push(s.id);
+        continue;
+      }
     }
 
     const meta = await credits(file);
