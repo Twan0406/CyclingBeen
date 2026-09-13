@@ -1,1 +1,577 @@
-{}
+{
+  "alpe-dhuez": {
+    "file": "Cyclists Beware ... Tour de Oughtibridge Ahead^ - geograph.org.uk - 1018171.jpg",
+    "credit": "Terry Robinson",
+    "license": "CC BY-SA 2.0",
+    "via": "search: Alpe d'Huez cycling"
+  },
+  "amstel-gold-toerversie": {
+    "file": "Valkenburg, Daalhemerweg.jpg",
+    "credit": "Kleon3",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "angliru": {
+    "file": "Downhill - panoramio.jpg",
+    "credit": "Taken by Dimas, posted by Mikel Ortega",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "ardennen-gravel": {
+    "file": "Pierre de Crawhez, vainqueur du Circuit des Ardennes en juin 1903.jpg",
+    "credit": "Jules Beau",
+    "license": "Public domain",
+    "via": "search: The Ardennes cycling"
+  },
+  "badlands-spain": {
+    "file": "Chalk badlands (Niobrara Formation, Upper Cretaceous; chalk bluffs south of Castle Rock, Gove County, Kansas, USA) 27 (25260701298).jpg",
+    "credit": "James St. John",
+    "license": "CC BY 2.0",
+    "via": "search: Badlands cycling"
+  },
+  "bergisches-land": {
+    "file": "Wuppertal-Varresbeck. Empfangsgebäude des ehemaligen Bahnhofs - Flickr - wwwuppertal.jpg",
+    "credit": "wwwuppertal",
+    "license": "CC BY 2.0",
+    "via": "search: Bergisches Land cycling"
+  },
+  "black-forest-gravel": {
+    "file": "Marrion Dunials, Leo Bathol, Louise Anderson, A. J. Howard, and Maud Dunning with their bicycles in Forest Park on the Fourth of July, 1892. - DPLA - 7ccb64283b02f70e4972e41e00f2f6e7.jpg",
+    "credit": "Unknown",
+    "license": "No restrictions",
+    "via": "search: The Black Forest cycling"
+  },
+  "blockhaus": {
+    "file": "Blockhaus - panoramio.jpg",
+    "credit": "ildirettore",
+    "license": "CC BY 3.0",
+    "via": "geosearch"
+  },
+  "camargue": {
+    "file": "Go! FAST! (42800378764).jpg",
+    "credit": "Ralf Steinberger from Milan, Berlin + Munich, Italy + Germany",
+    "license": "CC BY 2.0",
+    "via": "search: The Camargue cycling"
+  },
+  "cauberg": {
+    "file": "Cauberg Hill of Fame World Cycling Champions1.jpg",
+    "credit": "Hoebele",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Cauberg cycling"
+  },
+  "chianti": {
+    "file": "Tuscany cycling 11 (21232899379).jpg",
+    "credit": "Winniepix",
+    "license": "CC BY 2.0",
+    "via": "search: Chianti cycling"
+  },
+  "col-daspin": {
+    "file": "2005 Mountain Pass Cycling Milestone - Col d'Aspin Arreau.JPG",
+    "credit": "Cyclingralph",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Col d'Aspin cycling"
+  },
+  "col-daubisque": {
+    "file": "Profil cycliste du col d'Aubisque depuis Laruns.jpg",
+    "credit": "OliveRadula",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Col d'Aubisque cycling"
+  },
+  "col-de-joux-plane": {
+    "file": "Lac de Nyon-Guerin 01.jpg",
+    "credit": "Krzysztof Golik",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "col-de-la-bonette": {
+    "file": "Col de la Bonnette South.jpg",
+    "credit": "Ingo Mehling",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "col-de-la-croix-de-fer": {
+    "file": "Col du Glandon (panoramique).JPG",
+    "credit": "Florian Pépellin",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "col-de-la-loze": {
+    "file": "Jonas Vingegaard on Col de la Loze (cropped).jpg",
+    "credit": "Wompratte",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Col de la Loze cycling"
+  },
+  "col-de-la-madeleine": {
+    "file": "Col de la Madeleine, France (7956607706).jpg",
+    "credit": "Robbie Shade",
+    "license": "CC BY 2.0",
+    "via": "search: Col de la Madeleine cycling"
+  },
+  "col-de-peyresourde": {
+    "file": "Col Peyresourde 4x4 berger 2009.jpg",
+    "credit": "JLPC",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "col-dizoard": {
+    "file": "Hautes-Alpes Col De L'Izoard Tour de France Feminin 071986 - panoramio.jpg",
+    "credit": "rene boulay",
+    "license": "CC BY-SA 3.0",
+    "via": "search: Col d'Izoard cycling"
+  },
+  "col-du-galibier": {
+    "file": "Col du Galibier 1.jpg",
+    "credit": "Bonzon",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Col du Galibier road pass mountains"
+  },
+  "col-du-glandon": {
+    "file": "2010 Mountain Pass Cycling Milestone - Col du Glandon La Chambre.jpg",
+    "credit": "Cyclingralph",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Col du Glandon cycling"
+  },
+  "col-du-granon": {
+    "file": "Nevache - panoramio.jpg",
+    "credit": "patano",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "col-du-tourmalet": {
+    "file": "00 0847 Col du Tourmalet in the Pyrenees.jpg",
+    "credit": "W. Bulach",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Col du Tourmalet road pass Pyrenees"
+  },
+  "coll-de-rates": {
+    "file": "StoppOmat Coll de Rates.JPG",
+    "credit": "Roland Hecht",
+    "license": "CC0",
+    "via": "search: Coll de Rates cycling"
+  },
+  "colle-dellagnello": {
+    "file": "Col Agnel, cyclists.jpg",
+    "credit": "Mikel Ortega from Errenteria, Spain",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "colle-delle-finestre": {
+    "file": "Forte d'Aval e Monte Albergian (upper left corner) (9770693046).jpg",
+    "credit": "Fulvio Spada from Torino, Italy",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "crete-senesi": {
+    "file": "Corso Giacomo Matteotti Asciano.JPG",
+    "credit": "Tubantia",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "danube-passau-vienna": {
+    "file": "Spitz Hofarnsdorf Donau downstream-3191.jpg",
+    "credit": "Isiwal",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Wachau Danube valley vineyards river"
+  },
+  "eifel": {
+    "file": "Cycling-sign-eifel.jpg",
+    "credit": "Bronstein",
+    "license": "CC BY-SA 3.0",
+    "via": "search: The Eifel cycling"
+  },
+  "etape-du-tour": {
+    "file": "Tour de France slate bike on the descent of the Col du Tourmalet during stage 14 of the TDF 2024.jpg",
+    "credit": "Hugo LUC",
+    "license": "CC BY-SA 4.0",
+    "via": "search: L'Étape du Tour cycling"
+  },
+  "ferrara-po": {
+    "file": "Ferrara, Castello Estense.jpg",
+    "credit": "NoStressIvan",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "fietselfstedentocht": {
+    "file": "Fietselfstedentocht1912.jpg",
+    "credit": "Unknown photographer",
+    "license": "CC BY-SA 3.0",
+    "via": "search: Fietselfstedentocht cycling"
+  },
+  "finale-ligure": {
+    "file": "Stefano Migliorini riding.jpg",
+    "credit": "Ste Editor",
+    "license": "CC0",
+    "via": "search: Finale Ligure cycling"
+  },
+  "girona-gravel": {
+    "file": "Tour de France 2009 Voiture de Lampre, Girona.JPG",
+    "credit": "DavidianSkitzou",
+    "license": "CC BY-SA 3.0",
+    "via": "search: Girona cycling"
+  },
+  "gotthard-tremola": {
+    "file": "Gotthard lago della piazza.jpg",
+    "credit": "Fafner",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "grand-colombier": {
+    "file": "Étape 13 Tour France 2023 Route Colombier - Anglefort (FR01) - 2023-07-14 - 6.jpg",
+    "credit": "Chabe01",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "granfondo-stelvio": {
+    "file": "San sebastiano - panoramio.jpg",
+    "credit": "silvio alaimo sj",
+    "license": "CC BY 3.0",
+    "via": "geosearch"
+  },
+  "grossglockner": {
+    "file": "Großglockner-hochalpenstraße5950.JPG",
+    "credit": "Ewald Gabardi",
+    "license": "CC BY-SA 3.0",
+    "via": "search: Grossglockner cycling"
+  },
+  "hardknott-pass": {
+    "file": "Steep hill above Killeen - geograph.org.uk - 450799.jpg",
+    "credit": "Oliver Dixon",
+    "license": "CC BY-SA 2.0",
+    "via": "search: Hardknott Pass cycling"
+  },
+  "hautacam": {
+    "file": "Peloton of Tour féminin international des Pyrénées 2023 in Hautacam climb.jpg",
+    "credit": "Hugo LUC",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Hautacam cycling"
+  },
+  "highland-trail-550": {
+    "file": "Summer showers, Glencoe. (EXPLORED^^^) - Flickr - Jonathan Combe (Thank you for 400,000 views^).jpg",
+    "credit": "Jonathan Combe from Scotland",
+    "license": "CC BY 2.0",
+    "via": "search: Scottish Highlands glen mountains landscape"
+  },
+  "hope-1000": {
+    "file": "Wanderwegweiser Ennethorw 442.jpg",
+    "credit": "Pududuss",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "houffalize": {
+    "file": "Houffalize 0003.JPG",
+    "credit": "Agrillo Mario Me contacter",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "kent-downs": {
+    "file": "Cycling up the North Downs - geograph.org.uk - 2678809.jpg",
+    "credit": "Stephen Craven",
+    "license": "CC BY-SA 2.0",
+    "via": "search: The North Downs cycling"
+  },
+  "kings-alfreds-way": {
+    "file": "Colebrook Street, Winchester - geograph.org.uk - 1131046.jpg",
+    "credit": "Keith Edkins",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "kitzbueheler-horn": {
+    "file": "Sessellift Hornköpfl Talstation a.jpg",
+    "credit": "Linie29",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "la-marmotte": {
+    "file": "Quartz oisan.jpg",
+    "credit": "Didier Descouens",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "la-redoute": {
+    "file": "2018 LBL Redoute W05.jpg",
+    "credit": "Hoebele",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Côte de la Redoute cycling"
+  },
+  "lagos-de-covadonga": {
+    "file": "Lago Ercina. - panoramio.jpg",
+    "credit": "Gerardo Almeida",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "livigno": {
+    "file": "BikeShuttleMuntLaSchera.jpg",
+    "credit": "Jedesto",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Livigno cycling"
+  },
+  "loire-a-velo": {
+    "file": "Cycling holiday - The Loire Valley, France.jpg",
+    "credit": "Cjp24",
+    "license": "CC BY-SA 4.0",
+    "via": "search: The Loire valley cycling"
+  },
+  "los-machucos": {
+    "file": "Sedimentary Rocks near San Roque de Riomiera in Cantabria Spain.jpg",
+    "credit": "Graeme Churchard (GOC53) https://www.flickr.com/people/graeme/",
+    "license": "CC BY 2.0",
+    "via": "geosearch"
+  },
+  "luz-ardiden": {
+    "file": "Cicloturismo-Puerto de Luz-Ardiden-Francia-05.JPG",
+    "credit": "Adolfobrigido",
+    "license": "CC BY-SA 3.0",
+    "via": "search: Luz Ardiden cycling"
+  },
+  "maratona-dles-dolomites": {
+    "file": "Maratona dles Dolomites - Sella Pass.jpg",
+    "credit": "Maratona dles Dolomites Committee Photographer",
+    "license": "CC BY-SA 3.0",
+    "via": "search: Maratona dles Dolomites cycling"
+  },
+  "mecklenburg-lakes": {
+    "file": "Weiden bei Ludorf im LSG Mecklenburger Großseenland.jpg",
+    "credit": "Joachim50",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "mont-cenis": {
+    "file": "Épreuve Cyclisme Route Course Ligne Masculine Jeux Olympiques 2024 Rue Mont Cenis - Paris XVIII (FR75) - 2024-08-03 - 1.jpg",
+    "credit": "Chabe01",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Mont Cenis cycling"
+  },
+  "mont-ventoux": {
+    "file": "Mont Ventoux Dénivelé Challenges 2019 - Montée de Blauvac - Peloton 5.jpg",
+    "credit": "Marianne Casamance",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Mont Ventoux cycling"
+  },
+  "mortirolo": {
+    "file": "Passo del Mortirolo.JPG",
+    "credit": "Gabri80",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "morzine": {
+    "file": "Mobeye-ÉtéDesVilles-Avoriaz-640.jpg",
+    "credit": "Miscroix",
+    "license": "CC BY 4.0",
+    "via": "geosearch"
+  },
+  "mount-teide": {
+    "file": "Caldera Las Cañadas mit Roques de García und TF-21.jpg",
+    "credit": "Thomas Wolf, www.foto-tw.de",
+    "license": "CC BY-SA 3.0 de",
+    "via": "search: Teide road landscape Tenerife"
+  },
+  "mur-de-huy": {
+    "file": "Emily Collins + Marion Rousse 2013 Flèche.jpg",
+    "credit": "...some guy",
+    "license": "CC BY 2.0",
+    "via": "search: Mur de Huy cycling"
+  },
+  "muur-van-geraardsbergen": {
+    "file": "Geraardsbergen - Muur 2.jpg",
+    "credit": "User:LimoWreck",
+    "license": "CC BY 2.5",
+    "via": "search: Muur van Geraardsbergen cycling"
+  },
+  "noordzeeroute-nl": {
+    "file": "Heliomare - sanatorium.jpg",
+    "license": "CC BY 2.0",
+    "via": "geosearch"
+  },
+  "oetztaler-radmarathon": {
+    "file": "KriegerdenkmalFriedhofSölden.11A.JPG",
+    "credit": "Anton-kurt",
+    "license": "CC BY 3.0",
+    "via": "geosearch"
+  },
+  "osterlen-gravel": {
+    "file": "Swedish castle Gärsnäs.jpg",
+    "credit": "Jorchr",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "oude-kwaremont": {
+    "file": "Ronde van Vlaanderen 2015 - Oude Kwaremont (17028897986).jpg",
+    "credit": "youkeys",
+    "license": "CC BY 2.0",
+    "via": "search: Oude Kwaremont cycling"
+  },
+  "paris-roubaix-challenge": {
+    "file": "Ligne R du tramway de Lille - Roubaix - Tourcoing (099).JPG",
+    "credit": "Jérémy-Günther-Heinz Jähnick",
+    "license": "GFDL 1.2",
+    "via": "geosearch"
+  },
+  "passo-fedaia": {
+    "file": "Canazei, Province of Trento, Italy - panoramio.jpg",
+    "credit": "Gabriel Marchionni",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "passo-gavia": {
+    "file": "Old mountain road (Unsplash).jpg",
+    "credit": "Jens Herrndorff jens_h",
+    "license": "CC0",
+    "via": "search: Passo Gavia road pass mountains"
+  },
+  "passo-giau": {
+    "file": "Passo di Giau (2233m), chapel - panoramio.jpg",
+    "credit": "Frans-Banja Mulder",
+    "license": "CC BY 3.0",
+    "via": "geosearch"
+  },
+  "passo-pordoi": {
+    "file": "Pordoijoch Ost.jpg",
+    "credit": "Aconcagua",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "peak-district": {
+    "file": "Winnats Pass - geograph.org.uk - 4065617.jpg",
+    "credit": "Derek Harper",
+    "license": "CC BY-SA 2.0",
+    "via": "search: Winnats Pass Peak District road"
+  },
+  "pico-veleta": {
+    "file": "Mulhacen Sommer.jpg",
+    "credit": "Nilsf at German Wikipedia",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "plateau-de-beille": {
+    "file": "Plateau de Beille - Ville d'arrivée du Tour de France 2015.JPG",
+    "credit": "JFachetti",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Plateau de Beille cycling"
+  },
+  "puig-major": {
+    "file": "Base.Militar.Son.Torrella.jpg",
+    "credit": "Paucabot",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "puy-de-dome": {
+    "file": "Homme à C.Vélo - Vélogik - Clermont.JPG",
+    "credit": "Sebbi Marrec",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Puy de Dôme cycling"
+  },
+  "ronde-van-vlaanderen-cyclo": {
+    "file": "Classic EMU (5948359824).jpg",
+    "credit": "LHOON from Mechelen, Belgium",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "sa-calobra": {
+    "file": "Mallorca Port de Sa Calobra February 2018-4151.jpg",
+    "credit": "Isiwal",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Sa Calobra road hairpin Mallorca"
+  },
+  "snowdonia-mtb": {
+    "file": "A470 - geograph.org.uk - 386806.jpg",
+    "credit": "Alan Fryer",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "soca-gravel": {
+    "file": "Caporetto-Kobarid (22408853717).jpg",
+    "credit": "stefano Merli from legnano, italy",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "stelvio-pass": {
+    "file": "En route; a descriptive automobile tour through nine countries and over nineteen great passes of Europe (1908) (14769596825).jpg",
+    "credit": "Internet Archive Book Images",
+    "license": "No restrictions",
+    "via": "search: Stelvio Pass hairpins road"
+  },
+  "texel": {
+    "file": "Tourist cycle on texel beach.jpg",
+    "credit": "Virtualage",
+    "license": "CC BY-SA 3.0",
+    "via": "search: Texel cycling"
+  },
+  "torino-nice-rally": {
+    "file": "Madonna della Betulla facciata.jpg",
+    "credit": "Betty&amp;Giò",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "tre-cime": {
+    "file": "La chiesetta (3854768539).jpg",
+    "credit": "Roberto Ferrari from Campogalliano (Modena), Italy",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "vatternrundan": {
+    "file": "Stora torget, Linköping, juli 2005.jpg",
+    "credit": "Thuresson",
+    "license": "CC BY-SA 2.5",
+    "via": "geosearch"
+  },
+  "veluwe-gravel": {
+    "file": "New built bikers viaduct to pass low and wet vegetation zones near Deelense Was Hoge Veluwe National Park - panoramio.jpg",
+    "credit": "Henk Monster",
+    "license": "CC BY 3.0",
+    "via": "search: De Veluwe cycling"
+  },
+  "via-francigena-alps": {
+    "file": "Grand St Bernard.jpg",
+    "credit": "Hans Hillewaert",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "vlaamse-ardennen": {
+    "file": "Wandel- en fietsnetwerk Vlaamse Ardennen 01.jpg",
+    "credit": "FrDr",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Flemish Ardennes cycling"
+  },
+  "vlaamse-kust": {
+    "file": "Leffinge oude tramweg 1.jpg",
+    "credit": "Smiley.toerist",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
+  },
+  "vosges-mtb": {
+    "file": "Chronophotography sport 360 Cross- (Almost).jpg",
+    "credit": "Herve",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
+  "west-jutland": {
+    "file": "Danmarks Flymuseum, Spitfire.jpg",
+    "credit": "M_H.DE",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
+  },
+  "winterberg": {
+    "file": "Radfahrer Winterberg.jpg",
+    "credit": "H005",
+    "license": "CC BY-SA 3.0",
+    "via": "search: Winterberg cycling"
+  },
+  "zeeland": {
+    "file": "Vrouwenpolder (NL), Oosterscheldekering -- 2022 -- 5016.jpg",
+    "credit": "Dietmar Rabich",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Oosterscheldekering stormvloedkering Zeeland"
+  },
+  "zoncolan": {
+    "file": "Auf zum M.te Zoncolan (vor der Asfaltierung wg. Giro d'Italia 2006) - panoramio.jpg",
+    "credit": "worraworra",
+    "license": "CC BY 3.0",
+    "via": "geosearch"
+  },
+  "zuid-limburg": {
+    "file": "Sibbe-Bosage aan Bergstraat-Sibbergrubbe.JPG",
+    "credit": "Romaine",
+    "license": "CC0",
+    "via": "geosearch"
+  }
+}
