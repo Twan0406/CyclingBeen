@@ -35,10 +35,22 @@
     "license": "CC BY 2.0",
     "via": "commons category"
   },
+  "blockhaus": {
+    "file": "Blockhaus - panoramio.jpg",
+    "credit": "ildirettore",
+    "license": "CC BY 3.0",
+    "via": "geosearch"
+  },
   "camargue": {
     "file": "065F Camargue (15844970442).jpg",
     "credit": "Rüdiger Stehn from Kiel, Deutschland",
     "license": "CC BY-SA 2.0",
+    "via": "commons category"
+  },
+  "cauberg": {
+    "file": "Wielrennen, sport, Bestanddeelnr 905-1654.jpg",
+    "credit": "Harry Pot for Anefo",
+    "license": "CC0",
     "via": "commons category"
   },
   "chianti": {
@@ -125,6 +137,24 @@
     "license": "CC BY-SA 4.0",
     "via": "commons category"
   },
+  "coll-de-rates": {
+    "file": "StoppOmat Coll de Rates.JPG",
+    "credit": "Roland Hecht",
+    "license": "CC0",
+    "via": "search: Coll de Rates cycling"
+  },
+  "colle-dellagnello": {
+    "file": "Col Agnel, cyclists.jpg",
+    "credit": "Mikel Ortega from Errenteria, Spain",
+    "license": "CC BY-SA 2.0",
+    "via": "commons category"
+  },
+  "colle-delle-finestre": {
+    "file": "Forte d'Aval e Monte Albergian (upper left corner) (9770693046).jpg",
+    "credit": "Fulvio Spada from Torino, Italy",
+    "license": "CC BY-SA 2.0",
+    "via": "de-duplicated"
+  },
   "crete-senesi": {
     "file": "Cretesenesi panorama.jpg",
     "credit": "louis-garden",
@@ -173,6 +203,12 @@
     "license": "CC BY 2.0",
     "via": "commons category"
   },
+  "gotthard-tremola": {
+    "file": "St. Gotthard landscape.jpg",
+    "credit": "Nowic",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
   "grand-colombier": {
     "file": "Grand Colombier from St Pierre Island.jpg",
     "credit": "Duda12345",
@@ -182,6 +218,18 @@
   "granfondo-stelvio": {
     "file": "Ex. Österreichische Gipfelstellung auf dem Monte Scerluzzo.JPG",
     "credit": "Unterillertaler",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "grossglockner": {
+    "file": "KMH - Sklavenkette aus Eisen, Großklockner Hochalpenstraße 275-15v. C.jpg",
+    "credit": "NearEMPTiness",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "hardknott-pass": {
+    "file": "Hardknott Pass and Eskdale.jpg",
+    "credit": "Mick Knapton at English Wikipedia",
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
@@ -221,10 +269,28 @@
     "license": "CC BY-SA 4.0",
     "via": "geosearch"
   },
+  "kitzbueheler-horn": {
+    "file": "Mountain peak in a lake (Unsplash).jpg",
+    "credit": "Orlova Maria orlovamaria",
+    "license": "CC0",
+    "via": "commons category"
+  },
   "la-marmotte": {
     "file": "Mountain rescue Alpe d'Huez.jpg",
     "credit": "No machine-readable author provided. Stevage assumed (based on copyright claims).",
     "license": "CC BY-SA 2.5",
+    "via": "commons category"
+  },
+  "la-redoute": {
+    "file": "2018 LBL Redoute W05.jpg",
+    "credit": "Hoebele",
+    "license": "CC BY-SA 4.0",
+    "via": "search: Côte de la Redoute cycling"
+  },
+  "lagos-de-covadonga": {
+    "file": "Covadonga, lago..jpg",
+    "credit": "Narniel",
+    "license": "CC BY-SA 3.0 es",
     "via": "commons category"
   },
   "livigno": {
@@ -238,6 +304,12 @@
     "credit": "Duch.seb",
     "license": "CC BY-SA 3.0",
     "via": "commons category"
+  },
+  "los-machucos": {
+    "file": "Valle del Río Miera, Cantabria.JPG",
+    "credit": "Jesús Gómez Fernández",
+    "license": "CC BY-SA 4.0",
+    "via": "geosearch"
   },
   "luz-ardiden": {
     "file": "Montée vers Luz Ardiden 291.jpg",
@@ -269,10 +341,34 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
+  "mortirolo": {
+    "file": "Passo del Mortirolo.JPG",
+    "credit": "Gabri80",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
   "morzine": {
     "file": "Dranse et Route de la Manche à Morzine (octobre 2021).JPG",
     "credit": "Florian Pépellin",
     "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
+  "mount-teide": {
+    "file": "Clouds on the way to Pico del Teide from Vilaflor (399921084).jpg",
+    "credit": "Tony Hisgett from Birmingham, UK",
+    "license": "CC BY 2.0",
+    "via": "commons category"
+  },
+  "mur-de-huy": {
+    "file": "Huy - Chemin des chapelles - Chicane et chapelle 3.jpg",
+    "credit": "Ludovic Péron",
+    "license": "CC BY-SA 3.0",
+    "via": "wikidata P18"
+  },
+  "muur-van-geraardsbergen": {
+    "file": "Muur van Geraardsbergen en kasseiweg Oudenbergstraat.jpg",
+    "credit": "Severien Malfait",
+    "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
   "noordzeeroute-nl": {
@@ -293,10 +389,40 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
+  "oude-kwaremont": {
+    "file": "VIP-dorp Kwaremont - RVV 2014.jpg",
+    "credit": "Spotter2",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
   "paris-roubaix-challenge": {
     "file": "The peloton through Trouée d'Arenberg, Paris-Roubaix 2008.jpg",
     "credit": "Jack Thurston",
     "license": "CC BY-SA 2.0",
+    "via": "commons category"
+  },
+  "passo-fedaia": {
+    "file": "Passo fedaia westrampe.jpg",
+    "credit": "Sönke Kraft aka Arnulf zu Linden",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "passo-gavia": {
+    "file": "Gavia Pass, Lombardy, Italy (July 4 2004).jpg",
+    "credit": "Marco Mayer, Germany",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "passo-giau": {
+    "file": "Passo giau16-12-07.jpg",
+    "credit": "Passfahrer",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "passo-pordoi": {
+    "file": "Passo pordoi.jpg",
+    "credit": "No machine-readable author provided. Egil assumed (based on copyright claims).",
+    "license": "CC BY 2.5",
     "via": "commons category"
   },
   "peak-district": {
@@ -305,10 +431,22 @@
     "license": "CC BY-SA 2.0",
     "via": "commons category"
   },
+  "pico-veleta": {
+    "file": "Pico del Veleta Sierra Nevada.jpg",
+    "credit": "Thomas Then",
+    "license": "CC BY 3.0",
+    "via": "commons category"
+  },
   "plateau-de-beille": {
     "file": "Montée Beille.jpg",
     "credit": "Antoine Blondin",
     "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "puig-major": {
+    "file": "Puig Major 15.jpg",
+    "credit": "Paucabot",
+    "license": "CC BY-SA 4.0",
     "via": "commons category"
   },
   "puy-de-dome": {
@@ -357,6 +495,12 @@
     "file": "Radfahrer Colle delle Finestre.jpg",
     "credit": "Motorpferd",
     "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "tre-cime": {
+    "file": "Dolomites - Dobbiaco area - Day 5 to Tre Cime (Drei Zinnen) - classic, stormy views of the peaks - (11059231115).jpg",
+    "credit": "Murray Foubister",
+    "license": "CC BY-SA 2.0",
     "via": "commons category"
   },
   "vatternrundan": {
