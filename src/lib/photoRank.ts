@@ -40,21 +40,55 @@ export const REJECT = [
 ];
 
 /**
- * The bar every candidate has to clear, whichever source proposed it.
- *
- * A title that mentions neither the outdoors nor riding is not a photo worth
- * showing — that is how an organ, a motorbike and a Polish polder arrived in a
- * cycling guide. Falling through to the next source, or to the gradient, is
- * the better answer.
+ * Relevance is now decided by isRelevant, not by a score threshold, so anything
+ * scoreCandidate returns is already worth showing and the number only ranks.
  */
-export const MIN_SCORE = 2;
+export const MIN_SCORE = 0;
 
 /** Words that suggest the photo actually shows riding. */
 export const CYCLING =
-  /bicycl|bike|biking|cycling|cyclist|peloton|fiets|wielren|radfahr|radweg|vélo|velo|mtb|gravel|randonneur/;
-/** Words that suggest an appealing outdoor scene. */
-export const SCENIC =
-  /landscape|panorama|view|vista|road|route|trail|path|pass|col|hairpin|mountain|coast|beach|dune|forest|valley|lake|vineyard|cobbl/;
+  /bicycl|bike|biking|cycling|cyclist|peloton|fiets|wielren|radfahr|radweg|vélo|velo|mtb|gravel|randonneur|kassei|cobble|pavé/;
+
+/**
+ * Terrain words that are short enough to appear inside unrelated names, so they
+ * only count as whole words. Without this, "col" matched Emily *Col*lins and
+ * *Col*legiata, and a bare "see" matches half of English.
+ */
+const SCENIC_EXACT = new RegExp(
+  '\\b(?:' +
+    [
+      'col|cols|pass|passo|puerto|alto|port|top|summit|ridge|moor|heath|fell',
+      'road|roads|route|trail|path|track|lane|way|weg|dijk|dike',
+      'view|views|vista|lake|loch|see|sjö|river|glen|dale|tal|val|valle',
+      'berg|bergen|hill|hills|heuvel|monte|mont|puig|sierra|alpe|alpen',
+      'bos|wood|woods|forest|skog|wald|field|fields|polder|heide',
+      'coast|kust|côte|beach|strand|playa|dune|duin|duinen|cliff|fjord',
+    ].join('|') +
+    ')\\b',
+  'i',
+);
+
+/**
+ * Longer terrain words, matched as stems so plurals and compounds count —
+ * "landschaft", "bergstraße", "hairpins", "vineyards".
+ */
+const SCENIC_STEM = new RegExp(
+  [
+    'landscape|landschap|landschaft|landskap|paysage|paesaggio|panorama|scenery',
+    'hairpin|lacet|serpentin|switchback|kasseiweg|cobbl|pavé|pave',
+    'mountain|montagne|montagna|gebirge|hochalpen|massif',
+    'vallée|valley|vineyard|orchard|windmill|watermill|meadow|moorland',
+    'uitzicht|aussicht|panoramablick|backar|chemin|sentiero|carretera|strada|straße|strasse',
+    'wattenmeer|waddenzee|nationalpark|national park',
+  ].join('|'),
+  'i',
+);
+
+/** Words that suggest an appealing outdoor scene, in whatever language. */
+export const SCENIC = {
+  test: (t: string) => SCENIC_EXACT.test(t) || SCENIC_STEM.test(t),
+};
+
 /** Wrong season for most of these destinations. */
 export const WINTER = /\b(snow|winter|ski|skiing|schnee|neige|sneeuw|piste)\b/;
 
@@ -69,15 +103,57 @@ export interface Candidate {
   title: string;
   index: number;
   thumburl: string;
+  /** The place this photo is meant to show, used to judge relevance. */
+  subject?: string;
   mime?: string;
   width?: number;
   height?: number;
+}
+
+/** Lowercase, unaccented, letters only — so "ColduGlandon" and "Col du Glandon" match. */
+function squash(text: string) {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z]/g, '');
+}
+
+/**
+ * Does the title name the subject? The strongest signal there is, and one no
+ * word list can replace: "ColduGlandon.jpg" has no spaces and no terrain word,
+ * but it is unmistakably a photo of the Col du Glandon.
+ */
+export function namesSubject(title: string, subject: string): boolean {
+  const haystack = squash(title);
+  const words = subject
+    .split(/[\s—–-]+/)
+    .map(squash)
+    .filter((w) => w.length >= 4);
+  return words.some((w) => haystack.includes(w));
+}
+
+/**
+ * Does the title say this is a picture of the place, or of somewhere you would
+ * ride?
+ *
+ * Kept separate from the score on purpose. Mixing the two was the bug: a file
+ * whose title said nothing at all could still clear the bar on the strength of
+ * its resolution and aspect ratio, which is how a BMW motorbike and a Polish
+ * polder got in, while a photo of the Muur van Geraardsbergen was dropped for
+ * being 1200px wide.
+ */
+export function isRelevant(title: string, subject?: string): boolean {
+  const t = title.toLowerCase();
+  if (CYCLING.test(t) || SCENIC.test(t)) return true;
+  return subject ? namesSubject(title, subject) : false;
 }
 
 /** null means "not usable at all"; otherwise higher is better. */
 export function scoreCandidate(c: Candidate): number | null {
   const title = c.title.toLowerCase();
   if (REJECT.some((r) => r.test(title))) return null;
+  if (!isRelevant(title, c.subject)) return null;
   if (c.mime && c.mime !== 'image/jpeg' && !/\.jpe?g$/i.test(c.title)) return null;
   if (c.width && c.width < 640) return null;
 

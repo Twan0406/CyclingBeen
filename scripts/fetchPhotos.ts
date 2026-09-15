@@ -70,7 +70,7 @@ async function api(url: string): Promise<unknown> {
  * mentions some of the same words, which is how a Spitfire ended up on West
  * Jutland and a war memorial on the Ötztaler.
  */
-async function wikidataImage(title: string): Promise<string | null> {
+async function wikidataImage(title: string, subject: string): Promise<string | null> {
   const idUrl =
     `https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=1` +
     `&titles=${encodeURIComponent(title)}&prop=pageprops&ppprop=wikibase_item`;
@@ -88,12 +88,12 @@ async function wikidataImage(title: string): Promise<string | null> {
   if (!file || fileLooksWrong(file)) return null;
   // P18 says "this is a picture of the subject", which still allows the organ
   // inside the church on the mountain. It has to clear the bar as well.
-  const score = scoreCandidate({ title: file, index: 0, thumburl: '' });
+  const score = scoreCandidate({ title: file, index: 0, thumburl: '', subject });
   return score !== null && score >= MIN_SCORE ? file : null;
 }
 
 /** The Commons category for the subject, which is curated per place. */
-async function commonsCategory(title: string, lat: number, lng: number): Promise<string | null> {
+async function commonsCategory(title: string, lat: number, lng: number, subject: string): Promise<string | null> {
   const idUrl =
     `https://en.wikipedia.org/w/api.php?action=query&format=json&redirects=1` +
     `&titles=${encodeURIComponent(title)}&prop=pageprops&ppprop=wikibase_item`;
@@ -142,6 +142,7 @@ async function commonsCategory(title: string, lat: number, lng: number): Promise
         title: p.title!.replace(/^File:/, ''),
         index: i,
         thumburl: info.url ?? '',
+        subject,
         mime: info.mime,
         width: info.width,
         height: info.height,
@@ -160,7 +161,7 @@ async function commonsCategory(title: string, lat: number, lng: number): Promise
 }
 
 /** Commons search, returning the best file name rather than a thumbnail URL. */
-async function search(query: string): Promise<string | null> {
+async function search(query: string, subject: string): Promise<string | null> {
   const url =
     `https://commons.wikimedia.org/w/api.php?action=query&format=json` +
     `&generator=search&gsrnamespace=6&gsrlimit=30` +
@@ -184,6 +185,7 @@ async function search(query: string): Promise<string | null> {
         title: p.title!.replace(/^File:/, ''),
         index: p.index ?? 99,
         thumburl: info.url ?? '',
+        subject,
         mime: info.mime,
         width: info.width,
         height: info.height,
@@ -198,7 +200,7 @@ async function search(query: string): Promise<string | null> {
 }
 
 /** Geotagged photos near the coordinates — the last resort before giving up. */
-async function nearby(lat: number, lng: number): Promise<string | null> {
+async function nearby(lat: number, lng: number, subject: string): Promise<string | null> {
   const url =
     `https://commons.wikimedia.org/w/api.php?action=query&format=json` +
     `&generator=geosearch&ggsnamespace=6&ggsradius=5000&ggslimit=20` +
@@ -215,7 +217,7 @@ async function nearby(lat: number, lng: number): Promise<string | null> {
     .filter((p) => p.title && !fileLooksWrong(p.title))
     .filter((p) => (p.imageinfo?.[0]?.width ?? 0) >= 640)
     .filter((p) => {
-      const score = scoreCandidate({ title: p.title!, index: 0, thumburl: '' });
+      const score = scoreCandidate({ title: p.title!, index: 0, thumburl: '', subject });
       return score !== null && score >= MIN_SCORE;
     });
   return ok[0]?.title?.replace(/^File:/, '') ?? null;
@@ -305,23 +307,23 @@ async function main() {
       // Best evidence first: a picture someone recorded as being of this
       // subject, then its own Commons category, and only then a text search.
       if (s.title) {
-        file = await commonsCategory(s.title, s.lat, s.lng);
+        file = await commonsCategory(s.title, s.lat, s.lng, s.name);
         via = 'commons category';
       }
       if (!file && s.title) {
-        file = await wikidataImage(s.title);
+        file = await wikidataImage(s.title, s.name);
         via = 'wikidata P18';
       }
       if (!file && s.query) {
-        file = await search(s.query);
+        file = await search(s.query, s.name);
         via = `search: ${s.query}`;
       }
       if (!file) {
-        file = await search(`${s.name} cycling`);
+        file = await search(`${s.name} cycling`, s.name);
         via = `search: ${s.name} cycling`;
       }
       if (!file) {
-        file = await nearby(s.lat, s.lng);
+        file = await nearby(s.lat, s.lng, s.name);
         via = 'geosearch';
       }
 
@@ -331,7 +333,7 @@ async function main() {
           // Two subjects sharing one photo makes the guide look thin, and it is
           // usually a sign the second one matched something generic.
           console.log(`  ↷ ${s.id}: ${file} already used by ${taken[0]}, searching on`);
-          file = (s.query ? await search(s.query) : null) ?? (await nearby(s.lat, s.lng));
+          file = (s.query ? await search(s.query, s.name) : null) ?? (await nearby(s.lat, s.lng, s.name));
           via = 'de-duplicated';
         }
       }
