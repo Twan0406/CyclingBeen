@@ -55,8 +55,22 @@ interface Subject {
   lng: number;
 }
 
-async function api(url: string): Promise<unknown> {
+/**
+ * One request, retried when Wikimedia asks us to slow down.
+ *
+ * Without this a full run resolved the first seventy subjects and then failed
+ * every remaining one in a row — which reads like "no photo exists" but is
+ * really "you are going too fast". Backing off turns that into a pause.
+ */
+async function api(url: string, attempt = 0): Promise<unknown> {
   const res = await fetch(url, { headers: { 'User-Agent': UA, 'Api-User-Agent': UA } });
+  if (res.status === 429 || res.status >= 500) {
+    if (attempt >= 4) throw new Error(`${res.status} after ${attempt} retries`);
+    const wait = Number(res.headers.get('retry-after')) * 1000 || 2000 * 2 ** attempt;
+    console.log(`    ${res.status} from Wikimedia, waiting ${Math.round(wait / 1000)}s`);
+    await new Promise((r) => setTimeout(r, wait));
+    return api(url, attempt + 1);
+  }
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   return res.json();
 }

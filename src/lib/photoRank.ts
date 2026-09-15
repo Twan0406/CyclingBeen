@@ -22,7 +22,15 @@ export const REJECT = [
   /\b(flag|vlag|drapeau|flagge)\b/,
   /\b(diagram|chart|graph|scheme|schema|plattegrond|grundriss)\b/,
   /\b(poster|banner|leaflet|cover|stamp|postzegel|coin|munt)\b/,
-  /\b(signpost|wegwijzer|signage|nameplate|plaque|wegweiser)\b/,
+  /\b(signpost|wegwijzer|signage|nameplate|plaque|wegweiser|panneau|panneaux|segnali|segnale|cartel)\b/,
+  // Street furniture and objects that happen to stand in the view.
+  /\b(bench|benches|banc|bank|picknick|picnic table|fountain|letterbox)\b/,
+  // Wartime leftovers: mines, gun positions, bunkers, chains as art.
+  /\b(mine|mines|stellung|gipfelstellung|bunker|kette|chain|wreck)\b/,
+  /\b(rescue|ambulance|helicopter|helikopter)\b/,
+  // Historical atlases, which are maps that never say "map".
+  /\b(diercke|atlas|bodenverhaeltnisse|bodenverhältnisse)\b/,
+  /notre.?dame|sacr[ée].?c[oœ]ur/,
   /\b(portrait|headshot|bust|statue|sculpture|monument|memorial)\b/,
   /\b(mural|fresco|shrine|altar|chapel interior|interior|museum)\b/,
   /\b(bottle|fiasco|wine|glass|vineyard bottle|cheese|dish|recipe)\b/,

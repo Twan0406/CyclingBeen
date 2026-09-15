@@ -1,10 +1,4 @@
 {
-  "alpe-dhuez": {
-    "file": "Notre-Dame des Neiges, Alpe d'Huez France.jpg",
-    "credit": "Tedder",
-    "license": "CC BY-SA 4.0",
-    "via": "de-duplicated"
-  },
   "angliru": {
     "file": "ANGLIRU VIAPARA.jpg",
     "credit": "Sierra del Aramo",
@@ -113,12 +107,6 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
-  "col-du-galibier": {
-    "file": "Panneaux cyclistes et C14 Col du Galibier ouvert au Lautaret.jpg",
-    "credit": "Marc Mongenet",
-    "license": "CC BY-SA 4.0",
-    "via": "commons category"
-  },
   "col-du-glandon": {
     "file": "Col du Glandon.jpg",
     "credit": "FabioDekker at Dutch Wikipedia (Original text: Fabio Dekker)",
@@ -215,12 +203,6 @@
     "license": "CC BY-SA 4.0",
     "via": "commons category"
   },
-  "granfondo-stelvio": {
-    "file": "Ex. Österreichische Gipfelstellung auf dem Monte Scerluzzo.JPG",
-    "credit": "Unterillertaler",
-    "license": "CC BY-SA 3.0",
-    "via": "commons category"
-  },
   "grossglockner": {
     "file": "KMH - Sklavenkette aus Eisen, Großklockner Hochalpenstraße 275-15v. C.jpg",
     "credit": "NearEMPTiness",
@@ -257,28 +239,10 @@
     "license": "CC BY 2.0",
     "via": "wikidata P18"
   },
-  "kent-downs": {
-    "file": "Bench at Thistle Hill - geograph.org.uk - 369302.jpg",
-    "credit": "John Hilton",
-    "license": "CC BY-SA 2.0",
-    "via": "commons category"
-  },
-  "kings-alfreds-way": {
-    "file": "View from the bench (OpenBenches 3070-2).jpg",
-    "credit": "alastairharding",
-    "license": "CC BY-SA 4.0",
-    "via": "geosearch"
-  },
   "kitzbueheler-horn": {
     "file": "Mountain peak in a lake (Unsplash).jpg",
     "credit": "Orlova Maria orlovamaria",
     "license": "CC0",
-    "via": "commons category"
-  },
-  "la-marmotte": {
-    "file": "Mountain rescue Alpe d'Huez.jpg",
-    "credit": "No machine-readable author provided. Stevage assumed (based on copyright claims).",
-    "license": "CC BY-SA 2.5",
     "via": "commons category"
   },
   "la-redoute": {
@@ -321,12 +285,6 @@
     "file": "Maratona dles Dolomites - Sella Pass.jpg",
     "credit": "Maratona dles Dolomites Committee Photographer",
     "license": "CC BY-SA 3.0",
-    "via": "commons category"
-  },
-  "mecklenburg-lakes": {
-    "file": "Lange diercke sachsen deutschland bodenverhaeltnisse 2 (Mecklenburg).jpg",
-    "credit": "Ilmtaler",
-    "license": "Public domain",
     "via": "commons category"
   },
   "mont-cenis": {
@@ -449,12 +407,6 @@
     "license": "CC BY-SA 4.0",
     "via": "commons category"
   },
-  "puy-de-dome": {
-    "file": "Circuit du Puy de Dôme - panneaux indicateurs - 001.jpg",
-    "credit": "Thesupermat",
-    "license": "CC BY-SA 3.0",
-    "via": "commons category"
-  },
   "ronde-van-vlaanderen-cyclo": {
     "file": "Tour des Flandres cyclo 2017- Oude Kwaremont VF.jpg",
     "credit": "Anthospace",
@@ -514,12 +466,6 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
-  "via-francigena-alps": {
-    "file": "Francigena Canavese Segnali 01.JPG",
-    "credit": "Laurom",
-    "license": "CC BY-SA 3.0",
-    "via": "commons category"
-  },
   "vlaamse-ardennen": {
     "file": "Geraardsbergen - Oudeberg top 2.jpg",
     "credit": "User:LimoWreck",
@@ -530,12 +476,6 @@
     "file": "FietsenindeVogezen.JPG",
     "credit": "ChristiaanPR",
     "license": "CC BY-SA 3.0",
-    "via": "commons category"
-  },
-  "west-jutland": {
-    "file": "Mine échouée sur la côte du Jutland (jeunes hommes sur une plage entourant la mine) - btv1b6933822z.jpg",
-    "credit": "Agence Rol. Agence photographique (commanditaire)",
-    "license": "Public domain",
     "via": "commons category"
   },
   "winterberg": {
