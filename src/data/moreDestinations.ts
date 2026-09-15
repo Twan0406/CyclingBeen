@@ -331,7 +331,7 @@ export const moreDestinations: Destination[] = [
       'Damme to Sluis along the canal is one of the prettiest flat roads in Europe, lined with poplars.',
       'The Yser plain is dense with First World War memorials; the Dodengang at Diksmuide is worth stopping for.',
     ],
-    wikiTitle: 'Polder',
+    wikiTitle: 'Belgian Coast',
     photoQuery: 'Damme kanaal fietsers polder Vlaanderen weg',
     gradient: g(3),
     basedIn: 'Bruges for everything else a trip needs; Veurne to be deep in the polders.',

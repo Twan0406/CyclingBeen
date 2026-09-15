@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   type Candidate,
-  MIN_SCORE,
   commonsFileUrl,
   fileLooksWrong,
   scoreCandidate,
@@ -79,10 +78,9 @@ async function commonsSearch(t: Target): Promise<string | null> {
   // Surviving the reject list is not the same as being a good photo. Without a
   // cycling or scenic word in the title this is just "an image that mentions
   // the place" — a wine bottle, a church, a crystal. Better to fall through.
-  // Same bar as the build-time resolver: a title that mentions neither the
-  // outdoors nor riding is not worth showing.
-  const best = scored[0];
-  return best && best.score >= MIN_SCORE ? best.c.thumburl : null;
+  // Same test as the build-time resolver: scoreCandidate has already rejected
+  // anything that does not look like a photo of somewhere you would ride.
+  return scored[0]?.c.thumburl ?? null;
 }
 
 async function wikipediaLeadImage(t: Target): Promise<string | null> {

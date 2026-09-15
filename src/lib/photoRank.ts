@@ -36,14 +36,16 @@ export const REJECT = [
   // Press clippings and albums rather than a photograph of the place.
   /\b(recueil|collection|album|scrapbook|clipping|journal)\b/,
   // Buildings that happen to stand there. A guide is about the riding.
-  /\b(church|chapel|cathedral|abbey|basilica|kerk|kirche|église|iglesia|chiesa|organ|hospiz|hospice)\b/,
+  /\b(church|chapel|cathedral|abbey|basilica|collegiata|duomo|kerk|kirche|église|iglesia|chiesa|organ|hospiz|hospice)\b/,
 ];
 
 /**
- * Relevance is now decided by isRelevant, not by a score threshold, so anything
- * scoreCandidate returns is already worth showing and the number only ranks.
+ * There is no score threshold, and there must not be one: relevance is decided
+ * by isRelevant, and the number that comes back only orders the survivors. A
+ * threshold of 0 quietly rejected every photo whose sole claim was naming the
+ * place — "ColduGlandon.jpg" scores 0 and then loses 0.05 for its position in
+ * the list — which is how 33 of the 49 climbs ended up with no photo at all.
  */
-export const MIN_SCORE = 0;
 
 /** Words that suggest the photo actually shows riding. */
 export const CYCLING =
