@@ -1,4 +1,10 @@
 {
+  "alpe-dhuez": {
+    "file": "Alpes d'Huez 2.jpg",
+    "credit": "Reno.38",
+    "license": "CC BY-SA 3.0",
+    "via": "de-duplicated"
+  },
   "angliru": {
     "file": "ANGLIRU VIAPARA.jpg",
     "credit": "Sierra del Aramo",
@@ -107,6 +113,12 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
+  "col-du-galibier": {
+    "file": "Col du Lautaret 5.JPG",
+    "credit": "Éclusette",
+    "license": "CC BY 3.0",
+    "via": "commons category"
+  },
   "col-du-glandon": {
     "file": "Col du Glandon.jpg",
     "credit": "FabioDekker at Dutch Wikipedia (Original text: Fabio Dekker)",
@@ -203,6 +215,12 @@
     "license": "CC BY-SA 4.0",
     "via": "commons category"
   },
+  "granfondo-stelvio": {
+    "file": "La strada dello Stelvio.JPG",
+    "credit": "Andrea Colturi",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
   "grossglockner": {
     "file": "KMH - Sklavenkette aus Eisen, Großklockner Hochalpenstraße 275-15v. C.jpg",
     "credit": "NearEMPTiness",
@@ -239,10 +257,28 @@
     "license": "CC BY 2.0",
     "via": "wikidata P18"
   },
+  "kent-downs": {
+    "file": "Box Hill from Thistle Hill - geograph.org.uk - 369295.jpg",
+    "credit": "John Hilton",
+    "license": "CC BY-SA 2.0",
+    "via": "commons category"
+  },
+  "kings-alfreds-way": {
+    "file": "Winchester -The River Itchen - geograph.org.uk - 2385623.jpg",
+    "credit": "Chris Talbot",
+    "license": "CC BY-SA 2.0",
+    "via": "geosearch"
+  },
   "kitzbueheler-horn": {
     "file": "Mountain peak in a lake (Unsplash).jpg",
     "credit": "Orlova Maria orlovamaria",
     "license": "CC0",
+    "via": "commons category"
+  },
+  "la-marmotte": {
+    "file": "Montagne 022.JPG",
+    "credit": "Simdaperce",
+    "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
   "la-redoute": {
@@ -286,6 +322,12 @@
     "credit": "Maratona dles Dolomites Committee Photographer",
     "license": "CC BY-SA 3.0",
     "via": "commons category"
+  },
+  "mecklenburg-lakes": {
+    "file": "Weiden bei Ludorf im LSG Mecklenburger Großseenland.jpg",
+    "credit": "Joachim50",
+    "license": "CC BY-SA 3.0",
+    "via": "geosearch"
   },
   "mont-cenis": {
     "file": "Col du Mont Cenis.jpg",
@@ -407,6 +449,12 @@
     "license": "CC BY-SA 4.0",
     "via": "commons category"
   },
+  "puy-de-dome": {
+    "file": "Le Puy de Dôme (3).JPG",
+    "credit": "PIERRE ANDRE LECLERCQ",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
   "ronde-van-vlaanderen-cyclo": {
     "file": "Tour des Flandres cyclo 2017- Oude Kwaremont VF.jpg",
     "credit": "Anthospace",
@@ -466,6 +514,12 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
+  "via-francigena-alps": {
+    "file": "Galleno, ponte a greppi sulla francigena 02.JPG",
+    "credit": "sailko",
+    "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
   "vlaamse-ardennen": {
     "file": "Geraardsbergen - Oudeberg top 2.jpg",
     "credit": "User:LimoWreck",
@@ -476,6 +530,12 @@
     "file": "FietsenindeVogezen.JPG",
     "credit": "ChristiaanPR",
     "license": "CC BY-SA 3.0",
+    "via": "commons category"
+  },
+  "west-jutland": {
+    "file": "Età della pietra danese, animaletti in ambra, 8000-5000 ac ca, testa d'orso, da resen mose, jutland c.le.jpg",
+    "credit": "Francesco Bini",
+    "license": "CC BY-SA 4.0",
     "via": "commons category"
   },
   "winterberg": {
