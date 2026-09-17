@@ -115,6 +115,8 @@ export interface Candidate {
   thumburl: string;
   /** The place this photo is meant to show, used to judge relevance. */
   subject?: string;
+  /** Commons' own peer review: a featured picture, or a quality image. */
+  assessed?: 'featured' | 'quality';
   mime?: string;
   width?: number;
   height?: number;
@@ -159,7 +161,16 @@ export function isRelevant(title: string, subject?: string): boolean {
   return subject ? namesSubject(title, subject) : false;
 }
 
-/** null means "not usable at all"; otherwise higher is better. */
+/**
+ * How good a photo is this, for a guide meant to make someone want to go?
+ *
+ * The picture does not have to have a bicycle in it. What it has to do is show
+ * what the place is like and be worth looking at, so the score is mostly about
+ * that: Commons' own peer review first, then size and shape, with the subject
+ * words counting for far less than they used to.
+ *
+ * null means "not usable at all"; otherwise higher is better.
+ */
 export function scoreCandidate(c: Candidate): number | null {
   const title = c.title.toLowerCase();
   if (REJECT.some((r) => r.test(title))) return null;
@@ -168,14 +179,35 @@ export function scoreCandidate(c: Candidate): number | null {
   if (c.width && c.width < 640) return null;
 
   const ratio = c.width && c.height ? c.width / c.height : 1.5;
-  if (ratio < 1.1 || ratio > 2.8) return null; // crops badly in a card
+  if (ratio < 1.0 || ratio > 3.2) return null; // crops badly in a wide card
 
   let score = 0;
-  if (CYCLING.test(title)) score += 6;
+
+  // Commons reviews photographs itself, and its verdict beats any guess a
+  // filename can support. A featured picture is one of the best on the site;
+  // a quality image has passed a technical review.
+  if (c.assessed === 'featured') score += 14;
+  else if (c.assessed === 'quality') score += 9;
+
+  // Resolution stands in for care: a big file is usually a real camera, a
+  // small one a snapshot cropped out of something else.
+  if (c.width) {
+    if (c.width >= 4000) score += 4;
+    else if (c.width >= 2500) score += 3;
+    else if (c.width >= 1600) score += 2;
+    else if (c.width >= 1100) score += 1;
+  }
+
+  // Wide and level fills a hero or a card; square and tall does not.
+  if (ratio >= 1.4 && ratio <= 2.1) score += 3;
+  else if (ratio >= 1.2) score += 1;
+
+  // Scenery is the point. A bicycle is welcome but no longer decisive — the
+  // photo has to sell the place, not the sport.
   if (SCENIC.test(title)) score += 2;
+  if (CYCLING.test(title)) score += 1;
   if (WINTER.test(title)) score -= 3;
-  if (c.width && c.width >= 1600) score += 1;
-  if (ratio >= 1.3 && ratio <= 2.1) score += 1;
+
   // Commons' own relevance still counts, but only as a tie-breaker.
   score -= c.index * 0.05;
   return score;

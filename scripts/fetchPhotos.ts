@@ -76,6 +76,89 @@ async function api(url: string, attempt = 0): Promise<unknown> {
 }
 
 
+
+const FEATURED = 'Category:Featured pictures on Wikimedia Commons';
+const QUALITY = 'Category:Quality images';
+
+/**
+ * Ask Commons what it thinks of these files.
+ *
+ * Featured pictures and quality images are peer-reviewed: a human looked at
+ * the photograph and judged it good. That is the closest thing to "would this
+ * make someone want to go there" that an API can tell us, and it beats
+ * anything a filename implies. Up to 50 titles per call.
+ */
+async function assessments(titles: string[]): Promise<Map<string, 'featured' | 'quality'>> {
+  const out = new Map<string, 'featured' | 'quality'>();
+  if (titles.length === 0) return out;
+  const url =
+    `https://commons.wikimedia.org/w/api.php?action=query&format=json` +
+    `&titles=${encodeURIComponent(titles.slice(0, 50).map((t) => `File:${t}`).join('|'))}` +
+    `&prop=categories&cllimit=500` +
+    `&clcategories=${encodeURIComponent(`${FEATURED}|${QUALITY}`)}`;
+  try {
+    const data = (await api(url)) as {
+      query?: { pages?: Record<string, { title?: string; categories?: Array<{ title?: string }> }> };
+    };
+    for (const page of Object.values(data.query?.pages ?? {})) {
+      const cats = (page.categories ?? []).map((c) => c.title);
+      const name = page.title?.replace(/^File:/, '');
+      if (!name) continue;
+      if (cats.includes(FEATURED)) out.set(name, 'featured');
+      else if (cats.includes(QUALITY)) out.set(name, 'quality');
+    }
+  } catch {
+    // An unreviewed photo is still a photo; carry on without the verdict.
+  }
+  return out;
+}
+
+/**
+ * Photos Commons has reviewed, of this place. Tried first, because a peer
+ * -reviewed landscape of the Stelvio beats an ordinary snapshot of it.
+ */
+async function assessedSearch(name: string, subject: string): Promise<string | null> {
+  for (const category of ['Featured pictures on Wikimedia Commons', 'Quality images']) {
+    const url =
+      `https://commons.wikimedia.org/w/api.php?action=query&format=json` +
+      `&generator=search&gsrnamespace=6&gsrlimit=20` +
+      `&gsrsearch=${encodeURIComponent(`incategory:"${category}" ${name} filetype:bitmap filew:>1200`)}` +
+      `&prop=imageinfo&iiprop=url|mime|size`;
+    const data = (await api(url)) as {
+      query?: { pages?: Record<string, {
+        title?: string;
+        index?: number;
+        imageinfo?: Array<{ url?: string; mime?: string; width?: number; height?: number }>;
+      }> };
+    };
+    const pages = data.query?.pages;
+    if (!pages) continue;
+
+    const assessed = category.startsWith('Featured') ? 'featured' : 'quality';
+    const scored = Object.values(pages)
+      .filter((p) => p.title && p.imageinfo?.[0])
+      .map((p) => {
+        const info = p.imageinfo![0];
+        const c: Candidate = {
+          title: p.title!.replace(/^File:/, ''),
+          index: p.index ?? 99,
+          thumburl: info.url ?? '',
+          subject,
+          assessed: assessed as 'featured' | 'quality',
+          mime: info.mime,
+          width: info.width,
+          height: info.height,
+        };
+        return { c, score: scoreCandidate(c) };
+      })
+      .filter((x): x is { c: Candidate; score: number } => x.score !== null)
+      .sort((a, b) => b.score - a.score);
+
+    if (scored[0]) return scored[0].c.title;
+  }
+  return null;
+}
+
 /**
  * The image Wikidata records for the subject itself (P18).
  *
@@ -165,10 +248,24 @@ async function commonsCategory(title: string, lat: number, lng: number, subject:
     .filter((x): x is { c: Candidate; score: number } => x.score !== null)
     .sort((a, b) => b.score - a.score);
 
+  if (scored.length === 0) return null;
+
+  // Ask Commons which of the plausible ones it rates, then rank again. Only
+  // the top handful are worth a verdict; the rest were never going to win.
+  const shortlist = scored.slice(0, 40);
+  const verdicts = await assessments(shortlist.map((x) => x.c.title));
+  const reranked = shortlist
+    .map(({ c }) => {
+      const withVerdict: Candidate = { ...c, assessed: verdicts.get(c.title) };
+      return { c: withVerdict, score: scoreCandidate(withVerdict) };
+    })
+    .filter((x): x is { c: Candidate; score: number } => x.score !== null)
+    .sort((a, b) => b.score - a.score);
+
   // Being filed under the place is not enough on its own — the category for a
   // ski resort holds the church, the cable car and, genuinely, the organ in
   // Notre-Dame des Neiges — but scoreCandidate has already thrown those out.
-  return scored[0]?.c.title ?? null;
+  return reranked[0]?.c.title ?? null;
 }
 
 /** Commons search, returning the best file name rather than a thumbnail URL. */
@@ -313,7 +410,10 @@ async function main() {
 
       // Best evidence first: a picture someone recorded as being of this
       // subject, then its own Commons category, and only then a text search.
-      if (s.title) {
+      file = await assessedSearch(s.name, s.name);
+      via = 'commons quality assessment';
+
+      if (!file && s.title) {
         file = await commonsCategory(s.title, s.lat, s.lng, s.name);
         via = 'commons category';
       }
