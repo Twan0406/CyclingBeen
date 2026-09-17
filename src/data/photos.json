@@ -11,6 +11,18 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
+  "ardennen-gravel": {
+    "file": "Beginning of Grande Randonnée en Haute Ardennes, BE.jpg",
+    "credit": "Trougnouf",
+    "license": "CC BY 4.0",
+    "via": "commons quality assessment"
+  },
+  "badlands-spain": {
+    "file": "Ramblas de Gergal, Tabernas y Sur de Sierra Alhamilla.jpg",
+    "credit": "Fährtenleser",
+    "license": "CC BY-SA 4.0",
+    "via": "commons category"
+  },
   "bergisches-land": {
     "file": "Morgenstimmung im Wald.jpg",
     "credit": "Elfriedemeta",
@@ -23,6 +35,12 @@
     "license": "Public domain",
     "via": "commons quality assessment"
   },
+  "blockhaus": {
+    "file": "Blockhaus - panoramio.jpg",
+    "credit": "ildirettore",
+    "license": "CC BY 3.0",
+    "via": "geosearch"
+  },
   "camargue": {
     "file": "005c Greater flamingos courtship display in the Camargue during mating season Photo by Giles Laurent.jpg",
     "credit": "Giles Laurent",
@@ -34,6 +52,12 @@
     "credit": "Kleon3",
     "license": "CC BY-SA 3.0 nl",
     "via": "commons category"
+  },
+  "chianti": {
+    "file": "Radda in Chianti - Fontana datata 1926.jpg",
+    "credit": "Anna.Massini",
+    "license": "CC BY 4.0",
+    "via": "commons quality assessment"
   },
   "col-daspin": {
     "file": "Col d'Aspin - panoramio.jpg",
@@ -155,6 +179,12 @@
     "license": "CC BY-SA 4.0",
     "via": "commons quality assessment"
   },
+  "ferrara-po": {
+    "file": "Tavolo da Biliardo impolverato, ex caserma Pozzuolo del Friuli, Ferrara.jpg",
+    "credit": "Nicola Quirico",
+    "license": "CC BY-SA 4.0",
+    "via": "commons quality assessment"
+  },
   "fietselfstedentocht": {
     "file": "Fiets elfstedentocht 2024.jpg",
     "credit": "Arnold Bartels",
@@ -221,6 +251,12 @@
     "license": "CC BY-SA 3.0",
     "via": "commons category"
   },
+  "houffalize": {
+    "file": "Leafless tree standing in front of a group of cows in Houffalize, Belgium (DSC 0331).jpg",
+    "credit": "Trougnouf (Benoit Brummer)",
+    "license": "CC BY 4.0",
+    "via": "commons quality assessment"
+  },
   "kent-downs": {
     "file": "Bridge Over the River Mole, Mickleham, Surrey - geograph.org.uk - 1504222.jpg",
     "credit": "Peter Trimming",
@@ -238,6 +274,12 @@
     "credit": "HellasX",
     "license": "CC BY-SA 2.5",
     "via": "commons category"
+  },
+  "la-marmotte": {
+    "file": "Paysage vers le Bourg d'Oisans - panoramio.jpg",
+    "credit": "Gilles Guillamot",
+    "license": "CC BY-SA 3.0",
+    "via": "de-duplicated"
   },
   "la-redoute": {
     "file": "2018 LBL Redoute W05.jpg",
