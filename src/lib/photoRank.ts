@@ -31,6 +31,9 @@ export const REJECT = [
   // Historical atlases, which are maps that never say "map".
   /\b(diercke|atlas|bodenverhaeltnisse|bodenverhältnisse)\b/,
   /notre.?dame|sacr[ée].?c[oœ]ur/,
+  // Museum specimens: a butterfly catalogued at Toulouse is not the Col du
+  // Granon, however faithfully its label names the place it was caught.
+  /\b(mhnt|mnhn|specimen|holotype|herbarium|taxidermy)\b/,
   /\b(portrait|headshot|bust|statue|sculpture|monument|memorial)\b/,
   /\b(mural|fresco|shrine|altar|chapel interior|interior|museum)\b/,
   /\b(bottle|fiasco|wine|glass|vineyard bottle|cheese|dish|recipe)\b/,

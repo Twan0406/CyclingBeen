@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { seedClimbs } from '../src/data/climbs';
 import { climbGuides } from '../src/data/climbGuides';
 import { allDestinations } from '../src/data/allDestinations';
-import { type Candidate, fileLooksWrong, scoreCandidate } from '../src/lib/photoRank';
+import { type Candidate, fileLooksWrong, namesSubject, scoreCandidate } from '../src/lib/photoRank';
 import { distanceKm } from '../src/lib/polyline';
 
 const OUT = path.resolve(
@@ -31,6 +31,12 @@ const OUT = path.resolve(
 
 /** How far a geotagged photo may sit from the subject and still count. */
 const MAX_PHOTO_KM = 60;
+
+/** Files without a geotag are given the benefit of the doubt. */
+function nearEnough(coord: { lat?: number; lon?: number } | undefined, lat: number, lng: number) {
+  if (coord?.lat == null || coord.lon == null) return true;
+  return distanceKm(lat, lng, coord.lat, coord.lon) <= MAX_PHOTO_KM;
+}
 
 const UA = 'Ridewild/1.0 (https://cyclingbeen-28952.web.app; build-time photo resolver)';
 
@@ -117,17 +123,18 @@ async function assessments(titles: string[]): Promise<Map<string, 'featured' | '
  * Photos Commons has reviewed, of this place. Tried first, because a peer
  * -reviewed landscape of the Stelvio beats an ordinary snapshot of it.
  */
-async function assessedSearch(name: string, subject: string): Promise<string | null> {
+async function assessedSearch(name: string, subject: string, lat: number, lng: number): Promise<string | null> {
   for (const category of ['Featured pictures on Wikimedia Commons', 'Quality images']) {
     const url =
       `https://commons.wikimedia.org/w/api.php?action=query&format=json` +
       `&generator=search&gsrnamespace=6&gsrlimit=20` +
       `&gsrsearch=${encodeURIComponent(`incategory:"${category}" ${name} filetype:bitmap filew:>1200`)}` +
-      `&prop=imageinfo&iiprop=url|mime|size`;
+      `&prop=imageinfo|coordinates&iiprop=url|mime|size`;
     const data = (await api(url)) as {
       query?: { pages?: Record<string, {
         title?: string;
         index?: number;
+        coordinates?: Array<{ lat?: number; lon?: number }>;
         imageinfo?: Array<{ url?: string; mime?: string; width?: number; height?: number }>;
       }> };
     };
@@ -137,6 +144,12 @@ async function assessedSearch(name: string, subject: string): Promise<string | n
     const assessed = category.startsWith('Featured') ? 'featured' : 'quality';
     const scored = Object.values(pages)
       .filter((p) => p.title && p.imageinfo?.[0])
+      // A free-text search has no idea what the photo is of — it only knows the
+      // words matched. Being a quality image makes it a good photograph, not a
+      // photograph of this place, which is how a Shar Pei, an Opinel knife and
+      // the badlands of South Dakota turned up. Insist on the name here.
+      .filter((p) => namesSubject(p.title!.replace(/^File:/, ''), subject))
+      .filter((p) => nearEnough(p.coordinates?.[0], lat, lng))
       .map((p) => {
         const info = p.imageinfo![0];
         const c: Candidate = {
@@ -227,11 +240,7 @@ async function commonsCategory(title: string, lat: number, lng: number, subject:
     // A category can cover a whole river or province, so a geotag far from the
     // subject is a different place entirely — that is how a Bulgarian harbour
     // arrived on the Danube route. Files without a geotag are left alone.
-    .filter((p) => {
-      const c = p.coordinates?.[0];
-      if (c?.lat == null || c.lon == null) return true;
-      return distanceKm(lat, lng, c.lat, c.lon) <= MAX_PHOTO_KM;
-    })
+    .filter((p) => nearEnough(p.coordinates?.[0], lat, lng))
     .map((p, i) => {
       const info = p.imageinfo![0];
       const c: Candidate = {
@@ -287,6 +296,9 @@ async function search(query: string, subject: string): Promise<string | null> {
 
   const scored = Object.values(pages)
     .filter((p) => p.title && p.imageinfo?.[0])
+    // Same reasoning as the assessed search: words matching is not evidence
+    // that the photo shows the place.
+    .filter((p) => namesSubject(p.title!.replace(/^File:/, ''), subject))
     .map((p) => {
       const info = p.imageinfo![0];
       const c: Candidate = {
@@ -410,7 +422,7 @@ async function main() {
 
       // Best evidence first: a picture someone recorded as being of this
       // subject, then its own Commons category, and only then a text search.
-      file = await assessedSearch(s.name, s.name);
+      file = await assessedSearch(s.name, s.name, s.lat, s.lng);
       via = 'commons quality assessment';
 
       if (!file && s.title) {
