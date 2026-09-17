@@ -422,7 +422,9 @@ async function main() {
 
       // Best evidence first: a picture someone recorded as being of this
       // subject, then its own Commons category, and only then a text search.
-      file = await assessedSearch(s.name, s.name, s.lat, s.lng);
+      // Search on the canonical title rather than the display name: "Badlands"
+      // matches South Dakota, "Tabernas Desert" does not.
+      file = await assessedSearch(s.title || s.name, `${s.title} ${s.name}`, s.lat, s.lng);
       via = 'commons quality assessment';
 
       if (!file && s.title) {

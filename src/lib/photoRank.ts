@@ -34,6 +34,11 @@ export const REJECT = [
   // Museum specimens: a butterfly catalogued at Toulouse is not the Col du
   // Granon, however faithfully its label names the place it was caught.
   /\b(mhnt|mnhn|specimen|holotype|herbarium|taxidermy)\b/,
+  // Portraits of animals. A photo of a dog in a park in the Ardennes names the
+  // Ardennes and shows you nothing about riding there.
+  /\b(dog|dogs|puppy|terrier|spaniel|cat|kitten|pet|portrait of a)\b/,
+  // Out of season and indoors.
+  /\bskating|ice rink|swimming pool|car ?park|parking\b/,
   /\b(portrait|headshot|bust|statue|sculpture|monument|memorial)\b/,
   /\b(mural|fresco|shrine|altar|chapel interior|interior|museum)\b/,
   /\b(bottle|fiasco|wine|glass|vineyard bottle|cheese|dish|recipe)\b/,
