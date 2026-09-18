@@ -8,7 +8,8 @@
   "angliru": {
     "file": "El angliru desde el Monsacro.jpg",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "license": "CC BY-SA 3.0"
   },
   "ardennen-gravel": {
     "file": "Beginning of Grande Randonnée en Haute Ardennes, BE.jpg",
@@ -103,7 +104,9 @@
   "col-de-peyresourde": {
     "file": "Col de Peyresourde.jpg",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Andy Hawkins",
+    "license": "CC BY-SA 2.0"
   },
   "col-dizoard": {
     "file": "Col-d'Izoard-Queyras-DSC 0130.jpg",
@@ -120,7 +123,9 @@
   "col-du-glandon": {
     "file": "Col du Glandon - 2014-08-27 - IMG 6036.jpg",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Poudou99",
+    "license": "CC BY-SA 3.0"
   },
   "col-du-granon": {
     "file": "The road to the Col du Granon, Vallée de la Clarée (4985632717).jpg",
@@ -179,7 +184,9 @@
   "ferrara-po": {
     "file": "Canale di Burana. Ferrara, Italy.jpg",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Ввласенко",
+    "license": "CC BY-SA 3.0"
   },
   "fietselfstedentocht": {
     "file": "Fiets elfstedentocht 2024.jpg",
@@ -310,7 +317,9 @@
   "luz-ardiden": {
     "file": "Cicloturismo-Puerto de Luz-Ardiden-Francia-04.JPG",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Adolfobrigido",
+    "license": "CC BY-SA 3.0"
   },
   "maratona-dles-dolomites": {
     "file": "Maratona dles Dolomites - Sella Pass.jpg",
@@ -327,7 +336,9 @@
   "mont-cenis": {
     "file": "RD 1006 au col du Mont-Cenis côté Maurienne (septembre 2024).JPG",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Florian Pépellin",
+    "license": "CC BY-SA 4.0"
   },
   "mont-ventoux": {
     "file": "Mont Ventoux par Malaucéne - P1000423.jpg",
@@ -482,7 +493,9 @@
   "texel": {
     "file": "Nationaal Park Duinen van Texel, duingebied richting Strandpaal 12 IMG 6332 2020-06-08 12.59.jpg",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Michielverbeek",
+    "license": "CC BY-SA 4.0"
   },
   "torino-nice-rally": {
     "file": "Col du Finestre.jpg",
@@ -522,17 +535,23 @@
   "vlaamse-kust": {
     "file": "Wenduine beach R01.jpg",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Marc Ryckaert (MJJR)",
+    "license": "CC BY 3.0"
   },
   "vosges-mtb": {
     "file": "Fleckenstein castle view P1310422-Pano.jpg",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Ermell",
+    "license": "CC BY-SA 4.0"
   },
   "west-jutland": {
     "file": "Nørre Vorupør Coast one third sky 2012-11-18.jpg",
     "pinned": true,
-    "via": "chosen by hand"
+    "via": "chosen by hand",
+    "credit": "Slaunger",
+    "license": "CC BY-SA 3.0"
   },
   "winterberg": {
     "file": "SächsischeSchweiz KleinerWinterberg 2.jpg",
