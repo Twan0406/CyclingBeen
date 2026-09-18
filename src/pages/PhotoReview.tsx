@@ -246,17 +246,23 @@ function Picker({
 }) {
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading');
   const [options, setOptions] = useState<PhotoCandidate[]>([]);
+  const [notes, setNotes] = useState<string[]>([]);
 
   useEffect(() => {
     let alive = true;
     setState('loading');
     candidatesFor(row)
-      .then((list) => {
+      .then(({ options: list, notes: why }) => {
         if (!alive) return;
         setOptions(list);
+        setNotes(why);
         setState(list.length ? 'ready' : 'failed');
       })
-      .catch(() => alive && setState('failed'));
+      .catch((err) => {
+        if (!alive) return;
+        setNotes([String(err)]);
+        setState('failed');
+      });
     return () => {
       alive = false;
     };
@@ -270,7 +276,16 @@ function Picker({
         </p>
       )}
       {state === 'failed' && (
-        <p className="text-[12px] text-[#7a7066] py-3">Commons had nothing usable for this one.</p>
+        <div className="py-3">
+          <p className="text-[12px] text-[#a1968a]">Commons had nothing usable for this one.</p>
+          {/* Say which source came up empty — an empty panel that explains
+              itself is worth far more than one that just sits there. */}
+          <ul className="mt-1.5 space-y-0.5">
+            {notes.map((n) => (
+              <li key={n} className="font-mono-dc text-[10px] text-[#6b6157]">{n}</li>
+            ))}
+          </ul>
+        </div>
       )}
       {state === 'ready' && (
         <>

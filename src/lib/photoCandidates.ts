@@ -117,7 +117,13 @@ async function categoryFor(wikiTitle: string): Promise<string | null> {
  * Deliberately wider than the resolver: a person can dismiss a bad photo at a
  * glance, so it is better to offer too many than to hide the good one.
  */
-export async function candidatesFor(subject: Subject, limit = 24): Promise<PhotoCandidate[]> {
+export interface CandidateResult {
+  options: PhotoCandidate[];
+  /** What each source returned, so an empty shortlist explains itself. */
+  notes: string[];
+}
+
+export async function candidatesFor(subject: Subject, limit = 24): Promise<CandidateResult> {
   const found = new Map<string, PhotoCandidate>();
   const common = {
     prop: 'imageinfo|categories',
@@ -127,7 +133,9 @@ export async function candidatesFor(subject: Subject, limit = 24): Promise<Photo
     clcategories: `${FEATURED}|${QUALITY}`,
   };
 
+  const notes: string[] = [];
   const category = await categoryFor(subject.wikiTitle);
+  notes.push(category ? `category: ${category}` : `no Commons category for "${subject.wikiTitle}"`);
 
   const searches: Array<[string, Record<string, string>]> = [];
   if (category) {
@@ -173,7 +181,15 @@ export async function candidatesFor(subject: Subject, limit = 24): Promise<Photo
       }
     }),
   );
-  for (const [source, pages] of results) collect(pages, subject.name, source, found);
+  for (const [source, pages] of results) {
+    const before = found.size;
+    const raw = Object.keys(pages).length;
+    collect(pages, subject.name, source, found);
+    notes.push(`${source}: ${raw} found, ${found.size - before} usable`);
+  }
 
-  return [...found.values()].sort((a, b) => b.score - a.score).slice(0, limit);
+  return {
+    options: [...found.values()].sort((a, b) => b.score - a.score).slice(0, limit),
+    notes,
+  };
 }
