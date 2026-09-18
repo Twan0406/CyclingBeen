@@ -73,7 +73,7 @@ function collect(
       width: info.width,
       height: info.height,
     };
-    const score = scoreCandidate(candidate);
+    const score = scoreCandidate(candidate, { requireRelevance: false });
     if (score === null) continue;
 
     into.set(file, {
@@ -157,7 +157,7 @@ export async function candidatesFor(subject: Subject, limit = 24): Promise<Photo
     {
       generator: 'geosearch',
       ggsnamespace: '6',
-      ggsradius: '10000',
+      ggsradius: '25000',
       ggslimit: '30',
       ggscoord: `${subject.lat}|${subject.lng}`,
       ...common,

@@ -480,6 +480,18 @@ async function main() {
     await new Promise((r) => setTimeout(r, 250));
   }
 
+  // Hand-picked entries skip the resolving, but they still need an author and
+  // a licence: Commons photographs are free to use, not free of attribution.
+  for (const [id, entry] of Object.entries(existing)) {
+    if (!entry.pinned || entry.credit) continue;
+    const meta = await credits(entry.file);
+    if (meta.credit || meta.license) {
+      existing[id] = { ...entry, ...meta };
+      console.log(`  © ${id} → ${meta.credit ?? 'unknown'}`);
+    }
+    await new Promise((r) => setTimeout(r, 250));
+  }
+
   save(existing);
   const sorted = Object.fromEntries(Object.entries(existing).sort(([a], [b]) => a.localeCompare(b)));
 

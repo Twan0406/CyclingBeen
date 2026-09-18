@@ -179,10 +179,14 @@ export function isRelevant(title: string, subject?: string): boolean {
  *
  * null means "not usable at all"; otherwise higher is better.
  */
-export function scoreCandidate(c: Candidate): number | null {
+export function scoreCandidate(c: Candidate, opts: { requireRelevance?: boolean } = {}): number | null {
+  const { requireRelevance = true } = opts;
   const title = c.title.toLowerCase();
   if (REJECT.some((r) => r.test(title))) return null;
-  if (!isRelevant(title, c.subject)) return null;
+  // The relevance test exists to stop a machine choosing blind. When a person
+  // is going to look at the shortlist anyway, it only hides their options —
+  // South Limburg has plenty of photographs, none of which say "South Limburg".
+  if (requireRelevance && !isRelevant(title, c.subject)) return null;
   if (c.mime && c.mime !== 'image/jpeg' && !/\.jpe?g$/i.test(c.title)) return null;
   if (c.width && c.width < 640) return null;
 
